@@ -1,0 +1,62 @@
+  <!-- header -->
+      <header>
+         <!-- header inner -->
+         <div class="header">
+            <div class="head_top">
+               <div class="container">
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                       <div class="top-box">
+                        <ul class="sociel_link">
+                         <li> <a href="#"><i class="fa fa-facebook-f text-light"></i></a></li>
+                         <li> <a href="#"><i class="fa fa-twitter text-light"></i></a></li>
+                         <li> <a href="#"><i class="fa fa-instagram text-light"></i></a></li>
+                         <li> <a href="#"><i class="fa fa-linkedin text-light"></i></a></li>
+                     </ul>
+                    </div>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                       <div class="top-box">
+                        <p class="text-light">long established fact that a reader will be </p>
+                    </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="container">
+            <div class="row">
+               <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col logo_section">
+                  <div class="full">
+                     <div class="center-desk">
+                        <div class="logo"> 
+                           <a href="{{route('home')}}">
+                              <h2>Logo</h2>
+                              {{-- <img src="templates/images/logo.jpg" alt="logo"/> --}}
+                        </a> 
+                     </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-xl-7 col-lg-7 col-md-9 col-sm-9">
+                  <div class="menu-area">
+                     <div class="limit-box">
+                        <nav class="main-menu">
+                           <ul class="menu-area-main">
+                              <li class="active"> <a href="{{ route('home') }}">Home</a> </li>
+                              <li> <a href="{{ route('about.index') }}">About</a> </li>
+                              <li> <a href="{{ route('product.index') }}">product</a> </li>
+                              <li> <a href="{{ route('contact.index') }}">Contact</a> </li>
+                               
+                           </ul>
+                        </nav>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                  <li><a class="buy text-light" href="{{ route('login.index') }}">Login</a></li>
+               </div>
+            </div>
+         </div>
+         <!-- end header inner --> 
+      </header>
+      <!-- end header -->
