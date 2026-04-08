@@ -10,6 +10,7 @@
         <input class="form-control bg-dark border-0" type="search" placeholder="Search">
     </form>
     <div class="navbar-nav align-items-center ms-auto">
+        <!-- Messages -->
         <div class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-envelope me-lg-2"></i>
@@ -21,41 +22,21 @@
                         <img class="rounded-circle" src="admins/img/user.jpg" alt=""
                             style="width: 40px; height: 40px;">
                         <div class="ms-2">
-                            <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                            <h6 class="fw-normal mb-0">John sent you a message</h6>
                             <small>15 minutes ago</small>
                         </div>
                     </div>
                 </a>
                 <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item">
-                    <div class="d-flex align-items-center">
-                        <img class="rounded-circle" src="admins/img/user.jpg" alt=""
-                            style="width: 40px; height: 40px;">
-                        <div class="ms-2">
-                            <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                            <small>15 minutes ago</small>
-                        </div>
-                    </div>
-                </a>
-                <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item">
-                    <div class="d-flex align-items-center">
-                        <img class="rounded-circle" src="admins/img/user.jpg" alt=""
-                            style="width: 40px; height: 40px;">
-                        <div class="ms-2">
-                            <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                            <small>15 minutes ago</small>
-                        </div>
-                    </div>
-                </a>
-                <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item text-center">See all message</a>
+                <a href="#" class="dropdown-item text-center">See all messages</a>
             </div>
         </div>
+
+        <!-- Notifications -->
         <div class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-bell me-lg-2"></i>
-                <span class="d-none d-lg-inline-flex">Notificatin</span>
+                <span class="d-none d-lg-inline-flex">Notification</span>
             </a>
             <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                 <a href="#" class="dropdown-item">
@@ -68,24 +49,32 @@
                     <small>15 minutes ago</small>
                 </a>
                 <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item">
-                    <h6 class="fw-normal mb-0">Password changed</h6>
-                    <small>15 minutes ago</small>
-                </a>
-                <hr class="dropdown-divider">
                 <a href="#" class="dropdown-item text-center">See all notifications</a>
             </div>
         </div>
+
+        <!-- User Profile -->
         <div class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img class="rounded-circle me-lg-2" src="admins/img/user.jpg" alt=""
-                    style="width: 40px; height: 40px;">
-                <span class="d-none d-lg-inline-flex">John Doe</span>
+                <img class="rounded-circle me-lg-2" 
+                     src="admins/img/user.jpg" 
+                     alt=""
+                     style="width: 40px; height: 40px;">
+                <span class="d-none d-lg-inline-flex">
+                    {{ auth()->user()->name ?? 'Guest' }} 
+                    ({{ auth()->user()->role ?? 'N/A' }})
+                </span>
             </a>
             <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                 <a href="#" class="dropdown-item">My Profile</a>
                 <a href="#" class="dropdown-item">Settings</a>
-                <a href="#" class="dropdown-item">Log Out</a>
+                <a href="{{ route('logout') }}" class="dropdown-item"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Log Out
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
         </div>
     </div>

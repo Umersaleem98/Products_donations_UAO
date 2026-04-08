@@ -15,10 +15,15 @@ Route::get("contact", [ContactController::class,"index"])->name("contact.index")
 Route::get("product", [ProductsController::class,"index"])->name("product.index");
 
 
-
-Route::get("dashboard", [DashboardControllerr::class, 'index'] )->name('dashboard');
+Route::get("dashboard", [DashboardControllerr::class, 'index'])
+    ->name('dashboard')
+    ->middleware(['auth', 'role:admin']);
+// Route::get("dashboard", [DashboardControllerr::class, 'index'] )->name('dashboard');
 Route::get("login", [AuthControllerr::class, 'Loginscreen'] )->name('login.index');
+Route::post("login", [AuthControllerr::class, 'login'] )->name('login.store');
 Route::get("register", [AuthControllerr::class, 'Regiserscreen'] )->name('register.index');
+Route::post("register", [AuthControllerr::class, 'register'] )->name('register.store');
+Route::post("logout", [AuthControllerr::class, 'logout'] )->name('logout');
 
 Route::get("buyters/products/index", [BuyerProductsController::class, 'index'] )->name('buyers.products.index');
 
