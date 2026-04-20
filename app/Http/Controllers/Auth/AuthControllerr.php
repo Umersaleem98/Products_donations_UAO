@@ -15,38 +15,49 @@ class AuthControllerr extends Controller
     {
         return view("pages.auth.login");
     }
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+   public function login(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
 
-        $user = User::where('email', $credentials['email'])->first();
+    $user = User::where('email', $credentials['email'])->first();
 
-        if (!$user) {
-            return back()->withErrors([
-                'email' => 'These credentials do not match our records.',
-            ])->onlyInput('email');
-        }
-
-        if (!$user->is_active) {
-            return back()->withErrors([
-                'email' => 'Your account has been deactivated. Please contact support.',
-            ])->onlyInput('email');
-        }
-
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-
-            // Single redirect to unified dashboard
-            return redirect()->intended(route('dashboard'));
-        }
-
+    // User not found
+    if (!$user) {
         return back()->withErrors([
             'email' => 'These credentials do not match our records.',
         ])->onlyInput('email');
     }
+
+    // Check active status
+    if (!$user->is_active) {
+        return back()->withErrors([
+            'email' => 'Your account has been deactivated. Please contact support.',
+        ])->onlyInput('email');
+    }
+
+    // Attempt login
+    if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        $request->session()->regenerate();
+
+        $user = Auth::user();
+
+        // ✅ ROLE-BASED REDIRECT (NO 403 ISSUE)
+        return match ($user->role) {
+            'admin' => redirect()->route('dashboard'),
+            'donor' => redirect()->route('dashboard'),
+            'beneficiary' => redirect()->route('dashboard'),
+            default => redirect()->route('dashboard'),
+        };
+    }
+
+    // Invalid credentials
+    return back()->withErrors([
+        'email' => 'These credentials do not match our records.',
+    ])->onlyInput('email');
+}
     public function Regiserscreen()
     {
         return view("pages.auth.register");

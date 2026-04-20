@@ -12,22 +12,15 @@ class RoleMiddleware
     {
         // Check login
         if (!auth()->check()) {
-            return redirect()->route('login');
-        }
+        return redirect()->route('login');
+    }
 
-        $user = auth()->user();
+    $userRole = auth()->user()->role;
 
-        // Check active status
-        if (!$user->is_active) {
-            auth()->logout();
-            return redirect()->route('login')
-                ->with('error', 'Your account has been deactivated.');
-        }
-
-        // Check role
-        if (!$user->hasRole($role)) {
-            abort(403, 'Unauthorized access.');
-        }
+    // If roles are defined, check access
+    if (!empty($roles) && !in_array($userRole, $roles)) {
+        abort(403, 'Unauthorized access');
+    }
 
         return $next($request);
     }

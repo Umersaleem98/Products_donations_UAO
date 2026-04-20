@@ -3,33 +3,34 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class DashboardControllerr extends Controller
 {
      public function index()
-    {
-       $user = auth()->user();
-        $role = $user->role;
-        
-        // Common data for all roles
-        $data = [
-            'user' => $user,
-            'role' => $role,
-            'roleLabel' => $this->getRoleLabel($role),
-        ];
+{
+    $user = auth()->user();
 
-        // Role-specific data
-        $data = match($role) {
-            'admin' => $this->getAdminData($data),
-            'beneficiary' => $this->getBeneficiaryData($data),
-            'donor' => $this->getDonorData($data),
-            default => $data,
-        };
+    $role = $user->role;
 
-        return view('dashboard', $data);
-    }
+    $data = [
+        'user' => $user,
+        'role' => $role,
+        'roleLabel' => $this->getRoleLabel($role),
+    ];
+
+    $data = match($role) {
+        'admin' => $this->getAdminData($data),
+        'beneficiary' => $this->getBeneficiaryData($data),
+        'donor' => $this->getDonorData($data),
+        default => $data,
+    };
+
+    return view('dashboard', $data);
+}
 
     private function getRoleLabel(string $role): string
     {
@@ -41,23 +42,17 @@ class DashboardControllerr extends Controller
         };
     }
 
-    private function getAdminData(array $data): array
-    {
-        return array_merge($data, [
-            'stats' => [
-                'total_users' => User::count(),
-                'total_beneficiaries' => User::where('role', 'beneficiary')->count(),
-                'total_donors' => User::where('role', 'donor')->count(),
-                'pending_requests' => 12,
-            ],
-            'recent_users' => User::latest()->take(5)->get(),
-            'recent_activities' => [
-                ['action' => 'New user registered', 'time' => '2 minutes ago', 'type' => 'user'],
-                ['action' => 'Donation received', 'time' => '15 minutes ago', 'type' => 'donation'],
-                ['action' => 'Beneficiary request approved', 'time' => '1 hour ago', 'type' => 'request'],
-            ],
-        ]);
-    }
+   private function getAdminData(array $data): array
+{
+    return array_merge($data, [
+        'stats' => [
+            'total_users' => User::count(),
+            'total_products' => Product::count(),
+            'total_categories' => Category::count(),
+            'total_revenue' => Product::sum('price'),
+        ],
+    ]);
+}
 
     private function getBeneficiaryData(array $data): array
     {

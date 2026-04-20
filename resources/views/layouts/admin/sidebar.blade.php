@@ -11,21 +11,8 @@
       <i class="bi bi-grid-fill"></i> Dashboard
     </a>
 
-    <!-- Analytics dropdown -->
-    <div class="nav-dropdown">
-      <div class="nav-dropdown-toggle" data-dropdown="analytics">
-        <i class="bi bi-bar-chart-line-fill nav-icon"></i>
-        <span>Analytics</span>
-        <i class="bi bi-chevron-right nav-chevron"></i>
-      </div>
-      <div class="nav-submenu" id="dd-analytics">
-        <a class="nav-sub-item active">Overview</a>
-        <a class="nav-sub-item" href="">Traffic Sources</a>
-        <a class="nav-sub-item" href="">Conversion Rates</a>
-        <a class="nav-sub-item" href="">Heatmaps</a>
-      </div>
-    </div>
-
+    
+@if(auth()->user()->role === 'admin')
     <!-- Users dropdown -->
     <div class="nav-dropdown">
       <div class="nav-dropdown-toggle" data-dropdown="users">
@@ -41,22 +28,8 @@
       </div>
     </div>
 
-    <!-- Orders dropdown -->
-    <div class="nav-dropdown">
-      <div class="nav-dropdown-toggle" data-dropdown="orders">
-        <i class="bi bi-bag-check-fill nav-icon"></i>
-        <span>Orders</span>
-        <span class="nav-badge">12</span>
-        <i class="bi bi-chevron-right nav-chevron"></i>
-      </div>
-      <div class="nav-submenu" id="dd-orders">
-        <a class="nav-sub-item" href="">All Orders</a>
-        <a class="nav-sub-item" href="">Pending <span class="sub-badge">12</span></a>
-        <a class="nav-sub-item" href="">Completed</a>
-        <a class="nav-sub-item" href="">Refunds</a>
-      </div>
-    </div>
-
+   
+@endif
     <div class="nav-label mt-2">Content</div>
 
     <!-- Products dropdown -->
@@ -68,30 +41,16 @@
       </div>
       <div class="nav-submenu" id="dd-products">
         <a class="nav-sub-item" href="{{ route('products.index') }}">All Products</a>
-        <a class="nav-sub-item" href="{{ route('products.index') }}">Add Product</a>
-        <a class="nav-sub-item" href="{{ route('category.index') }}">Categories</a>
+        <a class="nav-sub-item" href="{{ route('products.create') }}">Add Product</a>
+        <a class="nav-sub-item" href="{{ route('category.index') }}">All Categories</a>
+        <a class="nav-sub-item" href="{{ route('category.create') }}">Add Categories</a>
       </div>
     </div>
 
-    <a class="nav-link-item" data-page="messages">
-      <i class="bi bi-chat-dots-fill"></i> Messages
-      <span class="nav-badge">5</span>
-    </a>
+   
 
     <!-- Reports dropdown -->
-    <div class="nav-dropdown">
-      <div class="nav-dropdown-toggle" data-dropdown="reports">
-        <i class="bi bi-file-earmark-bar-graph-fill nav-icon"></i>
-        <span>Reports</span>
-        <i class="bi bi-chevron-right nav-chevron"></i>
-      </div>
-      <div class="nav-submenu" id="dd-reports">
-        <a class="nav-sub-item" href="">Sales Report</a>
-        <a class="nav-sub-item" href="">Revenue Report</a>
-        <a class="nav-sub-item" href="">User Report</a>
-        <a class="nav-sub-item" href="">Export Data</a>
-      </div>
-    </div>
+   
 
     <div class="nav-label mt-2">System</div>
 
@@ -111,9 +70,6 @@
       </div>
     </div>
 
-    <a class="nav-link-item" data-page="help">
-      <i class="bi bi-question-circle-fill"></i> Help
-    </a>
   </nav>
 
   <div class="sidebar-footer">

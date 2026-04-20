@@ -76,14 +76,14 @@
                 </td>
 
                 <td>
-                  <a href="#" class="btn btn-sm btn-primary">Edit</a>
+                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-info btn-sm">Edit</a>
 
-                  <form action="#" method="POST" style="display:inline;">
+                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-sm btn-danger">Delete</button>
-                  </form>
-                </td>
+                    <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this product?')">Delete</button>
+                </form>
+            </td>
               </tr>
               @empty
               <tr>

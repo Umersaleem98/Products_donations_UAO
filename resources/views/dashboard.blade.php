@@ -24,6 +24,7 @@
       </button>
     </div>
 
+    @include('layouts.admin.content')
 
   </div><!-- /content-area -->
 </main>
