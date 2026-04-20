@@ -1,238 +1,127 @@
- <!-- Sales Chart Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-secondary text-center rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Worldwide Sales</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <canvas id="worldwide-sales"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-secondary text-center rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Salse & Revenue</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <canvas id="salse-revenue"></canvas>
-                        </div>
-                    </div>
-                </div>
+
+    <!-- ── STAT CARDS ── -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon icon-purple"><i class="bi bi-people-fill"></i></div>
+          <div>
+            <div class="stat-value" id="statUsers">0</div>
+            <div class="stat-label">Total Users</div>
+          </div>
+          <div class="stat-change up"><i class="bi bi-arrow-up-short"></i>+12.4% vs last month</div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon icon-cyan"><i class="bi bi-bag-check-fill"></i></div>
+          <div>
+            <div class="stat-value" id="statOrders">0</div>
+            <div class="stat-label">Total Orders</div>
+          </div>
+          <div class="stat-change up"><i class="bi bi-arrow-up-short"></i>+8.1% vs last month</div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon icon-green"><i class="bi bi-currency-dollar"></i></div>
+          <div>
+            <div class="stat-value" id="statRevenue">$0</div>
+            <div class="stat-label">Revenue</div>
+          </div>
+          <div class="stat-change up"><i class="bi bi-arrow-up-short"></i>+19.2% vs last month</div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon icon-amber"><i class="bi bi-star-fill"></i></div>
+          <div>
+            <div class="stat-value" id="statReviews">0</div>
+            <div class="stat-label">Reviews</div>
+          </div>
+          <div class="stat-change down"><i class="bi bi-arrow-down-short"></i>-2.3% vs last month</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CHART ROW ── -->
+    <div class="row g-3 mb-4">
+      <!-- Revenue Bar Chart -->
+      <div class="col-lg-8">
+        <div class="card-box">
+          <div class="card-title">Revenue Overview</div>
+          <div class="card-subtitle">Monthly revenue for 2024</div>
+          <div class="bar-chart" id="barChart"></div>
+          <div class="d-flex gap-3 mt-3 flex-wrap">
+            <small class="text-muted"><span style="color:var(--primary);font-weight:700;">■</span> 2024 Revenue</small>
+            <small class="text-muted"><span style="color:var(--accent);font-weight:700;">■</span> 2023 Revenue</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donut -->
+      <div class="col-lg-4">
+        <div class="card-box h-100">
+          <div class="card-title">Traffic Sources</div>
+          <div class="card-subtitle">Where visitors come from</div>
+          <div class="donut-wrap">
+            <svg viewBox="0 0 120 120" width="120" height="120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#E2E8F0" stroke-width="18"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="var(--primary)" stroke-width="18"
+                stroke-dasharray="188 314" stroke-linecap="round" class="donut-seg" id="seg1"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="var(--accent)" stroke-width="18"
+                stroke-dasharray="94 314" stroke-dashoffset="-188" stroke-linecap="round" class="donut-seg" id="seg2"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="var(--success)" stroke-width="18"
+                stroke-dasharray="32 314" stroke-dashoffset="-282" stroke-linecap="round" class="donut-seg" id="seg3"/>
+            </svg>
+            <div class="donut-center">
+              <div class="val">68%</div>
+              <div class="lbl">Organic</div>
             </div>
-            <!-- Sales Chart End -->
+          </div>
+          <div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--primary)"></div><span>Organic Search — 60%</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div><span>Social Media — 30%</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--success)"></div><span>Direct — 10%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-
-            <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-secondary text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Recent Salse</h6>
-                        <a href="">Show All</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-white">
-                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Invoice</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <!-- ── TABLE + ACTIVITY ── -->
+    <div class="row g-3">
+      <!-- Recent Orders Table -->
+      <div class="col-lg-8">
+        <div class="card-box table-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <div class="card-title mb-0">Recent Orders</div>
+              <div style="font-size:.78rem;color:var(--muted);">Latest 6 transactions</div>
             </div>
-            <!-- Recent Sales End -->
+            <a href="#" style="font-size:.8rem;color:var(--primary);font-weight:600;text-decoration:none;">View All →</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-borderless mb-0" id="ordersTable">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Product</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-
-            <!-- Widgets Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-secondary rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h6 class="mb-0">Messages</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="admins/img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="admins/img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="admins/img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-3">
-                                <img class="rounded-circle flex-shrink-0" src="admins/img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-secondary rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Calender</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div id="calender"></div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-secondary rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">To Do List</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <input class="form-control bg-dark border-0" type="text" placeholder="Enter task">
-                                <button type="button" class="btn btn-primary ms-2">Add</button>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox" checked>
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span><del>Short task goes here...</del></span>
-                                        <button class="btn btn-sm text-primary"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Widgets End -->
-
-
-            <!-- Footer Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-secondary rounded-top p-4">
-                    <div class="row">
-                        <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">Your Site Name</a>, All Right Reserved. 
-                        </div>
-                        <div class="col-12 col-sm-6 text-center text-sm-end">
-                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                            <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Footer End -->
+      <!-- Activity Feed -->
+      <div class="col-lg-4">
+        <div class="card-box">
+          <div class="card-title">Recent Activity</div>
+          <div class="card-subtitle">System events log</div>
+          <div id="activityFeed"></div>
+        </div>
+      </div>
+    </div>

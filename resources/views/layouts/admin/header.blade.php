@@ -1,82 +1,113 @@
-<!-- Navbar Start -->
-<nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
-    <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-        <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
-    </a>
-    <a href="#" class="sidebar-toggler flex-shrink-0">
-        <i class="fa fa-bars"></i>
-    </a>
-    <form class="d-none d-md-flex ms-4">
-        <input class="form-control bg-dark border-0" type="search" placeholder="Search">
-    </form>
-    <div class="navbar-nav align-items-center ms-auto">
-        <!-- Messages -->
-        <div class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="fa fa-envelope me-lg-2"></i>
-                <span class="d-none d-lg-inline-flex">Message</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                <a href="#" class="dropdown-item">
-                    <div class="d-flex align-items-center">
-                        <img class="rounded-circle" src="admins/img/user.jpg" alt=""
-                            style="width: 40px; height: 40px;">
-                        <div class="ms-2">
-                            <h6 class="fw-normal mb-0">John sent you a message</h6>
-                            <small>15 minutes ago</small>
-                        </div>
-                    </div>
-                </a>
-                <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item text-center">See all messages</a>
-            </div>
-        </div>
+<!-- ═══════════════════ TOPBAR ═══════════════════ -->
+<header id="topbar">
+  <button class="topbar-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
 
-        <!-- Notifications -->
-        <div class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="fa fa-bell me-lg-2"></i>
-                <span class="d-none d-lg-inline-flex">Notification</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                <a href="#" class="dropdown-item">
-                    <h6 class="fw-normal mb-0">Profile updated</h6>
-                    <small>15 minutes ago</small>
-                </a>
-                <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item">
-                    <h6 class="fw-normal mb-0">New user added</h6>
-                    <small>15 minutes ago</small>
-                </a>
-                <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item text-center">See all notifications</a>
-            </div>
-        </div>
+  <!-- Search -->
+  <div class="topbar-search">
+    <i class="bi bi-search"></i>
+    <input type="text" placeholder="Search anything…" id="searchInput"/>
+    <span class="search-kbd d-none d-md-flex">⌘K</span>
+  </div>
 
-        <!-- User Profile -->
-        <div class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img class="rounded-circle me-lg-2" 
-                     src="admins/img/user.jpg" 
-                     alt=""
-                     style="width: 40px; height: 40px;">
-                <span class="d-none d-lg-inline-flex">
-                    {{ auth()->user()->name ?? 'Guest' }} 
-                    ({{ auth()->user()->role ?? 'N/A' }})
-                </span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                <a href="#" class="dropdown-item">My Profile</a>
-                <a href="#" class="dropdown-item">Settings</a>
-                <a href="{{ route('logout') }}" class="dropdown-item"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    Log Out
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </div>
+  <div class="topbar-actions">
+
+    <!-- Notifications -->
+    <div style="position:relative;">
+      <div class="icon-btn" id="notifBtn" title="Notifications">
+        <i class="bi bi-bell-fill"></i>
+        <span class="notif-count">4</span>
+      </div>
+      <!-- Notification Panel -->
+      <div class="topbar-panel" id="notifPanel">
+        <div class="panel-header">
+          <span class="ph-title">Notifications</span>
+          <a class="ph-clear">Mark all read</a>
         </div>
+        <div class="notif-list">
+          <div class="notif-item unread">
+            <div class="notif-icon-wrap icon-purple"><i class="bi bi-person-plus-fill"></i></div>
+            <div class="notif-body">
+              <div class="notif-text"><strong>Sara Ahmed</strong> just registered a new account.</div>
+              <div class="notif-time">2 minutes ago</div>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-icon-wrap icon-cyan"><i class="bi bi-bag-check-fill"></i></div>
+            <div class="notif-body">
+              <div class="notif-text">New order <strong>#ORD-4821</strong> received — $1,299</div>
+              <div class="notif-time">14 minutes ago</div>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-icon-wrap icon-amber"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <div class="notif-body">
+              <div class="notif-text">Server CPU load reached <strong>87%</strong> — check resources.</div>
+              <div class="notif-time">1 hour ago</div>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-icon-wrap icon-green"><i class="bi bi-star-fill"></i></div>
+            <div class="notif-body">
+              <div class="notif-text">You received a <strong>5-star</strong> review from Bilal R.</div>
+              <div class="notif-time">3 hours ago</div>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon-wrap" style="background:#F1F5F9;color:#64748B;"><i class="bi bi-x-circle-fill"></i></div>
+            <div class="notif-body">
+              <div class="notif-text">Order <strong>#ORD-4799</strong> was cancelled by the customer.</div>
+              <div class="notif-time">5 hours ago</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer"><a href="#">View all notifications →</a></div>
+      </div>
     </div>
-</nav>
-<!-- Navbar End -->
+
+    <!-- Messages -->
+    <div class="icon-btn" id="fullscreenBtn" title="Full Screen">
+      <i class="bi bi-fullscreen"></i>
+    </div>
+
+    <div class="topbar-divider"></div>
+
+    <!-- Profile Dropdown -->
+    <div style="position:relative;">
+      <div class="profile-trigger" id="profileBtn">
+        <div class="profile-avatar">AK</div>
+        <div class="profile-info d-none d-md-block">
+          <div class="p-name">{{ auth()->user()->name ?? 'Guest' }}</div>
+          <div class="p-role">{{ auth()->user()->role ?? 'N/A' }}</div>
+        </div>
+        <i class="bi bi-chevron-down profile-chevron d-none d-md-flex"></i>
+      </div>
+      <!-- Profile Panel -->
+      <div class="profile-panel" id="profilePanel">
+        <div class="profile-panel-head">
+          <div class="pp-avatar">AK</div>
+          <div>
+            <div class="pp-name">{{ auth()->user()->name ?? 'Guest' }}</div>
+            <div class="pp-email">{{ auth()->user()->email ?? 'N/A' }}</div>
+            <span class="pp-badge">{{ auth()->user()->role ?? 'N/A' }}</span>
+          </div>
+        </div>
+        <div class="profile-menu">
+          <a class="pm-item"><i class="bi bi-person-fill"></i> My Profile</a>
+          <a class="pm-item"><i class="bi bi-shield-lock-fill"></i> Security</a>
+          <a class="pm-item"><i class="bi bi-bell-fill"></i> Notification Prefs</a>
+          <a class="pm-item"><i class="bi bi-palette-fill"></i> Appearance</a>
+          <div class="pm-divider"></div>
+          <a class="pm-item"><i class="bi bi-question-circle-fill"></i> Help &amp; Support</a>
+          <a class="pm-item"><i class="bi bi-box-arrow-up-right"></i> What's New</a>
+          <div class="pm-divider"></div>
+          <a class="pm-item logout"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</header>

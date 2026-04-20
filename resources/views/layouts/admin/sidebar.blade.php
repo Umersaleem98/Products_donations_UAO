@@ -1,45 +1,129 @@
-<!-- Sidebar Start -->
-<div class="sidebar pe-4 pb-3">
-    <nav class="navbar bg-secondary navbar-dark">
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<aside id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+    <div class="brand-name">Nex<span>Admin</span></div>
+  </div>
 
-        <!-- Brand -->
-        <a href="{{ route('dashboard') }}" class="navbar-brand mx-4 mb-3">
-            <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>DarkPan</h3>
-        </a>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Main</div>
+    <a class="nav-link-item active" data-page="dashboard">
+      <i class="bi bi-grid-fill"></i> Dashboard
+    </a>
 
-        <!-- User Info -->
-        <div class="d-flex align-items-center ms-4 mb-4">
-            <div class="position-relative">
-                <img class="rounded-circle" 
-                     src="admins/img/user.jpg" 
-                     alt="" 
-                     style="width: 40px; height: 40px;">
-                <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
-            </div>
-            <div class="ms-3">
-                <h6 class="mb-0">{{ auth()->user()->name ?? 'Guest' }}</h6>
-                <span>{{ auth()->user()->role ?? 'N/A' }}</span>
-            </div>
-        </div>
+    <!-- Analytics dropdown -->
+    <div class="nav-dropdown">
+      <div class="nav-dropdown-toggle" data-dropdown="analytics">
+        <i class="bi bi-bar-chart-line-fill nav-icon"></i>
+        <span>Analytics</span>
+        <i class="bi bi-chevron-right nav-chevron"></i>
+      </div>
+      <div class="nav-submenu" id="dd-analytics">
+        <a class="nav-sub-item active">Overview</a>
+        <a class="nav-sub-item" href="">Traffic Sources</a>
+        <a class="nav-sub-item" href="">Conversion Rates</a>
+        <a class="nav-sub-item" href="">Heatmaps</a>
+      </div>
+    </div>
 
-        <!-- Navigation Links -->
-        <div class="navbar-nav w-100">
-            <a href="{{ route('dashboard') }}" class="nav-item nav-link active">
-                <i class="fa fa-tachometer-alt me-2"></i>Dashboard
-            </a>
+    <!-- Users dropdown -->
+    <div class="nav-dropdown">
+      <div class="nav-dropdown-toggle" data-dropdown="users">
+        <i class="bi bi-people-fill nav-icon"></i>
+        <span>Users</span>
+        <i class="bi bi-chevron-right nav-chevron"></i>
+      </div>
+      <div class="nav-submenu" id="dd-users">
+        <a class="nav-sub-item" href="">All Users</a>
+        <a class="nav-sub-item" href="">Roles &amp; Permissions</a>
+        <a class="nav-sub-item" href="">Activity Logs</a>
+        <a class="nav-sub-item" href="">Banned Users <span class="sub-badge">3</span></a>
+      </div>
+    </div>
 
-            <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="fa fa-laptop me-2"></i>Products
-                </a>
-                <div class="dropdown-menu bg-transparent border-0">
-                    <a href="{{ route('buyers.products.index') }}" class="dropdown-item">Products List</a>
-                </div>
-            </div>
+    <!-- Orders dropdown -->
+    <div class="nav-dropdown">
+      <div class="nav-dropdown-toggle" data-dropdown="orders">
+        <i class="bi bi-bag-check-fill nav-icon"></i>
+        <span>Orders</span>
+        <span class="nav-badge">12</span>
+        <i class="bi bi-chevron-right nav-chevron"></i>
+      </div>
+      <div class="nav-submenu" id="dd-orders">
+        <a class="nav-sub-item" href="">All Orders</a>
+        <a class="nav-sub-item" href="">Pending <span class="sub-badge">12</span></a>
+        <a class="nav-sub-item" href="">Completed</a>
+        <a class="nav-sub-item" href="">Refunds</a>
+      </div>
+    </div>
 
-            <!-- Add more menu items here if needed -->
-        </div>
+    <div class="nav-label mt-2">Content</div>
 
-    </nav>
-</div>
-<!-- Sidebar End -->
+    <!-- Products dropdown -->
+    <div class="nav-dropdown">
+      <div class="nav-dropdown-toggle" data-dropdown="products">
+        <i class="bi bi-box-seam-fill nav-icon"></i>
+        <span>Products</span>
+        <i class="bi bi-chevron-right nav-chevron"></i>
+      </div>
+      <div class="nav-submenu" id="dd-products">
+        <a class="nav-sub-item" href="{{ route('products.index') }}">All Products</a>
+        <a class="nav-sub-item" href="{{ route('products.index') }}">Add Product</a>
+        <a class="nav-sub-item" href="{{ route('category.index') }}">Categories</a>
+      </div>
+    </div>
+
+    <a class="nav-link-item" data-page="messages">
+      <i class="bi bi-chat-dots-fill"></i> Messages
+      <span class="nav-badge">5</span>
+    </a>
+
+    <!-- Reports dropdown -->
+    <div class="nav-dropdown">
+      <div class="nav-dropdown-toggle" data-dropdown="reports">
+        <i class="bi bi-file-earmark-bar-graph-fill nav-icon"></i>
+        <span>Reports</span>
+        <i class="bi bi-chevron-right nav-chevron"></i>
+      </div>
+      <div class="nav-submenu" id="dd-reports">
+        <a class="nav-sub-item" href="">Sales Report</a>
+        <a class="nav-sub-item" href="">Revenue Report</a>
+        <a class="nav-sub-item" href="">User Report</a>
+        <a class="nav-sub-item" href="">Export Data</a>
+      </div>
+    </div>
+
+    <div class="nav-label mt-2">System</div>
+
+    <!-- Settings dropdown -->
+    <div class="nav-dropdown">
+      <div class="nav-dropdown-toggle" data-dropdown="settings">
+        <i class="bi bi-gear-fill nav-icon"></i>
+        <span>Settings</span>
+        <i class="bi bi-chevron-right nav-chevron"></i>
+      </div>
+      <div class="nav-submenu" id="dd-settings">
+        <a class="nav-sub-item" href="">General</a>
+        <a class="nav-sub-item" href="">Security</a>
+        <a class="nav-sub-item" href="">Notifications</a>
+        <a class="nav-sub-item" href="">Integrations</a>
+        <a class="nav-sub-item" href="">Billing</a>
+      </div>
+    </div>
+
+    <a class="nav-link-item" data-page="help">
+      <i class="bi bi-question-circle-fill"></i> Help
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="user-avatar">AK</div>
+      <div class="user-info">
+        <div class="name">{{ auth()->user()->name ?? 'Guest' }}</div>
+        <div class="role">{{ auth()->user()->role ?? 'N/A' }}</div>
+      </div>
+      <i class="bi bi-three-dots-vertical ms-auto text-secondary" style="font-size:.85rem;"></i>
+    </div>
+  </div>
+</aside>
