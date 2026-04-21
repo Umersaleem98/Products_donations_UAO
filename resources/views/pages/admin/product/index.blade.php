@@ -24,7 +24,7 @@
         <i class="bi bi-plus-lg me-1"></i> Add Product
       </a>
     </div>
-
+@include('layouts.admin.components.alert')
     <!-- TABLE -->
     <div class="card mt-3" style="border-radius:12px;">
       <div class="card-body">

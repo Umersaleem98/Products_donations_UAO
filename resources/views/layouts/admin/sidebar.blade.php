@@ -21,15 +21,14 @@
         <i class="bi bi-chevron-right nav-chevron"></i>
       </div>
       <div class="nav-submenu" id="dd-users">
-        <a class="nav-sub-item" href="">All Users</a>
-        <a class="nav-sub-item" href="">Roles &amp; Permissions</a>
-        <a class="nav-sub-item" href="">Activity Logs</a>
-        <a class="nav-sub-item" href="">Banned Users <span class="sub-badge">3</span></a>
+        <a class="nav-sub-item" href="{{ route('users.index') }}">All Users</a>
+        <a class="nav-sub-item" href="{{ route('users.create') }}">Create Users</a>
       </div>
     </div>
 
    
 @endif
+@if(auth()->user()->role === 'admin')
     <div class="nav-label mt-2">Content</div>
 
     <!-- Products dropdown -->
@@ -46,29 +45,28 @@
         <a class="nav-sub-item" href="{{ route('category.create') }}">Add Categories</a>
       </div>
     </div>
+@endif
 
    
 
     <!-- Reports dropdown -->
    
-
+@if(auth()->user()->role === 'donor')
     <div class="nav-label mt-2">System</div>
 
     <!-- Settings dropdown -->
     <div class="nav-dropdown">
       <div class="nav-dropdown-toggle" data-dropdown="settings">
         <i class="bi bi-gear-fill nav-icon"></i>
-        <span>Settings</span>
+        <span>Donation Post</span>
         <i class="bi bi-chevron-right nav-chevron"></i>
       </div>
       <div class="nav-submenu" id="dd-settings">
-        <a class="nav-sub-item" href="">General</a>
-        <a class="nav-sub-item" href="">Security</a>
-        <a class="nav-sub-item" href="">Notifications</a>
-        <a class="nav-sub-item" href="">Integrations</a>
-        <a class="nav-sub-item" href="">Billing</a>
+        <a class="nav-sub-item" href="{{ route('donor.post.index') }}">All Post</a>
+        <a class="nav-sub-item" href="{{ route('donor.post.create') }}">Create Post</a>
       </div>
     </div>
+@endif
 
   </nav>
 

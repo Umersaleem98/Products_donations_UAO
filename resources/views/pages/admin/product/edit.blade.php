@@ -15,16 +15,7 @@
         <h1>Edit Product</h1>
     </div>
 
-    <!-- Error Messages -->
-    @if($errors->any())
-        <div style="background:#f8d7da; color:#721c24; padding:12px; border-radius:6px; margin-bottom:15px;">
-            <ul style="margin:0; padding-left:20px;">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+@include('layouts.admin.components.alert')
 
     <!-- Form Card -->
     <div style="background:#fff; padding:25px; border-radius:10px; max-width:700px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">

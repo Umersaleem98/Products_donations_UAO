@@ -18,7 +18,7 @@
         <h1>Categories</h1>
         <p id="dateLabel"></p>
       </div>
-
+@include('layouts.admin.components.alert')
       <a href="#" class="btn btn-sm text-white px-3 py-2"
          style="background:var(--primary);border-radius:10px;font-size:.82rem;font-weight:600;">
         <i class="bi bi-plus-lg me-1"></i> Add Category

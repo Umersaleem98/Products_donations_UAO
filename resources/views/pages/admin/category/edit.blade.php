@@ -12,13 +12,7 @@
 
     <h1>Edit Category</h1>
 
-    @if($errors->any())
-        <div style="color:red;">
-            @foreach($errors->all() as $error)
-                <p>{{ $error }}</p>
-            @endforeach
-        </div>
-    @endif
+@include('layouts.admin.components.alert')
 
     <div style="background:#fff; padding:20px; max-width:400px; border-radius:8px;">
 

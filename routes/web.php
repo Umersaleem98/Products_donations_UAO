@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Admin\AdminUsersController;
 use App\Http\Controllers\Admin\DashboardControllerr;
 use App\Http\Controllers\Auth\AuthControllerr;
+use App\Http\Controllers\Donoe\DonorPostController;
 use App\Http\Controllers\Home\AboutController;
 use App\Http\Controllers\Home\ContactController;
 use App\Http\Controllers\Home\HomeController;
@@ -38,3 +40,19 @@ Route::post('category/store', [AdminCategoryController::class, 'store'])->name('
 Route::get('/category/{id}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
 Route::put('/category/{id}', [AdminCategoryController::class, 'update'])->name('categories.update');
 Route::delete('/category/{id}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
+
+Route::get('users/index', [AdminUsersController::class, 'index'])->name('users.index');
+Route::get('users/create', [AdminUsersController::class, 'create'])->name('users.create');
+Route::post('users/store', [AdminUsersController::class, 'store'])->name('users.store');
+Route::get('/admin/users/{id}/edit', [AdminUsersController::class, 'edit'])->name('users.edit');
+Route::put('/admin/users/{id}', [AdminUsersController::class, 'update'])->name('users.update');
+Route::delete('/admin/users/{id}', [AdminUsersController::class, 'destroy'])->name('users.destroy');
+
+
+// Donor Routes 
+Route::get('donor/post/index', [DonorPostController::class, 'index'])->name('donor.post.index');
+Route::get('donor/post/create', [DonorPostController::class, 'create'])->name('donor.post.create');
+Route::post('donor/post//store', [DonorPostController::class, 'store'])->name('donor.post.store');
+Route::get('donor/post//{id}/edit', [DonorPostController::class, 'edit'])->name('donor.post.edit');
+Route::put('donor/post//{id}', [DonorPostController::class, 'update'])->name('donor.post.update');
+Route::delete('donor/post//{id}', [DonorPostController::class, 'destroy'])->name('donor.post.destroy');
