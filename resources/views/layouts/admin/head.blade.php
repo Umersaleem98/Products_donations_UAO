@@ -582,5 +582,27 @@
       background: rgba(0,0,0,.45); z-index: 999;
     }
     #overlay.show { display: block; }
+  
+  .profile-menu form {
+  margin: 0;
+}
+
+.profile-menu .logout {
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.profile-menu .logout:hover {
+  background-color: #f1f5f9; /* match your hover style */
+}
   </style>
+
 </head>

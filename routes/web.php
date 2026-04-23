@@ -5,12 +5,15 @@ use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminUsersController;
 use App\Http\Controllers\Admin\DashboardControllerr;
 use App\Http\Controllers\Auth\AuthControllerr;
+use App\Http\Controllers\Beneficiary\BeneficiaryConnectionController;
+use App\Http\Controllers\Beneficiary\BeneficiaryProductController;
 use App\Http\Controllers\Donoe\DonorPostController;
 use App\Http\Controllers\Home\AboutController;
 use App\Http\Controllers\Home\ContactController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\ProductsController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('about', [AboutController::class, 'index'])->name('about.index');
@@ -56,3 +59,9 @@ Route::post('donor/post//store', [DonorPostController::class, 'store'])->name('d
 Route::get('donor/post//{id}/edit', [DonorPostController::class, 'edit'])->name('donor.post.edit');
 Route::put('donor/post//{id}', [DonorPostController::class, 'update'])->name('donor.post.update');
 Route::delete('donor/post//{id}', [DonorPostController::class, 'destroy'])->name('donor.post.destroy');
+
+
+Route::get('beneficiary/products/index', [BeneficiaryProductController::class, 'index'])->name('beneficiary.products.index');
+Route::get('beneficiary/products/show/{id}', [BeneficiaryProductController::class, 'show'])->name('beneficiary.products.show');
+Route::post('/connection/send', [BeneficiaryConnectionController::class, 'send'])
+    ->name('connection.send');

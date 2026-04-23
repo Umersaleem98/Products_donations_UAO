@@ -1,3 +1,4 @@
+
 <!-- ═══════════════════ TOPBAR ═══════════════════ -->
 <header id="topbar">
   <button class="topbar-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
@@ -104,8 +105,12 @@
           <a class="pm-item"><i class="bi bi-question-circle-fill"></i> Help &amp; Support</a>
           <a class="pm-item"><i class="bi bi-box-arrow-up-right"></i> What's New</a>
           <div class="pm-divider"></div>
-          <a class="pm-item logout"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
-        </div>
+          <form method="POST" action="{{ route('logout') }}">
+    @csrf
+    <button type="submit" class="pm-item logout">
+        <i class="bi bi-box-arrow-right"></i> Sign Out
+    </button>
+</form>
       </div>
     </div>
 

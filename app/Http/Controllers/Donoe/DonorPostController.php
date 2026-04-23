@@ -12,12 +12,13 @@ use Illuminate\Support\Facades\Storage;
 class DonorPostController extends Controller
 {
 
-    public function index()
+   public function index()
 {
-   $products = Product::with(['user','category','images'])
-        ->where('user_id', auth()->id()) // 👈 ONLY current user
+    $products = Product::with(['user','category'])
+        ->where('user_id', auth()->id())
         ->latest()
-        ->get();
+        ->paginate(10); // ✅ IMPORTANT
+
     return view('pages.donors.post.index', compact('products'));
 }
 
@@ -27,103 +28,118 @@ class DonorPostController extends Controller
         return view('pages.donors.post.create', compact('categories'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required',
-            'category_id' => 'required',
-            'type' => 'required',
-            'condition' => 'required',
-            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048'
-        ]);
+   public function store(Request $request)
+{
+    // VALIDATION
+    $request->validate([
+        'title'        => 'required|string|max:255',
+        'category_id'  => 'required|exists:categories,id',
+        'type'         => 'required|in:donate,sale',
+        'price'        => 'nullable|numeric|min:0',
+        'condition'    => 'required|in:new,used',
+        'description'  => 'nullable|string',
+        'is_active'    => 'required|in:0,1',
+        'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+    ]);
 
-        $product = Product::create([
-            'user_id' => auth()->id(),
-            'category_id' => $request->category_id,
-            'title' => $request->title,
-            'description' => $request->description,
-            'type' => $request->type,
-            'price' => $request->price,
-            'condition' => $request->condition,
-            'is_active' => $request->is_active ?? 1,
-        ]);
+    // IMAGE UPLOAD (SINGLE)
+    $imagePath = null;
 
-        // Upload Images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $img) {
-                $path = $img->store('products', 'public');
-
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_path' => $path,
-                ]);
-            }
-        }
-
-        return redirect()->route('donor.post.index')->with('success','Product added');
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('products', 'public');
     }
 
-    public function edit($id)
-    {
-        $product = Product::where('id',$id)
-            ->where('user_id', auth()->id())
-            ->with('images')
-            ->firstOrFail();
+    // CREATE PRODUCT
+    $product = Product::create([
+        'user_id'      => auth()->id(),
+        'category_id'  => $request->category_id,
+        'title'        => $request->title,
+        'description'  => $request->description,
+        'type'         => $request->type,
+        'price'        => $request->price,
+        'condition'    => $request->condition,
+        'is_active'    => $request->is_active,
+        'image'        => $imagePath, // ✅ store single image
+    ]);
 
-        $categories = Category::all();
+    return redirect()
+        ->route('donor.post.index')
+        ->with('success', 'Donation created successfully!');
+}
 
-        return view('pages.donors.post.edit', compact('product','categories'));
-    }
+
+   public function edit($id)
+{
+    $product = Product::where('id', $id)
+        ->where('user_id', auth()->id())
+        ->firstOrFail();
+
+    $categories = Category::all();
+
+    return view('pages.donors.post.edit', compact('product', 'categories'));
+}
 
     public function update(Request $request, $id)
-    {
-        $product = Product::where('id',$id)
-            ->where('user_id', auth()->id())
-            ->firstOrFail();
+{
+    $product = Product::where('id', $id)
+        ->where('user_id', auth()->id())
+        ->firstOrFail();
 
-        $request->validate([
-            'title' => 'required',
-            'category_id' => 'required'
-        ]);
+    // VALIDATION
+    $request->validate([
+        'title'        => 'required|string|max:255',
+        'category_id'  => 'required|exists:categories,id',
+        'type'         => 'required|in:donate,sale',
+        'price'        => 'nullable|numeric|min:0',
+        'condition'    => 'required|in:new,used',
+        'description'  => 'nullable|string',
+        'is_active'    => 'required|in:0,1',
+        'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+    ]);
 
-        $product->update([
-            'title' => $request->title,
-            'category_id' => $request->category_id,
-            'description' => $request->description,
-            'type' => $request->type,
-            'price' => $request->price,
-            'condition' => $request->condition,
-            'is_active' => $request->is_active,
-        ]);
+    // OLD IMAGE DELETE (optional but recommended)
+    if ($request->hasFile('image')) {
 
-        // Add new images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $img) {
-                $path = $img->store('products','public');
-
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_path' => $path,
-                ]);
-            }
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
         }
 
-        return redirect()->route('donor.post.index')->with('success','Updated successfully');
+        $imagePath = $request->file('image')->store('products', 'public');
+
+        $product->image = $imagePath;
     }
 
-    public function destroy($id)
-    {
-        $product = Product::where('id',$id)
-            ->where('user_id', auth()->id())
-            ->with('images')
-            ->firstOrFail();
+    // UPDATE PRODUCT
+    $product->update([
+        'title'        => $request->title,
+        'category_id'  => $request->category_id,
+        'description'  => $request->description,
+        'type'         => $request->type,
+        'price'        => $request->price,
+        'condition'    => $request->condition,
+        'is_active'    => $request->is_active,
+        'image'        => $product->image ?? null,
+    ]);
 
-        foreach ($product->images as $img) {
-            Storage::disk('public')->delete($img->image_path);
-        }
+    return redirect()
+        ->route('donor.post.index')
+        ->with('success', 'Updated successfully');
+}
 
-        $product->delete();
+  public function destroy($id)
+{
+    $product = Product::where('id', $id)
+        ->where('user_id', auth()->id())
+        ->firstOrFail();
 
-        return back()->with('success','Deleted successfully');
+    // DELETE IMAGE FROM STORAGE (if exists)
+    if ($product->image) {
+        Storage::disk('public')->delete($product->image);
     }
+
+    // DELETE PRODUCT
+    $product->delete();
+
+    return back()->with('success', 'Deleted successfully');
+}
 }

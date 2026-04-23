@@ -68,7 +68,26 @@
     </div>
 @endif
 
-  </nav>
+  
+
+@if(auth()->user()->role === 'beneficiary')
+    <div class="nav-label mt-2">System</div>
+
+    <!-- Settings dropdown -->
+    <div class="nav-dropdown">
+      <div class="nav-dropdown-toggle" data-dropdown="settings">
+        <i class="bi bi-gear-fill nav-icon"></i>
+        <span>Donation Post</span>
+        <i class="bi bi-chevron-right nav-chevron"></i>
+      </div>
+      <div class="nav-submenu" id="dd-settings">
+        <a class="nav-sub-item" href="{{ route('beneficiary.products.index') }}">All Products</a>
+      </div>
+    </div>
+@endif
+
+
+</nav>
 
   <div class="sidebar-footer">
     <div class="user-chip">
@@ -80,4 +99,5 @@
       <i class="bi bi-three-dots-vertical ms-auto text-secondary" style="font-size:.85rem;"></i>
     </div>
   </div>
+  
 </aside>

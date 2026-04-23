@@ -10,8 +10,15 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id','category_id','title','description',
-        'type','price','condition','is_active'
+        'user_id',
+        'category_id',
+        'title',
+        'description',
+        'type',
+        'price',
+        'condition',
+        'is_active',
+        'image'
     ];
 
     public function user()
@@ -22,15 +29,5 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function images()
-    {
-        return $this->hasMany(ProductImage::class);
-    }
-
-    public function requests()
-    {
-        return $this->hasMany(RequestModel::class);
     }
 }

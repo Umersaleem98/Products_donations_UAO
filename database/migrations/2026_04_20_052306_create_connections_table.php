@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('connections', function (Blueprint $table) {
             $table->id();
-
-    $table->foreignId('request_id')->constrained()->cascadeOnDelete();
-
+ $table->foreignId('product_id')->constrained()->cascadeOnDelete();
     $table->foreignId('donor_id')->constrained('users')->cascadeOnDelete();
     $table->foreignId('beneficiary_id')->constrained('users')->cascadeOnDelete();
-            $table->timestamps();
+
+    $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
         });
     }
 

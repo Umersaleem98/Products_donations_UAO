@@ -8,11 +8,10 @@
 @include('layouts.admin.sidebar')
 @include('layouts.admin.header')
 
-<!-- ═══════════════════ MAIN ═══════════════════════ -->
 <main id="main">
   <div class="content-area">
 
-    <!-- Header -->
+    <!-- HEADER -->
     <div class="page-header d-flex align-items-center justify-content-between flex-wrap gap-2">
       <div>
         <h1>Donations</h1>
@@ -21,14 +20,14 @@
 
       @include('layouts.admin.components.alert')
 
-      <a href="{{ route('donor.post.index') }}" 
+      <a href="{{ route('donor.post.create') }}"
          class="btn btn-sm text-white px-3 py-2"
          style="background:var(--primary);border-radius:10px;font-size:.82rem;font-weight:600;">
-        <i class="bi bi-plus-lg me-1"></i> Add post
+        <i class="bi bi-plus-lg me-1"></i> Add Post
       </a>
     </div>
 
-    <!-- TABLE -->
+    <!-- TABLE CARD -->
     <div class="card mt-3" style="border-radius:12px;">
       <div class="card-body">
 
@@ -46,44 +45,49 @@
                 <th>Price</th>
                 <th>Condition</th>
                 <th>Status</th>
-                <th>Created</th>
+                <th>Date</th>
                 <th>Action</th>
               </tr>
             </thead>
 
             <tbody>
+
               @forelse($products as $product)
               <tr>
 
+                <!-- INDEX -->
                 <td>{{ $loop->iteration }}</td>
 
-                <!-- Image -->
+                <!-- IMAGE -->
                 <td>
-                  @if($product->images->first())
-                    <img src="{{ asset('storage/'.$product->images->first()->image_path) }}" 
-                         width="50" height="50" style="object-fit:cover; border-radius:6px;">
+                  @if($product->images && $product->images->first())
+                    <img src="{{ asset('storage/'.$product->images->first()->image_path) }}"
+                         width="50" height="50"
+                         style="object-fit:cover;border-radius:6px;">
                   @else
-                    <span class="text-muted">No Image</span>
+                    <img src="{{ asset('admins/assets/img/dummy.png') }}"
+                         width="50" height="50"
+                         style="object-fit:cover;border-radius:6px;">
                   @endif
                 </td>
 
-                <!-- Title -->
+                <!-- TITLE -->
                 <td>{{ $product->title }}</td>
 
-                <!-- Donor -->
+                <!-- DONOR -->
                 <td>{{ $product->user->name ?? '-' }}</td>
 
-                <!-- Category -->
+                <!-- CATEGORY -->
                 <td>{{ $product->category->name ?? '-' }}</td>
 
-                <!-- Type -->
+                <!-- TYPE -->
                 <td>
                   <span class="badge bg-info text-dark">
                     {{ ucfirst($product->type) }}
                   </span>
                 </td>
 
-                <!-- Price -->
+                <!-- PRICE -->
                 <td>
                   @if($product->price)
                     Rs {{ number_format($product->price) }}
@@ -92,10 +96,10 @@
                   @endif
                 </td>
 
-                <!-- Condition -->
+                <!-- CONDITION -->
                 <td>{{ ucfirst($product->condition) }}</td>
 
-                <!-- Status -->
+                <!-- STATUS -->
                 <td>
                   @if($product->is_active)
                     <span class="badge bg-success">Active</span>
@@ -104,22 +108,19 @@
                   @endif
                 </td>
 
-                <!-- Date -->
+                <!-- DATE -->
                 <td>{{ $product->created_at->format('d M Y') }}</td>
 
-                <!-- Actions -->
-                <td>
+                <!-- ACTIONS -->
+                <td class="d-flex gap-1">
 
-                  <!-- Edit -->
-                  <a href="{{ route('donor.post.edit', $product->id) }}" 
+                  <a href="{{ route('donor.post.edit', $product->id) }}"
                      class="btn btn-sm btn-warning">
                     Edit
                   </a>
 
-                  <!-- Delete -->
-                  <form action="{{ route('donor.post.destroy', $product->id) }}" 
-                        method="POST" 
-                        style="display:inline-block;"
+                  <form action="{{ route('donor.post.destroy', $product->id) }}"
+                        method="POST"
                         onsubmit="return confirm('Delete this donation?')">
                     @csrf
                     @method('DELETE')
@@ -132,12 +133,16 @@
                 </td>
 
               </tr>
-
               @empty
+
               <tr>
-                <td colspan="11" class="text-center">No donations found</td>
+                <td colspan="11" class="text-center py-4">
+                  No donations found
+                </td>
               </tr>
+
               @endforelse
+
             </tbody>
 
           </table>
