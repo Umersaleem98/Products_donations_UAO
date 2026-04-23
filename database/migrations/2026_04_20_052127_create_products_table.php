@@ -24,6 +24,7 @@ return new class extends Migration
 
     $table->string('condition')->nullable();
     $table->boolean('is_active')->default(true);
+ $table->string('image')->nullable();
             $table->timestamps();
         });
     }

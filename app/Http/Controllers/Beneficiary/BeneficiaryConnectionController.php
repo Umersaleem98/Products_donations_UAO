@@ -8,30 +8,49 @@ use Illuminate\Http\Request;
 
 class BeneficiaryConnectionController extends Controller
 {
-    public function send(Request $request)
-    {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'donor_id' => 'required|exists:users,id',
-        ]);
+   public function send(Request $request, $donorId)
+{
+    $user = auth()->user();
 
-        // prevent duplicate request
-        $exists = Connection::where('product_id', $request->product_id)
-            ->where('donor_id', $request->donor_id)
-            ->where('beneficiary_id', auth()->id())
-            ->first();
+    // Only beneficiary allowed
+    if ($user->role !== 'beneficiary') {
+        abort(403);
+    }
 
-        if ($exists) {
-            return back()->with('error', 'Request already sent');
+    // Prevent self request
+    if ($user->id == $donorId) {
+        return back()->with('error', 'Invalid request');
+    }
+
+    // Check existing connection
+    $connection = Connection::where([
+        'beneficiary_id' => $user->id,
+        'donor_id' => $donorId
+    ])->first();
+
+    if ($connection) {
+        if ($connection->status === 'pending') {
+            return back()->with('error', 'Request already pending');
         }
 
-        Connection::create([
-            'product_id' => $request->product_id,
-            'donor_id' => $request->donor_id,
-            'beneficiary_id' => auth()->id(),
-            'status' => 'pending',
-        ]);
+        if ($connection->status === 'accepted') {
+            return back()->with('success', 'Already connected');
+        }
 
-        return back()->with('success', 'Request sent successfully');
+        if ($connection->status === 'rejected') {
+            // Allow resend → update status
+            $connection->update(['status' => 'pending']);
+            return back()->with('success', 'Request sent again');
+        }
     }
+
+    // Create new request
+    Connection::create([
+        'beneficiary_id' => $user->id,
+        'donor_id' => $donorId,
+        'status' => 'pending'
+    ]);
+
+    return back()->with('success', 'Request sent successfully');
+}
 }

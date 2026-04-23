@@ -30,4 +30,9 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function run(): void
+{
+    Product::factory()->count(20)->create();
+}
 }

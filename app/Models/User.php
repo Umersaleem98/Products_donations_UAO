@@ -65,23 +65,17 @@ class User extends Authenticatable
     return $this->hasMany(Product::class);
 }
 
+
+// Requests sent by beneficiary
 public function sentRequests()
 {
-    return $this->hasMany(RequestModel::class, 'beneficiary_id');
+    return $this->hasMany(Connection::class, 'beneficiary_id');
 }
 
+// Requests received by donor
 public function receivedRequests()
-{
-    return $this->hasMany(RequestModel::class, 'donor_id');
-}
-
-public function donorConnections()
 {
     return $this->hasMany(Connection::class, 'donor_id');
 }
 
-public function beneficiaryConnections()
-{
-    return $this->hasMany(Connection::class, 'beneficiary_id');
-}
 }

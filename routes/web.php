@@ -63,5 +63,4 @@ Route::delete('donor/post//{id}', [DonorPostController::class, 'destroy'])->name
 
 Route::get('beneficiary/products/index', [BeneficiaryProductController::class, 'index'])->name('beneficiary.products.index');
 Route::get('beneficiary/products/show/{id}', [BeneficiaryProductController::class, 'show'])->name('beneficiary.products.show');
-Route::post('/connection/send', [BeneficiaryConnectionController::class, 'send'])
-    ->name('connection.send');
+Route::post('/connection/send/{donorId}', [BeneficiaryConnectionController::class, 'send'])->name('connection.send');
