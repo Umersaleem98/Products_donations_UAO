@@ -1,81 +1,105 @@
 @include('layouts.admin.head')
-<title>Categories</title>
 
-<body>
+<body class="h-100">
 
-<div id="overlay"></div>
+    <div class="container-fluid">
+        <div class="row">
 
-@include('layouts.admin.sidebar')
-@include('layouts.admin.header')
+            <!-- Sidebar -->
+            @include('layouts.admin.sidebar')
 
-<!-- ═══════════════════ MAIN ═══════════════════════ -->
-<main id="main">
-  <div class="content-area">
+            <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
 
-    <!-- Header -->
-    <div class="page-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-      <div>
-        <h1>Categories</h1>
-        <p id="dateLabel"></p>
-      </div>
-@include('layouts.admin.components.alert')
-      <a href="#" class="btn btn-sm text-white px-3 py-2"
-         style="background:var(--primary);border-radius:10px;font-size:.82rem;font-weight:600;">
-        <i class="bi bi-plus-lg me-1"></i> Add Category
-      </a>
-    </div>
+                <!-- Navbar -->
+                <div class="main-navbar sticky-top bg-white">
+                    @include('layouts.admin.header')
+                </div>
 
-    <!-- TABLE -->
-    <div class="card mt-3" style="border-radius:12px;">
-      <div class="card-body">
+                <!-- Content -->
+                <div class="main-content-container container-fluid px-4">
 
-        <div class="table-responsive">
-          <table class="table align-middle table-hover">
+                    <!-- Page Header -->
+                    <div class="page-header row no-gutters py-4">
+                        <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+                            <span class="text-uppercase page-subtitle">Dashboard</span>
+                            <h3 class="page-title">Admin Overview</h3>
+                        </div>
+                    </div>
 
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Total Products</th>
-                <th>Action</th>
-              </tr>
-            </thead>
+                    <!-- Stats Row -->
+                    <div class="row">
 
-            <tbody>
-              @forelse($categories as $category)
-              <tr>
-                <td>{{ $loop->iteration }}</td>
+                        <div class="col-12">
+                            <div class="card shadow-sm">
 
-                <td>{{ $category->name }}</td>
+                                <div class="card-header d-flex justify-content-between">
+                                    <h5>Categories</h5>
 
-                <td>{{ $category->products->count() }}</td>
+                                    <a href="{{ route('admin.category.create') }}" class="btn btn-primary btn-sm">
+                                        + Add Category
+                                    </a>
+                                </div>
 
-                <td>
-                   <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-info btn-sm">Edit</a>
+                                <div class="card-body">
 
-                <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this category?')">Delete</button>
-                </form>
-                </td>
-              </tr>
-              @empty
-              <tr>
-                <td colspan="4" class="text-center">No categories found</td>
-              </tr>
-              @endforelse
-            </tbody>
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Category Name</th>
+                                                <th>Slug</th>
+                                                <th>Created At</th>
+                                                <th width="180">Actions</th>
+                                            </tr>
+                                        </thead>
 
-          </table>
+                                        <tbody>
+                                            @forelse($categories as $key => $category)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $category->name }}</td>
+                                                <td>{{ $category->slug }}</td>
+                                                <td>{{ $category->created_at->format('Y-m-d') }}</td>
+
+                                                <td>
+
+                                                    <!-- EDIT -->
+                                                    <a href="{{ route('admin.category.edit', $category->id) }}" class="btn btn-warning btn-sm">
+                                                        Edit
+                                                    </a>
+
+                                                    <!-- DELETE -->
+                                                    <form action="{{ route('admin.category.delete', $category->id) }}" method="POST" style="display:inline-block">
+
+                                                        @csrf
+                                                        @method('DELETE')
+
+                                                        <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                                                            Delete
+                                                        </button>
+
+                                                    </form>
+
+                                                </td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center">No categories found</td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </main>
         </div>
-
-      </div>
     </div>
 
-  </div>
-</main>
-
-@include('layouts.admin.script')
-
-</body>
+    @include('layouts.admin.script')

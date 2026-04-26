@@ -1,81 +1,64 @@
 <?php
-// app/Models/User.php
 
 namespace App\Models;
 
-use App\Models\Connection;
-use App\Models\RequestModel;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\BeneficiaryProfile;
+use App\Models\DonorProfile;
+use App\Models\Product;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'phone',
-        'address',
-        'is_active',
+   protected $fillable = [
+        'name', 'email', 'password', 'role'
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    protected function casts(): array
+    public function beneficiaryProfile()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_active' => 'boolean',
-        ];
+        return $this->hasOne(BeneficiaryProfile::class);
     }
 
-    // Role check methods
-    public function isAdmin(): bool
+    public function donorProfile()
     {
-        return $this->role === 'admin';
+        return $this->hasOne(DonorProfile::class);
     }
-
-    public function isBeneficiary(): bool
-    {
-        return $this->role === 'beneficiary';
-    }
-
-    public function isDonor(): bool
-    {
-        return $this->role === 'donor';
-    }
-
-    public function hasRole(string $role): bool
-    {
-        return $this->role === $role;
-    }
-
-
 
     public function products()
 {
     return $this->hasMany(Product::class);
 }
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
-// Requests sent by beneficiary
-public function sentRequests()
-{
-    return $this->hasMany(Connection::class, 'beneficiary_id');
-}
-
-// Requests received by donor
-public function receivedRequests()
-{
-    return $this->hasMany(Connection::class, 'donor_id');
-}
-
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 }

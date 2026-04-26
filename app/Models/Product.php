@@ -2,37 +2,29 @@
 
 namespace App\Models;
 
+use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
-    use HasFactory;
-
-    protected $fillable = [
+     protected $fillable = [
         'user_id',
         'category_id',
-        'title',
+        'name',
+        'slug',
         'description',
-        'type',
         'price',
-        'condition',
-        'is_active',
         'image'
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function run(): void
-{
-    Product::factory()->count(20)->create();
-}
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -2,10 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\BeneficiaryProfile;
+use App\Models\DonorProfile;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+
 class UserSeeder extends Seeder
 {
     /**
@@ -13,46 +16,40 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Admin
-        User::updateOrCreate(
-            ['email' => 'admin@gmail.com'],
-            [
-                'name' => 'Admin',
-                'email' => 'admin@gmail.com',
-                'password' => Hash::make('12345678'),
-                'role' => 'admin',
-                'phone' => '03000000000',
-                'address' => 'Admin Address',
-                'is_active' => true,
-            ]
-        );
+         // ADMIN
+        User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'role' => 'admin'
+        ]);
 
-        // Donor
-        User::updateOrCreate(
-            ['email' => 'donor@example.com'],
-            [
-                'name' => 'Donor User',
-                'email' => 'donor@gmail.com',
-                'password' => Hash::make('12345678'),
-                'role' => 'donor',
-                'phone' => '03111111111',
-                'address' => 'Donor Address',
-                'is_active' => true,
-            ]
-        );
+        // DONOR
+        $donor = User::create([
+            'name' => 'Donor User',
+            'email' => 'donor@gmail.com',
+            'password' => Hash::make('12345678'),
+            'role' => 'donor'
+        ]);
 
-        // Beneficiary
-        User::updateOrCreate(
-            ['email' => 'beneficiary@gmail.com'],
-            [
-                'name' => 'Beneficiary User',
-                'email' => 'beneficiary@gmail.com',
-                'password' => Hash::make('12345678'),
-                'role' => 'beneficiary',
-                'phone' => '03222222222',
-                'address' => 'Beneficiary Address',
-                'is_active' => true,
-            ]
-        );
+        DonorProfile::create([
+            'user_id' => $donor->id,
+            'organization' => 'Helping Org',
+            'phone' => '03001234567'
+        ]);
+
+        // BENEFICIARY
+        $beneficiary = User::create([
+            'name' => 'Beneficiary User',
+            'email' => 'beneficiary@gmail.com',
+            'password' => Hash::make('12345678'),
+            'role' => 'beneficiary'
+        ]);
+
+        BeneficiaryProfile::create([
+            'user_id' => $beneficiary->id,
+            'cnic' => '12345-1234567-1',
+            'address' => 'Rawalpindi'
+        ]);
     }
 }

@@ -1,43 +1,67 @@
 @include('layouts.admin.head')
 
-<body>
+<body class="h-100">
 
-<div id="overlay"></div>
+<div class="container-fluid">
+  <div class="row">
 
-@include('layouts.admin.sidebar')
-@include('layouts.admin.header')
+    @include('layouts.admin.sidebar')
 
-<main id="main">
-<div class="content-area">
+    <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
 
-    <h1>Edit Category</h1>
+      <div class="main-navbar sticky-top bg-white">
+        @include('layouts.admin.header')
+      </div>
 
-@include('layouts.admin.components.alert')
+      <div class="main-content-container container-fluid px-4">
 
-    <div style="background:#fff; padding:20px; max-width:400px; border-radius:8px;">
+        <div class="page-header row no-gutters py-4">
+          <div class="col-12">
+            <h3>Edit Category</h3>
+          </div>
+        </div>
 
-        <form action="{{ route('categories.update', $category->id) }}" method="POST">
-            @csrf
-            @method('PUT')
+        <div class="row">
+          <div class="col-md-6">
 
-            <label>Name</label>
-            <input type="text" name="name" value="{{ old('name', $category->name) }}"
-                style="width:100%; padding:10px; margin-bottom:15px;">
+            <div class="card">
+              <div class="card-body">
 
-            <button type="submit" style="padding:10px 20px; background:#28a745; color:#fff; border:none;">
-                Update
-            </button>
+                <form action="{{ route('admin.category.update', $category->id) }}" method="POST">
+                  @csrf
+                  @method('PUT')
 
-            <a href="{{ route('category.index') }}">Cancel</a>
+                  <!-- NAME -->
+                  <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text"
+                           name="name"
+                           value="{{ $category->name }}"
+                           class="form-control"
+                           required>
+                  </div>
 
-        </form>
+                  <!-- BUTTON -->
+                  <button type="submit" class="btn btn-success">
+                    Update Category
+                  </button>
 
-    </div>
+                  <a href="{{ route('admin.category.index') }}" class="btn btn-secondary">
+                    Back
+                  </a>
 
+                </form>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
 </div>
-</main>
 
 @include('layouts.admin.script')
-
-</body>
-</html>
