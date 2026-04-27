@@ -76,7 +76,7 @@
 
                 <a class="nav-link dropdown-toggle" href="#" id="usersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="material-icons">people</i>
-                    <span>Products</span>
+                    <span>Category</span>
                 </a>
 
                 <ul class="dropdown-menu w-100 border-0 shadow-sm">
@@ -92,9 +92,30 @@
                     </li>
                 </ul>
             </li>
+
+            <li class="nav-item dropdown">
+
+                <a class="nav-link dropdown-toggle" href="#" id="usersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="material-icons">people</i>
+                    <span>Products</span>
+                </a>
+
+                <ul class="dropdown-menu w-100 border-0 shadow-sm">
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="{{ route('admin.products.index') }}">
+                            <i class="material-icons">list</i> All products
+                        </a>
+                    </li>
+                </ul>
+            </li>
             @endif
 
-             @if(auth()->check() && auth()->user()->role === 'donor')
+            @if(auth()->check() && auth()->user()->role === 'donor')
 
             <!-- USERS DROPDOWN -->
             <li class="nav-item dropdown">
@@ -112,14 +133,14 @@
 
                     <!-- ALL USERS -->
                     <li>
-                        <a class="dropdown-item" href="{{ url('donor.products.index') }}">
+                        <a class="dropdown-item" href="{{ route('donor.products.index') }}">
                             <i class="material-icons">list</i> All Products
                         </a>
                     </li>
 
                     <!-- ADD USER -->
                     <li>
-                        <a class="dropdown-item" href="{{ url('donor.products.index') }}">
+                        <a class="dropdown-item" href="{{ route('donor.products.index') }}">
                             <i class="material-icons">person_add</i> Add Product
                         </a>
                     </li>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Shards Dashboard Lite - Free Bootstrap Admin Template</title>
+
   <meta name="description" content="A high-quality & free Bootstrap admin dashboard template.">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 

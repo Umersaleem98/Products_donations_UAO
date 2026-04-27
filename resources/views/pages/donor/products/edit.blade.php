@@ -1,5 +1,5 @@
-@include('layouts.admin.head')
-<title>Donor Product Add</title>
+.@include('layouts.admin.head')
+<title>Donor Product Edit </title>
 <body class="h-100">
 
 <div class="container-fluid">
@@ -18,7 +18,7 @@
         <!-- Header -->
         <div class="page-header row no-gutters py-4">
           <div class="col-12">
-            <h3 class="page-title">Create Product</h3>
+            <h3 class="page-title">Edit Product</h3>
           </div>
         </div>
 
@@ -29,22 +29,29 @@
             <div class="card">
               <div class="card-body">
 
-                <form method="POST" action="{{ route('donor.products.store') }}">
+                <form method="POST" action="{{ route('donor.products.update',$product->id) }}">
                   @csrf
+                  @method('PUT')
 
                   <!-- Name -->
                   <div class="form-group mb-3">
                     <label>Product Name</label>
-                    <input type="text" name="name" class="form-control" required>
+                    <input type="text"
+                           name="name"
+                           value="{{ $product->name }}"
+                           class="form-control"
+                           required>
                   </div>
 
                   <!-- Category -->
                   <div class="form-group mb-3">
                     <label>Category</label>
                     <select name="category_id" class="form-control" required>
-                      <option value="">Select Category</option>
                       @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        <option value="{{ $cat->id }}"
+                          {{ $product->category_id == $cat->id ? 'selected' : '' }}>
+                          {{ $cat->name }}
+                        </option>
                       @endforeach
                     </select>
                   </div>
@@ -52,19 +59,25 @@
                   <!-- Price -->
                   <div class="form-group mb-3">
                     <label>Price</label>
-                    <input type="number" name="price" class="form-control" required>
+                    <input type="number"
+                           name="price"
+                           value="{{ $product->price }}"
+                           class="form-control"
+                           required>
                   </div>
 
                   <!-- Description -->
                   <div class="form-group mb-3">
                     <label>Description</label>
-                    <textarea name="description" class="form-control"></textarea>
+                    <textarea name="description" class="form-control">
+                    {{ $product->description }}
+                    </textarea>
                   </div>
 
                   <!-- Buttons -->
-                  <button class="btn btn-primary">Save Product</button>
+                  <button class="btn btn-success">Update Product</button>
 
-                  <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
+                  <a href="{{ route('donor.products.index') }}" class="btn btn-secondary">
                     Back
                   </a>
 

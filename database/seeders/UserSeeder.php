@@ -38,6 +38,7 @@ class UserSeeder extends Seeder
             'phone' => '03001234567'
         ]);
 
+        
         // BENEFICIARY
         $beneficiary = User::create([
             'name' => 'Beneficiary User',

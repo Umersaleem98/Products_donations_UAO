@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>admin Category Create</title>
 <body class="h-100">
 
 <div class="container-fluid">
