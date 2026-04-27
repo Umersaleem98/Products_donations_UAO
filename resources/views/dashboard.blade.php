@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>Dashboard</title>
 <body class="h-100">
 
 <div class="container-fluid">

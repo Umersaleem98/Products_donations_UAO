@@ -6,7 +6,6 @@
 <div class="container-fluid">
   <div class="row">
 
-    <!-- Sidebar -->
     @include('layouts.admin.sidebar')
 
     <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
@@ -19,7 +18,7 @@
       <!-- Content -->
       <div class="main-content-container container-fluid px-4">
 
-        <!-- Page Header -->
+        <!-- PAGE HEADER -->
         <div class="page-header row no-gutters py-4">
           <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
             <span class="text-uppercase page-subtitle">Dashboard</span>
@@ -27,7 +26,7 @@
           </div>
         </div>
 
-        <!-- Products Table -->
+        <!-- TABLE -->
         <div class="row">
           <div class="col-12">
 
@@ -36,7 +35,8 @@
               <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Products List</h5>
 
-                <a href="{{ route('donor.products.create') }}" class="btn btn-primary btn-sm">
+                <a href="{{ route('donor.products.create') }}"
+                   class="btn btn-primary btn-sm">
                   + Add Product
                 </a>
               </div>
@@ -49,14 +49,16 @@
                   </div>
                 @endif
 
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover align-middle">
+
                   <thead>
                     <tr>
                       <th>#</th>
+                      <th>Image</th>
                       <th>Name</th>
                       <th>Category</th>
-                      <th>Added By</th>
                       <th>Price</th>
+                      <th>Status</th>
                       <th width="180">Action</th>
                     </tr>
                   </thead>
@@ -64,21 +66,54 @@
                   <tbody>
 
                     @forelse($products as $key => $product)
+
                       <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $product->name }}</td>
-                        <td>{{ $product->category->name ?? 'N/A' }}</td>
-                        <td>{{ $product->user->name ?? 'N/A' }}</td>
-                        <td>{{ $product->price }}</td>
 
+                        <!-- IMAGE -->
                         <td>
-                          <!-- Edit -->
+                          @php
+                            $images = json_decode($product->images, true);
+                          @endphp
+
+                          @if(!empty($images))
+                            <img src="{{ asset('admin/products/'.$images[0]) }}"
+                                 width="60"
+                                 height="60"
+                                 style="object-fit:cover;border-radius:6px;">
+                          @else
+                            N/A
+                          @endif
+                        </td>
+
+                        <!-- NAME -->
+                        <td>{{ $product->name }}</td>
+
+                        <!-- CATEGORY -->
+                        <td>{{ $product->category->name ?? 'N/A' }}</td>
+
+                        <!-- PRICE -->
+                        <td>{{ $product->price ?? 0 }}</td>
+
+                        <!-- STATUS -->
+                        <td>
+                          @if($product->status == 'active')
+                            <span class="badge bg-success">Active</span>
+                          @else
+                            <span class="badge bg-danger">Inactive</span>
+                          @endif
+                        </td>
+
+                        <!-- ACTION -->
+                        <td>
+
+                          <!-- EDIT -->
                           <a href="{{ route('donor.products.edit', $product->id) }}"
                              class="btn btn-warning btn-sm">
-                             Edit
+                            Edit
                           </a>
 
-                          <!-- Delete -->
+                          <!-- DELETE -->
                           <form action="{{ route('donor.products.delete', $product->id) }}"
                                 method="POST"
                                 style="display:inline-block">
@@ -92,15 +127,18 @@
                             </button>
 
                           </form>
+
                         </td>
                       </tr>
 
                     @empty
+
                       <tr>
-                        <td colspan="6" class="text-center">
+                        <td colspan="7" class="text-center">
                           No products found
                         </td>
                       </tr>
+
                     @endforelse
 
                   </tbody>

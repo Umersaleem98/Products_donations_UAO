@@ -1,5 +1,6 @@
 @include('layouts.admin.head')
 <title>Donor Product Add</title>
+
 <body class="h-100">
 
 <div class="container-fluid">
@@ -15,7 +16,7 @@
 
       <div class="main-content-container container-fluid px-4">
 
-        <!-- Header -->
+        <!-- HEADER -->
         <div class="page-header row no-gutters py-4">
           <div class="col-12">
             <h3 class="page-title">Create Product</h3>
@@ -24,47 +25,80 @@
 
         <!-- FORM -->
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-8">
 
             <div class="card">
               <div class="card-body">
 
-                <form method="POST" action="{{ route('donor.products.store') }}">
+                <form method="POST"
+                      action="{{ route('donor.products.store') }}"
+                      enctype="multipart/form-data">
                   @csrf
 
-                  <!-- Name -->
-                  <div class="form-group mb-3">
-                    <label>Product Name</label>
-                    <input type="text" name="name" class="form-control" required>
+                  <!-- ROW 1 -->
+                  <div class="row">
+
+                    <!-- NAME -->
+                    <div class="col-md-6 mb-3">
+                      <label>Product Name</label>
+                      <input type="text" name="name" class="form-control" required>
+                    </div>
+
+                    <!-- CATEGORY -->
+                    <div class="col-md-6 mb-3">
+                      <label>Category</label>
+                      <select name="category_id" class="form-control" required>
+                        <option value="">Select Category</option>
+                        @foreach($categories as $cat)
+                          <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+
                   </div>
 
-                  <!-- Category -->
-                  <div class="form-group mb-3">
-                    <label>Category</label>
-                    <select name="category_id" class="form-control" required>
-                      <option value="">Select Category</option>
-                      @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                      @endforeach
-                    </select>
+                  <!-- ROW 2 -->
+                  <div class="row">
+
+                    <!-- PRICE -->
+                    <div class="col-md-6 mb-3">
+                      <label>Price</label>
+                      <input type="number" name="price" class="form-control">
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="col-md-6 mb-3">
+                      <label>Status</label>
+                      <select name="status" class="form-control" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                    </div>
+
                   </div>
 
-                  <!-- Price -->
-                  <div class="form-group mb-3">
-                    <label>Price</label>
-                    <input type="number" name="price" class="form-control" required>
-                  </div>
-
-                  <!-- Description -->
-                  <div class="form-group mb-3">
+                  <!-- DESCRIPTION -->
+                  <div class="mb-3">
                     <label>Description</label>
-                    <textarea name="description" class="form-control"></textarea>
+                    <textarea name="description" class="form-control" rows="4"></textarea>
                   </div>
 
-                  <!-- Buttons -->
-                  <button class="btn btn-primary">Save Product</button>
+                  <!-- IMAGES -->
+                  <div class="mb-3">
+                    <label>Product Images</label>
+                    <input type="file"
+                           name="images[]"
+                           class="form-control"
+                           multiple>
+                  </div>
 
-                  <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
+                  <!-- BUTTONS -->
+                  <button type="submit" class="btn btn-primary">
+                    Save Product
+                  </button>
+
+                  <a href="{{ route('donor.products.index') }}"
+                     class="btn btn-secondary">
                     Back
                   </a>
 

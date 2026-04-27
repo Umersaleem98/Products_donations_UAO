@@ -36,17 +36,16 @@ Route::get('admin/category/edit/{id}', [AdminCategorytController::class, 'edit']
 Route::put('admin/category/update/{id}', [AdminCategorytController::class, 'update'])->name('admin.category.update');
 Route::delete('admin/category/delete/{id}', [AdminCategorytController::class, 'destroy'])->name('admin.category.delete');
 
- Route::get('products', [AdminProductController::class,'index'])->name('admin.products.index');
-Route::get('products/create', [AdminProductController::class,'create'])->name('admin.products.create');
-Route::post('products/store', [AdminProductController::class,'store'])->name('admin.products.store');
-Route::get('products/edit/{id}', [AdminProductController::class,'edit'])->name('admin.products.edit');
-Route::put('products/update/{id}', [AdminProductController::class,'update'])->name('admin.products.update');
-Route::delete('products/delete/{id}', [AdminProductController::class,'destroy'])->name('admin.products.delete');
-
+ Route::get('admin/products/index', [AdminProductController::class,'index'])->name('admin.products.index');
+Route::get('admin/products/create', [AdminProductController::class,'create'])->name('admin.products.create');
+Route::post('admin/products/store', [AdminProductController::class,'store'])->name('admin.products.store');
+Route::get('admin/product/{id}/edit', [AdminProductController::class, 'edit'])->name('admin.product.edit');
+Route::put('admin/products/update/{id}', [AdminProductController::class,'update'])->name('admin.products.update');
+Route::delete('admin/products/delete/{id}', [AdminProductController::class, 'destroy'])->name('admin.products.delete');
 
 Route::get('donor/product/index', [DonorProductController::class, 'index'])->name('donor.products.index');
 Route::get('donor/product/create', [DonorProductController::class, 'create'])->name('donor.products.create');
-Route::post('products/store', [DonorProductController::class,'store'])->name('donor.products.store');
-Route::get('products/edit/{id}', [DonorProductController::class,'edit'])->name('donor.products.edit');
-Route::put('products/update/{id}', [DonorProductController::class,'update'])->name('donor.products.update');
-Route::delete('products/delete/{id}', [DonorProductController::class,'destroy'])->name('donor.products.delete');
+Route::post('donor/products/store', [DonorProductController::class,'store'])->name('donor.products.store');
+Route::get('donor/products/edit/{id}', [DonorProductController::class,'edit'])->name('donor.products.edit');
+Route::put('donor/products/update/{id}', [DonorProductController::class,'update'])->name('donor.products.update');
+Route::delete('donor/products/delete/{id}', [DonorProductController::class,'destroy'])->name('donor.products.delete');
