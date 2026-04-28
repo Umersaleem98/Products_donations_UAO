@@ -87,41 +87,49 @@
         @endif
 
 
-        {{-- 👤 USER DROPDOWN --}}
-        <li class="nav-item dropdown">
+   {{-- 👤 USER DROPDOWN --}}
+<li class="nav-item dropdown">
 
-            <a class="nav-link dropdown-toggle text-nowrap px-3"
-               data-bs-toggle="dropdown"
-               href="#"
-               role="button">
+    <a class="nav-link dropdown-toggle text-nowrap px-3"
+       data-bs-toggle="dropdown"
+       href="#"
+       role="button">
 
-                <img class="user-avatar rounded-circle mr-2"
-                     src="{{ asset('admins/images/avatars/0.jpg') }}"
-                     alt="User Avatar">
+        {{-- USER IMAGE --}}
+        <img class="user-avatar rounded-circle mr-2"
+             src="{{ Auth::user()->image 
+                    ? asset('admin/profileimg/' . Auth::user()->image) 
+                    : asset('admins/images/avatars/0.jpg') }}"
+             width="30"
+             height="30"
+             alt="User Avatar">
 
-                <span class="d-none d-md-inline-block">
-                    {{ Auth::user()->name }}
-                </span>
-            </a>
+        {{-- USER NAME --}}
+        <span class="d-none d-md-inline-block">
+            {{ Auth::user()->name }}
+        </span>
 
-            <div class="dropdown-menu dropdown-menu-small">
+    </a>
 
-                <a class="dropdown-item" href="#">
-                    <i class="material-icons">&#xE7FD;</i> Profile
-                </a>
+    <div class="dropdown-menu dropdown-menu-small">
 
-                <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="{{ route('donor.profile.index') }}">
+            <i class="material-icons">&#xE7FD;</i> Profile
+        </a>
 
-                {{-- LOGOUT --}}
-                <form method="POST" action="{{ route('logout') }}" class="text-center">
-                    @csrf
-                    <button class="dropdown-item text-danger">
-                        Logout
-                    </button>
-                </form>
+        <div class="dropdown-divider"></div>
 
-            </div>
-        </li>
+        {{-- LOGOUT --}}
+        <form method="POST" action="{{ route('logout') }}" class="text-center">
+            @csrf
+            <button class="dropdown-item text-danger">
+                Logout
+            </button>
+        </form>
+
+    </div>
+
+</li>
 
     </ul>
 

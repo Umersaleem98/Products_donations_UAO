@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Donor\DonorProductController;
+use App\Http\Controllers\Donor\DonorProfileController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,3 +50,6 @@ Route::post('donor/products/store', [DonorProductController::class,'store'])->na
 Route::get('donor/products/edit/{id}', [DonorProductController::class,'edit'])->name('donor.products.edit');
 Route::put('donor/products/update/{id}', [DonorProductController::class,'update'])->name('donor.products.update');
 Route::delete('donor/products/delete/{id}', [DonorProductController::class,'destroy'])->name('donor.products.delete');
+
+Route::get('donor/profile/index', [DonorProfileController::class, 'index'])->name('donor.profile.index');
+Route::post('/donor/profile/update', [DonorProfileController::class, 'update'])->name('donor.profile.update');
