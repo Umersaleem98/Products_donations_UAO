@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\BeneficiaryProfile;
-use App\Models\DonorProfile;
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -16,41 +14,28 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-         // ADMIN
         User::create([
             'name' => 'Admin User',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('12345678'),
-            'role' => 'admin'
+            'password' => Hash::make('123456'),
+            'role' => 'admin',
         ]);
 
         // DONOR
-        $donor = User::create([
+        User::create([
             'name' => 'Donor User',
             'email' => 'donor@gmail.com',
-            'password' => Hash::make('12345678'),
-            'role' => 'donor'
+            'password' => Hash::make('123456'),
+            'role' => 'donor',
         ]);
 
-        DonorProfile::create([
-            'user_id' => $donor->id,
-            'organization' => 'Helping Org',
-            'phone' => '03001234567'
-        ]);
-
-        
         // BENEFICIARY
-        $beneficiary = User::create([
+        User::create([
             'name' => 'Beneficiary User',
             'email' => 'beneficiary@gmail.com',
-            'password' => Hash::make('12345678'),
-            'role' => 'beneficiary'
-        ]);
-
-        BeneficiaryProfile::create([
-            'user_id' => $beneficiary->id,
-            'cnic' => '12345-1234567-1',
-            'address' => 'Rawalpindi'
+            'password' => Hash::make('123456'),
+            'role' => 'beneficiary',
+            'qalam_id' => '12345',
         ]);
     }
 }

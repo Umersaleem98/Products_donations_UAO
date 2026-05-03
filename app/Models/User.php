@@ -4,8 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\BeneficiaryProfile;
-use App\Models\DonorProfile;
-use App\Models\Product;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,14 +11,29 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
-
+    
    protected $fillable = [
-        'name', 'email', 'password', 'image','role'
+        'name', 'email', 'password', 'image','role', 'qalam_id'
     ];
 
-    public function beneficiaryProfile()
+
+
+    public function isAdmin()
+{
+    return $this->role === 'admin';
+}
+
+public function isDonor()
+{
+    return $this->role === 'donor';
+}
+
+public function isBeneficiary()
+{
+    return $this->role === 'beneficiary';
+}
+
+   public function beneficiaryProfile()
     {
         return $this->hasOne(BeneficiaryProfile::class);
     }
@@ -36,10 +49,7 @@ class User extends Authenticatable
 }
 
 
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
+  
 
     /**
      * The attributes that should be hidden for serialization.

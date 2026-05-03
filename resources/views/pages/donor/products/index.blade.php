@@ -1,32 +1,33 @@
 @include('layouts.admin.head')
-<title>Donor Products</title>
 
-<body class="h-100">
+<body>
+    <div class="container-scroller">
 
-<div class="container-fluid">
-  <div class="row">
-
-    @include('layouts.admin.sidebar')
-
-    <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
-
-      <!-- Navbar -->
-      <div class="main-navbar sticky-top bg-white">
         @include('layouts.admin.header')
-      </div>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            @include('layouts.admin.sidebar')
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                                <i class="mdi mdi-home"></i>
+                            </span> Dashboard
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <span></span>Overview <i
+                                        class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                  
 
-      <!-- Content -->
-      <div class="main-content-container container-fluid px-4">
-
-        <!-- PAGE HEADER -->
-        <div class="page-header row no-gutters py-4">
-          <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-            <span class="text-uppercase page-subtitle">Dashboard</span>
-            <h3 class="page-title">My Products</h3>
-          </div>
-        </div>
-
-        <!-- TABLE -->
+ <!-- TABLE -->
         <div class="row">
           <div class="col-12">
 
@@ -35,7 +36,7 @@
               <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Products List</h5>
 
-                <a href="{{ route('donor.products.create') }}"
+                <a href="{{ route('donor.product.create') }}"
                    class="btn btn-primary btn-sm">
                   + Add Product
                 </a>
@@ -108,7 +109,7 @@
                         <td>
 
                           <!-- EDIT -->
-                          <a href="{{ route('donor.products.edit', $product->id) }}"
+                          <a href="{{ route('donor.product.edit', $product->id) }}"
                              class="btn btn-warning btn-sm">
                             Edit
                           </a>
@@ -152,10 +153,13 @@
           </div>
         </div>
 
-      </div>
 
-    </main>
-  </div>
-</div>
+                </div>
 
-@include('layouts.admin.script')
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    @include('layouts.admin.script')

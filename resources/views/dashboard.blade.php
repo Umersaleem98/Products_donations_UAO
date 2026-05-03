@@ -1,144 +1,82 @@
 @include('layouts.admin.head')
-<title>Dashboard</title>
-<body class="h-100">
+ <title>Admin Dashboard</title>
+<body>
+    <div class="container-scroller">
 
-<div class="container-fluid">
-  <div class="row">
-
-    <!-- Sidebar -->
-    @include('layouts.admin.sidebar')
-
-    <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
-
-      <!-- Navbar -->
-      <div class="main-navbar sticky-top bg-white">
         @include('layouts.admin.header')
-      </div>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            @include('layouts.admin.sidebar')
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                                <i class="mdi mdi-home"></i>
+                            </span> Dashboard
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <span></span>Overview <i
+                                        class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    @if (Auth::user()->role === 'admin')
+                        <div class="row">
+                            <div class="col-md-4 stretch-card grid-margin">
+                                <div class="card bg-gradient-danger card-img-holder text-white">
+                                    <div class="card-body">
+                                        <img src="admin/assets/images/dashboard/circle.svg" class="card-img-absolute"
+                                            alt="circle-image" />
+                                        <h4 class="font-weight-normal mb-3">Weekly Sales <i
+                                                class="mdi mdi-chart-line mdi-24px float-end"></i>
+                                        </h4>
+                                        <h2 class="mb-5">$ 15,0000</h2>
+                                        <h6 class="card-text">Increased by 60%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 stretch-card grid-margin">
+                                <div class="card bg-gradient-info card-img-holder text-white">
+                                    <div class="card-body">
+                                        <img src="admin/assets/images/dashboard/circle.svg" class="card-img-absolute"
+                                            alt="circle-image" />
+                                        <h4 class="font-weight-normal mb-3">Weekly Orders <i
+                                                class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
+                                        </h4>
+                                        <h2 class="mb-5">45,6334</h2>
+                                        <h6 class="card-text">Decreased by 10%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 stretch-card grid-margin">
+                                <div class="card bg-gradient-success card-img-holder text-white">
+                                    <div class="card-body">
+                                        <img src="admin/assets/images/dashboard/circle.svg" class="card-img-absolute"
+                                            alt="circle-image" />
+                                        <h4 class="font-weight-normal mb-3">Visitors Online <i
+                                                class="mdi mdi-diamond mdi-24px float-end"></i>
+                                        </h4>
+                                        <h2 class="mb-5">95,5741</h2>
+                                        <h6 class="card-text">Increased by 5%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
-      <!-- Content -->
-      <div class="main-content-container container-fluid px-4">
 
-        <!-- Page Header -->
-        <div class="page-header row no-gutters py-4">
-          <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-            <span class="text-uppercase page-subtitle">Dashboard</span>
-            <h3 class="page-title">Admin Overview</h3>
-          </div>
+
+                </div>
+
+            </div>
+            <!-- main-panel ends -->
         </div>
-
-        <!-- Stats Row -->
-        <div class="row">
-
-          <!-- TOTAL USERS -->
-          <div class="col-lg col-md-6 col-sm-6 mb-4">
-            <div class="stats-small stats-small--1 card card-small">
-              <div class="card-body p-0 d-flex">
-                <div class="d-flex flex-column m-auto">
-                  <div class="stats-small__data text-center">
-                    <span class="stats-small__label text-uppercase">Users</span>
-                    <h6 class="stats-small__value count my-3">
-                      {{ number_format($totalUsers) }}
-                    </h6>
-                  </div>
-                  <div class="stats-small__data">
-                    <span class="stats-small__percentage stats-small__percentage--increase">
-                      Live Data
-                    </span>
-                  </div>
-                </div>
-                <canvas height="120"></canvas>
-              </div>
-            </div>
-          </div>
-
-          <!-- DONORS -->
-          <div class="col-lg col-md-6 col-sm-6 mb-4">
-            <div class="stats-small stats-small--1 card card-small">
-              <div class="card-body p-0 d-flex">
-                <div class="d-flex flex-column m-auto">
-                  <div class="stats-small__data text-center">
-                    <span class="stats-small__label text-uppercase">Donors</span>
-                    <h6 class="stats-small__value count my-3">
-                      {{ number_format($totalDonors) }}
-                    </h6>
-                  </div>
-                  <div class="stats-small__data">
-                    <span class="stats-small__percentage stats-small__percentage--increase">
-                      Active
-                    </span>
-                  </div>
-                </div>
-                <canvas height="120"></canvas>
-              </div>
-            </div>
-          </div>
-
-          <!-- BENEFICIARIES -->
-          <div class="col-lg col-md-4 col-sm-6 mb-4">
-            <div class="stats-small stats-small--1 card card-small">
-              <div class="card-body p-0 d-flex">
-                <div class="d-flex flex-column m-auto">
-                  <div class="stats-small__data text-center">
-                    <span class="stats-small__label text-uppercase">Beneficiaries</span>
-                    <h6 class="stats-small__value count my-3">
-                      {{ number_format($totalBeneficiaries) }}
-                    </h6>
-                  </div>
-                  <div class="stats-small__data">
-                    <span class="stats-small__percentage stats-small__percentage--increase">
-                      Registered
-                    </span>
-                  </div>
-                </div>
-                <canvas height="120"></canvas>
-              </div>
-            </div>
-          </div>
-
-          <!-- LOGGED USER -->
-          <div class="col-lg col-md-4 col-sm-6 mb-4">
-            <div class="stats-small stats-small--1 card card-small">
-              <div class="card-body p-0 d-flex">
-                <div class="d-flex flex-column m-auto text-center">
-
-                  <div class="stats-small__data">
-                    <span class="stats-small__label text-uppercase">Logged User</span>
-
-                    @auth
-                      <h6 class="stats-small__value my-2">
-                        {{ auth()->user()->name }}
-                      </h6>
-
-                      <small class="text-muted d-block">
-                        {{ auth()->user()->email }}
-                      </small>
-
-                      <small class="text-info d-block">
-                        Role: {{ auth()->user()->role }}
-                      </small>
-                    @endauth
-                  </div>
-
-                  <!-- Logout -->
-                  <form method="POST" action="{{ route('logout') }}" class="mt-2">
-                    @csrf
-                    <button class="btn btn-sm btn-danger">
-                      Logout
-                    </button>
-                  </form>
-
-                </div>
-
-                <canvas height="120"></canvas>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </main>
-  </div>
-</div>
-
-@include('layouts.admin.script')
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    @include('layouts.admin.script')

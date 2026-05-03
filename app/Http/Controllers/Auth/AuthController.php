@@ -3,76 +3,67 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\BeneficiaryProfile;
-use App\Models\DonorProfile;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AuthController extends Controller
 {
-     public function showLogin()
+
+    public function showLoginForm()
     {
-        return view('auth.login');
+        return view('pages.auth.login');
     }
 
-    public function showRegister()
+    public function login(Request $request)
     {
-        return view('auth.register');
-    }
-
-    public function register(Request $request)
-    {
+        // Step 1: Base validation
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
+            'role'     => 'required|in:admin,donor,beneficiary',
+            'email'    => 'required|email',
             'password' => 'required|min:6',
-            'role' => 'required'
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role,
-            'password' => Hash::make($request->password)
-        ]);
-
-        // Create profile based on role
-        if ($user->role === 'beneficiary') {
-            BeneficiaryProfile::create(['user_id' => $user->id]);
+        // Step 2: Additional validation for beneficiary
+        if ($request->role === 'beneficiary') {
+            $request->validate([
+                'qalam_id' => 'required'
+            ]);
         }
 
-        if ($user->role === 'donor') {
-            DonorProfile::create(['user_id' => $user->id]);
+        // Step 3: Build query dynamically
+        $query = User::where('email', $request->email)
+            ->where('role', $request->role);
+
+        if ($request->role === 'beneficiary') {
+            $query->where('qalam_id', $request->qalam_id);
         }
 
+        $user = $query->first();
+
+        // Step 4: Check user existence + password
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'login' => 'Invalid credentials'
+            ])->withInput();
+        }
+
+        // Step 5: Login user
         Auth::login($user);
 
-        return redirect()->route('admin.dashboard');
-    }
-public function login(Request $request)
-{
-    $credentials = $request->validate([
-        'email' => ['required', 'email'],
-        'password' => ['required'],
-    ]);
-
-    if (Auth::attempt($credentials)) {
-
-        $request->session()->regenerate();
-
-        return redirect()->route('dashboard'); // ✅ ONLY ONE DASHBOARD
+        // Step 6: Redirect to single dashboard
+        return redirect()->route('dashboard');
     }
 
-    return back()->withErrors([
-        'email' => 'Invalid email or password.',
-    ])->onlyInput('email');
-}
-
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
         return redirect('/login');
     }
 }

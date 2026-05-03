@@ -1,129 +1,154 @@
 @include('layouts.admin.head')
-<title>Donor Profile</title>
 
-<body class="h-100">
+<body>
+    <div class="container-scroller">
 
-    <div class="container-fluid">
-        <div class="row">
-
+        @include('layouts.admin.header')
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
             @include('layouts.admin.sidebar')
-
-            <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
-
-                @include('layouts.admin.header')
-
-                <div class="main-content-container container-fluid px-4">
-
-                    <div class="page-header py-4">
-                        <h3>Donor Profile</h3>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                                <i class="mdi mdi-home"></i>
+                            </span> Dashboard
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <span></span>Overview <i
+                                        class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
+                    <!-- FORM -->
+        <div class="row">
+          <div class="col-md-10">
 
-                    @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
+            <div class="card">
+              <div class="card-body">
 
-                    @if($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
+              @if(session('success'))
+          <div class="alert alert-success">{{ session('success') }}</div>
+          @endif
 
-                    <form method="POST" action="{{ route('donor.profile.update') }}" enctype="multipart/form-data">
-                        @csrf
+          @if($errors->any())
+          <div class="alert alert-danger">
+            <ul class="mb-0">
+              @foreach($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+          @endif
 
-                        <!-- ================= USER INFO ================= -->
-                        <h5>User Information</h5>
+          <form method="POST" action="{{ route('donor.profile.update') }}" enctype="multipart/form-data">
+            @csrf
 
-                        <div class="row">
+            <!-- ================= USER INFO ================= -->
+            <h5>User Information</h5>
 
-                            <div class="col-md-6 mb-3">
-                                <label>Name</label>
-                                <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}">
-                            </div>
+            <div class="row">
 
-                            <div class="col-md-6 mb-3">
-                                <label>Email</label>
-                                <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}">
-                            </div>
+              <div class="col-md-6 mb-3">
+                <label>Name</label>
+                <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}">
+              </div>
 
-                        </div>
+              <div class="col-md-6 mb-3">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}">
+              </div>
 
-                        <!-- ================= IMAGE ================= -->
-                        <div class="row">
+            </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label>Profile Image</label>
-                                <input type="file" name="image" class="form-control">
-                            </div>
+            <!-- ================= IMAGE ================= -->
+            <div class="row">
 
-                            <div class="col-md-6 mb-3">
-                                <label>Preview</label><br>
+              <div class="col-md-6 mb-3">
+                <label>Profile Image</label>
+                <input type="file" name="image" class="form-control">
+              </div>
 
-                                @if($user->image)
-<img src="{{ asset('admin/profileimg/' . $user->image) }}" width="100" height="100">
-                                @else
-                                <span>No Image</span>
-                                @endif
+              <div class="col-md-6 mb-3">
+                <label>Preview</label><br>
 
-                            </div>
+                @if($user->image)
+                <img src="{{ asset('admin/profileimg/' . $user->image) }}" width="100" height="100">
+                @else
+                <span>No Image</span>
+                @endif
 
-                        </div>
+              </div>
 
-                        <!-- ================= DONOR PROFILE ================= -->
-                        <h5 class="mt-4">Donor Profile</h5>
+            </div>
 
-                        <div class="row">
+            <!-- ================= DONOR PROFILE ================= -->
+            <h5 class="mt-4">Donor Profile</h5>
 
-                            <div class="col-md-6 mb-3">
-                                <label>Organization</label>
-                                <input type="text" name="organization" class="form-control" value="{{ old('organization', optional($user->donorProfile)->organization) }}">
-                            </div>
+            <div class="row">
 
-                            <div class="col-md-6 mb-3">
-                                <label>Phone</label>
-                                <input type="text" name="phone" class="form-control" value="{{ old('phone', optional($user->donorProfile)->phone) }}">
-                            </div>
+              <div class="col-md-6 mb-3">
+                <label>Organization</label>
+                <input type="text" name="organization" class="form-control"
+                  value="{{ old('organization', optional($user->donorProfile)->organization) }}">
+              </div>
 
-                        </div>
+              <div class="col-md-6 mb-3">
+                <label>Phone</label>
+                <input type="text" name="phone" class="form-control"
+                  value="{{ old('phone', optional($user->donorProfile)->phone) }}">
+              </div>
 
-                        <!-- ================= PASSWORD ================= -->
-                        <h5 class="mt-4">Change Password</h5>
+            </div>
 
-                        <div class="row">
+            <!-- ================= PASSWORD ================= -->
+            <h5 class="mt-4">Change Password</h5>
 
-                            <div class="col-md-6 mb-3">
-                                <label>Current Password</label>
-                                <input type="password" name="current_password" class="form-control">
-                            </div>
+            <div class="row">
 
-                            <div class="col-md-6 mb-3">
-                                <label>New Password</label>
-                                <input type="password" name="password" class="form-control">
-                            </div>
+              <div class="col-md-6 mb-3">
+                <label>Current Password</label>
+                <input type="password" name="current_password" class="form-control">
+              </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label>Confirm Password</label>
-                                <input type="password" name="password_confirmation" class="form-control">
-                            </div>
+              <div class="col-md-6 mb-3">
+                <label>New Password</label>
+                <input type="password" name="password" class="form-control">
+              </div>
 
-                        </div>
+              <div class="col-md-6 mb-3">
+                <label>Confirm Password</label>
+                <input type="password" name="password_confirmation" class="form-control">
+              </div>
 
-                        <!-- ================= BUTTON ================= -->
-                        <button class="btn btn-primary">
-                            Update Profile
-                        </button>
+            </div>
 
-                    </form>
+            <!-- ================= BUTTON ================= -->
+            <button class="btn btn-primary">
+              Update Profile
+            </button>
+
+          </form>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
 
                 </div>
 
-            </main>
+            </div>
+            <!-- main-panel ends -->
         </div>
+        <!-- page-body-wrapper ends -->
     </div>
-
+    <!-- container-scroller -->
     @include('layouts.admin.script')
-</body>

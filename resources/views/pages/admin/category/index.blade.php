@@ -1,32 +1,32 @@
 @include('layouts.admin.head')
-<title>admin Category index</title>
-<body class="h-100">
 
-    <div class="container-fluid">
-        <div class="row">
+<body>
+    <div class="container-scroller">
 
-            <!-- Sidebar -->
+        @include('layouts.admin.header')
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
             @include('layouts.admin.sidebar')
-
-            <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
-
-                <!-- Navbar -->
-                <div class="main-navbar sticky-top bg-white">
-                    @include('layouts.admin.header')
-                </div>
-
-                <!-- Content -->
-                <div class="main-content-container container-fluid px-4">
-
-                    <!-- Page Header -->
-                    <div class="page-header row no-gutters py-4">
-                        <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-                            <span class="text-uppercase page-subtitle">Dashboard</span>
-                            <h3 class="page-title">Admin Overview</h3>
-                        </div>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                                <i class="mdi mdi-home"></i>
+                            </span> Dashboard
+                        </h3>
+                        <nav aria-label="breadcrumb">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <span></span>Overview <i
+                                        class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
-
-                    <!-- Stats Row -->
+                  
+  <!-- Stats Row -->
                     <div class="row">
 
                         <div class="col-12">
@@ -96,10 +96,14 @@
                         </div>
 
                     </div>
+
+
                 </div>
 
-            </main>
+            </div>
+            <!-- main-panel ends -->
         </div>
+        <!-- page-body-wrapper ends -->
     </div>
-
+    <!-- container-scroller -->
     @include('layouts.admin.script')

@@ -1,20 +1,23 @@
-<!doctype html>
-<html class="no-js h-100" lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   
 
-  <meta name="description" content="A high-quality & free Bootstrap admin dashboard template.">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{{ asset('admins/assets/vendors/mdi/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admins/assets/vendors/ti-icons/css/themify-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('admins/assets/vendors/css/vendor.bundle.base.css') }}">
+    <link rel="stylesheet" href="{{ asset('admins/assets/vendors/font-awesome/css/font-awesome.min.css') }}">
+    <!-- endinject -->
 
-  <!-- External CDN (no asset) -->
-  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{{ asset('admins/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
+    <!-- End plugin css for this page -->
 
-  <!-- Local files (use asset) -->
-  <link rel="stylesheet" href="{{ asset('admins/styles/shards-dashboards.1.1.0.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('admins/styles/extras.1.1.0.min.css') }}">
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="{{ asset('admins/assets/css/style.css') }}">
+    <!-- End layout styles -->
 
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <link rel="shortcut icon" href="{{ asset('admins/assets/images/favicon.png') }}" />
 </head>

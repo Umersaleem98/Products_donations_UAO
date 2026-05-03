@@ -1,147 +1,164 @@
-<!-- Main Navbar -->
-<nav class="navbar align-items-stretch navbar-light flex-md-nowrap p-0">
+  <!-- partial:partials/_navbar.html -->
+  <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+          <a class="navbar-brand brand-logo" href="index.html"><img src="{{ asset('admins/assets/images/logo.svg') }}"
+                  alt="logo" /></a>
+          <a class="navbar-brand brand-logo-mini" href="index.html"><img
+                  src="{{ asset('admins/assets/images/logo-mini.svg') }}" alt="logo" /></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-stretch">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+              <span class="mdi mdi-menu"></span>
+          </button>
+          <div class="search-field d-none d-md-block">
+              <form class="d-flex align-items-center h-100" action="#">
+                  <div class="input-group">
+                      <div class="input-group-prepend bg-transparent">
+                          <i class="input-group-text border-0 mdi mdi-magnify"></i>
+                      </div>
+                      <input type="text" class="form-control bg-transparent border-0" placeholder="Search projects">
+                  </div>
+              </form>
+          </div>
+          <ul class="navbar-nav navbar-nav-right">
 
-    <!-- SEARCH -->
-    <form action="#" class="main-navbar__search w-100 d-none d-md-flex d-lg-flex">
-        <div class="input-group input-group-seamless ml-3">
-            <div class="input-group-prepend">
-                <div class="input-group-text">
-                    <i class="fas fa-search"></i>
-                </div>
-            </div>
-            <input class="navbar-search form-control"
-                   type="text"
-                   placeholder="Search for something..."
-                   aria-label="Search">
-        </div>
-    </form>
+              <li class="nav-item d-none d-lg-block full-screen-link">
+                  <a class="nav-link">
+                      <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
+                  </a>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#"
+                      data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="mdi mdi-email-outline"></i>
+                      <span class="count-symbol bg-warning"></span>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list"
+                      aria-labelledby="messageDropdown">
+                      <h6 class="p-3 mb-0">Messages</h6>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item preview-item">
+                          <div class="preview-thumbnail">
+                              <img src="admins/assets/images/faces/face4.jpg" alt="image" class="profile-pic">
+                          </div>
+                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                              <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
+                              <p class="text-gray mb-0"> 1 Minutes ago </p>
+                          </div>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item preview-item">
+                          <div class="preview-thumbnail">
+                              <img src="admins/assets/images/faces/face2.jpg" alt="image" class="profile-pic">
+                          </div>
+                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                              <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
+                              <p class="text-gray mb-0"> 15 Minutes ago </p>
+                          </div>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item preview-item">
+                          <div class="preview-thumbnail">
+                              <img src="admins/assets/images/faces/face3.jpg" alt="image" class="profile-pic">
+                          </div>
+                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                              <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>
+                              <p class="text-gray mb-0"> 18 Minutes ago </p>
+                          </div>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <h6 class="p-3 mb-0 text-center">4 new messages</h6>
+                  </div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
+                      data-bs-toggle="dropdown">
+                      <i class="mdi mdi-bell-outline"></i>
+                      <span class="count-symbol bg-danger"></span>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list"
+                      aria-labelledby="notificationDropdown">
+                      <h6 class="p-3 mb-0">Notifications</h6>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item preview-item">
+                          <div class="preview-thumbnail">
+                              <div class="preview-icon bg-success">
+                                  <i class="mdi mdi-calendar"></i>
+                              </div>
+                          </div>
+                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                              <h6 class="preview-subject font-weight-normal mb-1">Event today</h6>
+                              <p class="text-gray ellipsis mb-0"> Just a reminder that you have an event today </p>
+                          </div>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item preview-item">
+                          <div class="preview-thumbnail">
+                              <div class="preview-icon bg-warning">
+                                  <i class="mdi mdi-cog"></i>
+                              </div>
+                          </div>
+                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                              <h6 class="preview-subject font-weight-normal mb-1">Settings</h6>
+                              <p class="text-gray ellipsis mb-0"> Update dashboard </p>
+                          </div>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item preview-item">
+                          <div class="preview-thumbnail">
+                              <div class="preview-icon bg-info">
+                                  <i class="mdi mdi-link-variant"></i>
+                              </div>
+                          </div>
+                          <div
+                              class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                              <h6 class="preview-subject font-weight-normal mb-1">Launch Admin</h6>
+                              <p class="text-gray ellipsis mb-0"> New admin wow! </p>
+                          </div>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <h6 class="p-3 mb-0 text-center">See all notifications</h6>
+                  </div>
+              </li>
+              <li class="nav-item nav-profile dropdown">
+                  <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown"
+                      aria-expanded="false">
 
-    <ul class="navbar-nav border-left flex-row">
+                      <div class="nav-profile-img">
+                          @if (Auth::user()->image)
+                              <img src="{{ asset('admin/asset/profilephoto/' . Auth::user()->image) }}"
+                                  alt="image">
+                          @else
+                              <img src="{{ asset('admin/default.png') }}" alt="image">
+                          @endif
 
-        {{-- 🔔 NOTIFICATIONS (ADMIN ONLY) --}}
-        @if(auth()->user()->role === 'admin')
+                          <span class="availability-status online"></span>
+                      </div>
 
-        <li class="nav-item border-right dropdown notifications">
+                      <div class="nav-profile-text">
+                          <p class="mb-1 text-black">{{ Auth::user()->name }}</p>
+                      </div>
+                  </a>
 
-            <a class="nav-link nav-link-icon text-center"
-               href="#"
-               role="button"
-               data-bs-toggle="dropdown"
-               aria-expanded="false">
+                  <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
 
-                <div class="nav-link-icon__wrapper">
-                    <i class="material-icons">&#xE7F4;</i>
+                      <a class="dropdown-item" href="#">
+                          <i class="mdi mdi-cached me-2 text-success"></i> Activity Log
+                      </a>
 
-                    <span class="badge badge-pill badge-danger">
-                        {{ auth()->user()->unreadNotifications->count() }}
-                    </span>
-                </div>
-            </a>
+                      <div class="dropdown-divider"></div>
 
-            <div class="dropdown-menu dropdown-menu-small">
+                      <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                          @csrf
 
-                {{-- NOTIFICATIONS LIST --}}
-                @forelse(auth()->user()->notifications->take(5) as $notification)
+                          <button type="submit" class="dropdown-item text-danger mx-4">
+                              <i class="mdi mdi-logout me-2 text-primary"></i> Signout
+                          </button>
+                      </form>
 
-                    <a class="dropdown-item" href="#">
+                  </div>
+              </li>
+          </ul>
 
-                        <div class="notification__icon-wrapper">
-                            <div class="notification__icon">
-                                <i class="material-icons">&#xE6E1;</i>
-                            </div>
-                        </div>
-
-                        <div class="notification__content">
-                            <span class="notification__category">
-                                New Product
-                            </span>
-
-                            <p>
-                                {{ $notification->data['message'] ?? 'New Notification' }}
-                                <br>
-                                <small class="text-muted">
-                                    {{ $notification->created_at->diffForHumans() }}
-                                </small>
-                            </p>
-                        </div>
-
-                    </a>
-
-                @empty
-
-                    <a class="dropdown-item text-center">
-                        No notifications
-                    </a>
-
-                @endforelse
-
-                {{-- MARK AS READ --}}
-                <a class="dropdown-item text-center"
-                   href="{{ url('/notifications/read') }}">
-                    Mark all as read
-                </a>
-
-            </div>
-        </li>
-
-        @endif
-
-
-   {{-- 👤 USER DROPDOWN --}}
-<li class="nav-item dropdown">
-
-    <a class="nav-link dropdown-toggle text-nowrap px-3"
-       data-bs-toggle="dropdown"
-       href="#"
-       role="button">
-
-        {{-- USER IMAGE --}}
-        <img class="user-avatar rounded-circle mr-2"
-             src="{{ Auth::user()->image 
-                    ? asset('admin/profileimg/' . Auth::user()->image) 
-                    : asset('admins/images/avatars/0.jpg') }}"
-             width="30"
-             height="30"
-             alt="User Avatar">
-
-        {{-- USER NAME --}}
-        <span class="d-none d-md-inline-block">
-            {{ Auth::user()->name }}
-        </span>
-
-    </a>
-
-    <div class="dropdown-menu dropdown-menu-small">
-
-        <a class="dropdown-item" href="{{ route('donor.profile.index') }}">
-            <i class="material-icons">&#xE7FD;</i> Profile
-        </a>
-
-        <div class="dropdown-divider"></div>
-
-        {{-- LOGOUT --}}
-        <form method="POST" action="{{ route('logout') }}" class="text-center">
-            @csrf
-            <button class="dropdown-item text-danger">
-                Logout
-            </button>
-        </form>
-
-    </div>
-
-</li>
-
-    </ul>
-
-    {{-- MOBILE --}}
-    <nav class="nav">
-        <a href="#"
-           class="nav-link nav-link-icon toggle-sidebar d-md-inline d-lg-none text-center border-left"
-           data-bs-toggle="collapse"
-           data-bs-target=".header-navbar">
-
-            <i class="material-icons">&#xE5D2;</i>
-        </a>
-    </nav>
-
-</nav>
+      </div>
+  </nav>
