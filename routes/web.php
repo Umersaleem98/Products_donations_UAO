@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminCategorytController;
 use App\Http\Controllers\Admin\AdminProductsController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Beneficiary\BeneficiaryProductController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Donor\DonorProductController;
 use App\Http\Controllers\Donor\DonorProfileController;
@@ -54,3 +55,7 @@ Route::delete('donor/products/delete/{id}', [DonorProductController::class,'dest
 
 Route::get('donor/profile/index', [DonorProfileController::class, 'index'])->name('donor.profile.index');
 Route::post('/donor/profile/update', [DonorProfileController::class, 'update'])->name('donor.profile.update');
+
+// beneficiary routes
+Route::get('beneficiary/products/index', [BeneficiaryProductController::class,'index'])->name('beneficiary.products.index');
+Route::get('beneficiary/products/detail/{id}', [BeneficiaryProductController::class,'detail'])->name('beneficiary.products.detail.show');
