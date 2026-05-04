@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>Update Categories</title>
 <body>
     <div class="container-scroller">
 

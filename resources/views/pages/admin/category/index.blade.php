@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>index Categories</title>
 <body>
     <div class="container-scroller">
 
@@ -25,8 +25,8 @@
                             </ul>
                         </nav>
                     </div>
-                  
-  <!-- Stats Row -->
+
+                    <!-- Stats Row -->
                     <div class="row">
 
                         <div class="col-12">
@@ -55,42 +55,49 @@
 
                                         <tbody>
                                             @forelse($categories as $key => $category)
-                                            <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>{{ $category->name }}</td>
-                                                <td>{{ $category->slug }}</td>
-                                                <td>{{ $category->created_at->format('Y-m-d') }}</td>
+                                                <tr>
+                                                    <td>{{ $key + 1 }}</td>
+                                                    <td>{{ $category->name }}</td>
+                                                    <td>{{ $category->slug }}</td>
+                                                    <td>{{ $category->created_at->format('Y-m-d') }}</td>
 
-                                                <td>
+                                                    <td>
 
-                                                    <!-- EDIT -->
-                                                    <a href="{{ route('admin.category.edit', $category->id) }}" class="btn btn-warning btn-sm">
-                                                        Edit
-                                                    </a>
+                                                        <!-- EDIT -->
+                                                        <a href="{{ route('admin.category.edit', $category->id) }}"
+                                                            class="btn btn-warning btn-sm">
+                                                            Edit
+                                                        </a>
 
-                                                    <!-- DELETE -->
-                                                    <form action="{{ route('admin.category.delete', $category->id) }}" method="POST" style="display:inline-block">
+                                                        <!-- DELETE -->
+                                                        <form
+                                                            action="{{ route('admin.category.delete', $category->id) }}"
+                                                            method="POST" style="display:inline-block">
 
-                                                        @csrf
-                                                        @method('DELETE')
+                                                            @csrf
+                                                            @method('DELETE')
 
-                                                        <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
-                                                            Delete
-                                                        </button>
+                                                            <button class="btn btn-danger btn-sm"
+                                                                onclick="return confirm('Are you sure?')">
+                                                                Delete
+                                                            </button>
 
-                                                    </form>
+                                                        </form>
 
-                                                </td>
-                                            </tr>
+                                                    </td>
+                                                </tr>
                                             @empty
-                                            <tr>
-                                                <td colspan="5" class="text-center">No categories found</td>
-                                            </tr>
+                                                <tr>
+                                                    <td colspan="5" class="text-center">No categories found</td>
+                                                </tr>
                                             @endforelse
                                         </tbody>
 
                                     </table>
 
+                                    <div class="d-flex justify-content-end mt-3">
+                                        {{ $categories->links() }}
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -1,30 +1,25 @@
 @include('layouts.admin.head')
-
+<title>Update products</title>
 <body>
     <div class="container-scroller">
 
         @include('layouts.admin.header')
-        <!-- partial -->
+
         <div class="container-fluid page-body-wrapper">
             @include('layouts.admin.sidebar')
-            <!-- partial -->
+
             <div class="main-panel">
                 <div class="content-wrapper">
+
+                    <!-- PAGE HEADER -->
                     <div class="page-header">
                         <h3 class="page-title">
                             <span class="page-title-icon bg-gradient-primary text-white me-2">
                                 <i class="mdi mdi-home"></i>
                             </span> Dashboard
                         </h3>
-                        <nav aria-label="breadcrumb">
-                            <ul class="breadcrumb">
-                                <li class="breadcrumb-item active" aria-current="page">
-                                    <span></span>Overview <i
-                                        class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
+
                     <!-- FORM -->
                     <div class="row">
                         <div class="col-md-8">
@@ -32,7 +27,9 @@
                             <div class="card">
                                 <div class="card-body">
 
-                                    <form method="POST" action="{{ route('admin.products.update', $product->id) }}" enctype="multipart/form-data">
+                                    <form method="POST"
+                                          action="{{ route('admin.products.update', $product->id) }}"
+                                          enctype="multipart/form-data">
 
                                         @csrf
                                         @method('PUT')
@@ -43,17 +40,26 @@
                                             <!-- NAME -->
                                             <div class="col-md-6 mb-3">
                                                 <label>Product Name</label>
-                                                <input type="text" name="name" value="{{ $product->name }}" class="form-control" required>
+                                                <input type="text"
+                                                       name="name"
+                                                       value="{{ $product->name }}"
+                                                       class="form-control form-control-sm"
+                                                       placeholder="Enter product name..."
+                                                       required>
                                             </div>
 
                                             <!-- CATEGORY -->
                                             <div class="col-md-6 mb-3">
                                                 <label>Category</label>
-                                                <select name="category_id" class="form-control" required>
+                                                <select name="category_id"
+                                                        class="form-control form-control-sm"
+                                                        required>
+                                                    <option value="">Select Category</option>
                                                     @foreach($categories as $cat)
-                                                    <option value="{{ $cat->id }}" {{ $product->category_id == $cat->id ? 'selected' : '' }}>
-                                                        {{ $cat->name }}
-                                                    </option>
+                                                        <option value="{{ $cat->id }}"
+                                                            {{ $product->category_id == $cat->id ? 'selected' : '' }}>
+                                                            {{ $cat->name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -63,20 +69,18 @@
                                         <!-- ROW 2 -->
                                         <div class="row">
 
-                                            <!-- PRICE -->
-                                            <div class="col-md-6 mb-3">
-                                                <label>Price</label>
-                                                <input type="number" name="price" value="{{ $product->price }}" class="form-control" required>
-                                            </div>
-
                                             <!-- STATUS -->
                                             <div class="col-md-6 mb-3">
                                                 <label>Status</label>
-                                                <select name="status" class="form-control">
-                                                    <option value="active" {{ $product->status == 'active' ? 'selected' : '' }}>
+                                                <select name="status"
+                                                        class="form-control form-control-sm">
+                                                    <option value="">Select status</option>
+                                                    <option value="active"
+                                                        {{ $product->status == 'active' ? 'selected' : '' }}>
                                                         Active
                                                     </option>
-                                                    <option value="inactive" {{ $product->status == 'inactive' ? 'selected' : '' }}>
+                                                    <option value="inactive"
+                                                        {{ $product->status == 'inactive' ? 'selected' : '' }}>
                                                         Inactive
                                                     </option>
                                                 </select>
@@ -87,9 +91,10 @@
                                         <!-- DESCRIPTION -->
                                         <div class="mb-3">
                                             <label>Description</label>
-                                            <textarea name="description" class="form-control" rows="4">
-                                            {{ $product->description }}
-                                            </textarea>
+                                            <textarea name="description"
+                                                      class="form-control form-control-sm"
+                                                      rows="4"
+                                                      placeholder="Enter product description...">{{ $product->description }}</textarea>
                                         </div>
 
                                         <!-- CURRENT IMAGES -->
@@ -98,30 +103,37 @@
                                             <br>
 
                                             @php
-                                            $images = json_decode($product->images, true);
+                                                $images = json_decode($product->images, true);
                                             @endphp
 
                                             @if(!empty($images))
-                                            @foreach($images as $img)
-                                            <img src="{{ asset('admin/products/'.$img) }}" width="70" height="70" style="object-fit:cover;margin-right:10px;border-radius:6px;">
-                                            @endforeach
+                                                @foreach($images as $img)
+                                                    <img src="{{ asset('admin/products/'.$img) }}"
+                                                         width="70"
+                                                         height="70"
+                                                         style="object-fit:cover;margin-right:10px;border-radius:6px;">
+                                                @endforeach
                                             @else
-                                            <p>No images found</p>
+                                                <p>No images found</p>
                                             @endif
                                         </div>
 
                                         <!-- NEW IMAGES -->
                                         <div class="mb-3">
                                             <label>Replace Images (optional)</label>
-                                            <input type="file" name="images[]" class="form-control" multiple>
+                                            <input type="file"
+                                                   name="images[]"
+                                                   class="form-control form-control-sm"
+                                                   multiple>
                                         </div>
 
                                         <!-- BUTTONS -->
-                                        <button type="submit" class="btn btn-success">
+                                        <button type="submit" class="btn btn-success btn-sm">
                                             Update Product
                                         </button>
 
-                                        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
+                                        <a href="{{ route('admin.products.index') }}"
+                                           class="btn btn-secondary btn-sm">
                                             Back
                                         </a>
 
@@ -133,14 +145,10 @@
                         </div>
                     </div>
 
-
-
                 </div>
-
             </div>
-            <!-- main-panel ends -->
+
         </div>
-        <!-- page-body-wrapper ends -->
     </div>
-    <!-- container-scroller -->
-    @include('layouts.admin.script')
+
+@include('layouts.admin.script')

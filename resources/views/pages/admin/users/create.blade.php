@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>Create Users</title>
 <body>
 <div class="container-scroller">
 
@@ -34,54 +34,76 @@
 
                                     @csrf
 
-                                    <!-- NAME -->
-                                    <div class="mb-3">
-                                        <label>Name</label>
-                                        <input type="text" name="name" class="form-control" required>
+                                    <!-- ROW 1 -->
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label>Name</label>
+                                            <input type="text"
+                                                   name="name"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Enter full name..."
+                                                   required>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Email</label>
+                                            <input type="email"
+                                                   name="email"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Enter email address..."
+                                                   required>
+                                        </div>
                                     </div>
 
-                                    <!-- EMAIL -->
-                                    <div class="mb-3">
-                                        <label>Email</label>
-                                        <input type="email" name="email" class="form-control" required>
+                                    <!-- ROW 2 -->
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label>Password</label>
+                                            <input type="password"
+                                                   name="password"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Enter password..."
+                                                   required>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Role</label>
+                                            <select name="role"
+                                                    class="form-control form-control-sm"
+                                                    required>
+                                                <option value="">Select Role</option>
+                                                <option value="admin">Admin</option>
+                                                <option value="beneficiary">Beneficiary</option>
+                                                <option value="donor">Donor</option>
+                                            </select>
+                                        </div>
                                     </div>
 
-                                    <!-- PASSWORD -->
-                                    <div class="mb-3">
-                                        <label>Password</label>
-                                        <input type="password" name="password" class="form-control" required>
-                                    </div>
+                                    <!-- ROW 3 -->
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label>Qalam ID</label>
+                                            <input type="text"
+                                                   name="qalam_id"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Enter Qalam ID (if applicable)">
+                                        </div>
 
-                                    <!-- ROLE -->
-                                    <div class="mb-3">
-                                        <label>Role</label>
-                                        <select name="role" class="form-control" required>
-                                            <option value="">Select Role</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="user">User</option>
-                                            <option value="donor">Donor</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- QALAM ID -->
-                                    <div class="mb-3">
-                                        <label>Qalam ID</label>
-                                        <input type="text" name="qalam_id" class="form-control">
-                                    </div>
-
-                                    <!-- IMAGE -->
-                                    <div class="mb-3">
-                                        <label>Profile Photo</label>
-                                        <input type="file" name="image" class="form-control">
+                                        <div class="col-md-6 mb-3">
+                                            <label>Profile Photo</label>
+                                            <input type="file"
+                                                   name="image"
+                                                   class="form-control form-control-sm">
+                                        </div>
                                     </div>
 
                                     <!-- BUTTONS -->
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary btn-sm">
                                         Save User
                                     </button>
 
                                     <a href="{{ route('admin.user.index') }}"
-                                       class="btn btn-secondary">
+                                       class="btn btn-secondary btn-sm">
                                         Back
                                     </a>
 

@@ -18,7 +18,7 @@ class DonorProductController extends Controller
         $products = Product::with(['category', 'user'])
             ->where('user_id', Auth::id()) // ✅ only current user
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('pages.donor.products.index', compact('products'));
     }

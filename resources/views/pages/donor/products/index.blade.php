@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>My Products</title>
 <body>
     <div class="container-scroller">
 
@@ -25,133 +25,128 @@
                             </ul>
                         </nav>
                     </div>
-                  
 
- <!-- TABLE -->
-        <div class="row">
-          <div class="col-12">
 
-            <div class="card shadow-sm">
+                    <!-- TABLE -->
+                    <div class="row">
+                        <div class="col-12">
 
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Products List</h5>
+                            <div class="card shadow-sm">
 
-                <a href="{{ route('donor.product.create') }}"
-                   class="btn btn-primary btn-sm">
-                  + Add Product
-                </a>
-              </div>
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Products List</h5>
 
-              <div class="card-body">
+                                    <a href="{{ route('donor.product.create') }}" class="btn btn-primary btn-sm">
+                                        + Add Product
+                                    </a>
+                                </div>
 
-                @if(session('success'))
-                  <div class="alert alert-success">
-                    {{ session('success') }}
-                  </div>
-                @endif
+                                <div class="card-body">
 
-                <table class="table table-bordered table-hover align-middle">
+                                    @if (session('success'))
+                                        <div class="alert alert-success">
+                                            {{ session('success') }}
+                                        </div>
+                                    @endif
 
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Image</th>
-                      <th>Name</th>
-                      <th>Category</th>
-                      <th>Price</th>
-                      <th>Status</th>
-                      <th width="180">Action</th>
-                    </tr>
-                  </thead>
+                                    <table class="table table-bordered table-hover align-middle">
 
-                  <tbody>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Image</th>
+                                                <th>Name</th>
+                                                <th>Category</th>
+                                                <th>Status</th>
+                                                <th width="180">Action</th>
+                                            </tr>
+                                        </thead>
 
-                    @forelse($products as $key => $product)
+                                        <tbody>
 
-                      <tr>
-                        <td>{{ $key + 1 }}</td>
+                                            @forelse($products as $key => $product)
+                                                <tr>
+                                                    <td>{{ $key + 1 }}</td>
 
-                        <!-- IMAGE -->
-                        <td>
-                          @php
-                            $images = json_decode($product->images, true);
-                          @endphp
+                                                    <!-- IMAGE -->
+                                                    <td>
+                                                        @php
+                                                            $images = json_decode($product->images, true);
+                                                        @endphp
 
-                          @if(!empty($images))
-                            <img src="{{ asset('admin/products/'.$images[0]) }}"
-                                 width="60"
-                                 height="60"
-                                 style="object-fit:cover;border-radius:6px;">
-                          @else
-                            N/A
-                          @endif
-                        </td>
+                                                        @if (!empty($images))
+                                                            <img src="{{ asset('admin/products/' . $images[0]) }}"
+                                                                width="60" height="60"
+                                                                style="object-fit:cover;border-radius:6px;">
+                                                        @else
+                                                            N/A
+                                                        @endif
+                                                    </td>
 
-                        <!-- NAME -->
-                        <td>{{ $product->name }}</td>
+                                                    <!-- NAME -->
+                                                    <td>{{ $product->name }}</td>
 
-                        <!-- CATEGORY -->
-                        <td>{{ $product->category->name ?? 'N/A' }}</td>
+                                                    <!-- CATEGORY -->
+                                                    <td>{{ $product->category->name ?? 'N/A' }}</td>
 
-                        <!-- PRICE -->
-                        <td>{{ $product->price ?? 0 }}</td>
 
-                        <!-- STATUS -->
-                        <td>
-                          @if($product->status == 'active')
-                            <span class="badge bg-success">Active</span>
-                          @else
-                            <span class="badge bg-danger">Inactive</span>
-                          @endif
-                        </td>
+                                                    <!-- STATUS -->
+                                                    <td>
+                                                        @if ($product->status == 'active')
+                                                            <span class="badge bg-success">Active</span>
+                                                        @else
+                                                            <span class="badge bg-danger">Inactive</span>
+                                                        @endif
+                                                    </td>
 
-                        <!-- ACTION -->
-                        <td>
+                                                    <!-- ACTION -->
+                                                    <td>
 
-                          <!-- EDIT -->
-                          <a href="{{ route('donor.product.edit', $product->id) }}"
-                             class="btn btn-warning btn-sm">
-                            Edit
-                          </a>
+                                                        <!-- EDIT -->
+                                                        <a href="{{ route('donor.product.edit', $product->id) }}"
+                                                            class="btn btn-warning btn-sm">
+                                                            Edit
+                                                        </a>
 
-                          <!-- DELETE -->
-                          <form action="{{ route('donor.products.delete', $product->id) }}"
-                                method="POST"
-                                style="display:inline-block">
+                                                        <!-- DELETE -->
+                                                        <form
+                                                            action="{{ route('donor.products.delete', $product->id) }}"
+                                                            method="POST" style="display:inline-block">
 
-                            @csrf
-                            @method('DELETE')
+                                                            @csrf
+                                                            @method('DELETE')
 
-                            <button class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Are you sure?')">
-                              Delete
-                            </button>
+                                                            <button class="btn btn-danger btn-sm"
+                                                                onclick="return confirm('Are you sure?')">
+                                                                Delete
+                                                            </button>
 
-                          </form>
+                                                        </form>
 
-                        </td>
-                      </tr>
+                                                    </td>
+                                                </tr>
 
-                    @empty
+                                            @empty
 
-                      <tr>
-                        <td colspan="7" class="text-center">
-                          No products found
-                        </td>
-                      </tr>
+                                                <tr>
+                                                    <td colspan="7" class="text-center">
+                                                        No products found
+                                                    </td>
+                                                </tr>
+                                            @endforelse
 
-                    @endforelse
+                                        </tbody>
 
-                  </tbody>
+                                    </table>
 
-                </table>
+                                </div>
+                                  <div class="d-flex justify-content-end mt-3">
+                                        {{ $products->links() }}
+                                    </div>
+                            </div>
 
-              </div>
-
-            </div>
-
-          </div>
-        </div>
+                        </div>
+                    </div>
 
 
                 </div>

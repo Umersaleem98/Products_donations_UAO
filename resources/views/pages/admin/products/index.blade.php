@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>Index products</title>
 <body>
     <div class="container-scroller">
 
@@ -61,7 +61,6 @@
                                             <th>Name</th>
                                             <th>Category</th>
                                             <th>Added By</th>
-                                            <th>Price</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -98,9 +97,6 @@
 
                                             <!-- USER -->
                                             <td>{{ $product->user->name ?? 'N/A' }}</td>
-
-                                            <!-- PRICE -->
-                                            <td>{{ $product->price }}</td>
 
                                             <!-- STATUS -->
                                             <td>
@@ -149,7 +145,9 @@
                                     </tbody>
 
                                 </table>
-
+                                   <div class="d-flex justify-content-end mt-3">
+                                        {{ $products->links() }}
+                                    </div>
                             </div>
 
                         </div>

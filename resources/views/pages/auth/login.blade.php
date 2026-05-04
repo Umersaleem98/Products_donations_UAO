@@ -1,21 +1,21 @@
 @include('layouts.admin.head')
 <title>Login</title>
+
 <body>
 <div class="container-scroller">
   <div class="container-fluid page-body-wrapper full-page-wrapper">
     <div class="content-wrapper d-flex align-items-center auth">
       <div class="row flex-grow">
 
-        <div class="col-lg-4 mx-auto">
+        <div class="col-lg-6 mx-auto">
           <div class="auth-form-light text-left p-5">
 
             <div class="brand-logo">
-                    <div><span class="brand-name">NUST Gift Store</span><span class="brand-sub">Donate · Connect · Empower</span></div>
-              {{-- <img src="{{ asset('admin/assets/images/logo.svg') }}"> --}}
+              <div>
+                <span class="brand-name">NUST Gift Store</span>
+                <span class="brand-sub">Donate · Connect · Empower</span>
+              </div>
             </div>
-
-            <h4>Hello! let's get started</h4>
-            <h6 class="font-weight-light">Sign in to continue.</h6>
 
             <!-- Role Selection -->
             <form method="POST" action="{{ route('login') }}" class="pt-3">
@@ -30,7 +30,7 @@
                 </select>
               </div>
 
-              <!-- Qalam ID (only for beneficiary) -->
+              <!-- Qalam ID -->
               <div class="form-group" id="qalam_id_field" style="display:none;">
                 <input type="text" name="qalam_id" class="form-control form-control-lg" placeholder="Qalam ID">
               </div>
@@ -40,9 +40,17 @@
                 <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" required>
               </div>
 
-              <!-- Password -->
-              <div class="form-group">
-                <input type="password" name="password" class="form-control form-control-lg" placeholder="Password" required>
+              <!-- Password with Toggle -->
+              <div class="form-group position-relative">
+                <input type="password" id="password" name="password"
+                       class="form-control form-control-lg"
+                       placeholder="Password" required>
+
+                <!-- Toggle Button -->
+                <span onclick="togglePassword()" 
+                      style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;">
+                  👁️
+                </span>
               </div>
 
               <!-- Submit -->
@@ -74,8 +82,9 @@
 
 @include('layouts.admin.script')
 
-<!-- Toggle Script -->
+<!-- Scripts -->
 <script>
+  // Role Toggle
   document.getElementById('role').addEventListener('change', function () {
     let qalamField = document.getElementById('qalam_id_field');
 
@@ -85,5 +94,17 @@
       qalamField.style.display = 'none';
     }
   });
+
+  // Password Toggle
+  function togglePassword() {
+    let passwordInput = document.getElementById('password');
+
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+    } else {
+      passwordInput.type = "password";
+    }
+  }
 </script>
 
+</body>

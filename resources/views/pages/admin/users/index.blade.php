@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>Index Users</title>
 <body>
     <div class="container-scroller">
 
@@ -143,7 +143,9 @@
                                     </table>
 
                                 </div>
-
+                                       <div class="d-flex justify-content-end mt-3">
+                                        {{ $users->links() }}
+                                    </div>
                             </div>
 
                         </div>
