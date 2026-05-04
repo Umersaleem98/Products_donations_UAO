@@ -1,5 +1,6 @@
 @include('layouts.admin.head')
- <title>Admin Dashboard</title>
+<title>Admin Dashboard</title>
+
 <body>
     <div class="container-scroller">
 
@@ -27,49 +28,130 @@
                     </div>
                     @if (Auth::user()->role === 'admin')
                         <div class="row">
-                            <div class="col-md-4 stretch-card grid-margin">
-                                <div class="card bg-gradient-danger card-img-holder text-white">
+
+                            {{-- USERS --}}
+                            <div class="col-md-3 grid-margin">
+                                <div class="card bg-gradient-primary text-white">
                                     <div class="card-body">
-                                        <img src="admin/assets/images/dashboard/circle.svg" class="card-img-absolute"
-                                            alt="circle-image" />
-                                        <h4 class="font-weight-normal mb-3">Weekly Sales <i
-                                                class="mdi mdi-chart-line mdi-24px float-end"></i>
-                                        </h4>
-                                        <h2 class="mb-5">$ 15,0000</h2>
-                                        <h6 class="card-text">Increased by 60%</h6>
+                                        <h4>Total Users</h4>
+                                        <h2>{{ $totalUsers }}</h2>
+                                        <small>Donors: {{ $totalDonors }} | Beneficiaries:
+                                            {{ $totalBeneficiaries }}</small>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 stretch-card grid-margin">
-                                <div class="card bg-gradient-info card-img-holder text-white">
+
+                            {{-- PRODUCTS --}}
+                            <div class="col-md-3 grid-margin">
+                                <div class="card bg-gradient-success text-white">
                                     <div class="card-body">
-                                        <img src="admin/assets/images/dashboard/circle.svg" class="card-img-absolute"
-                                            alt="circle-image" />
-                                        <h4 class="font-weight-normal mb-3">Weekly Orders <i
-                                                class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
-                                        </h4>
-                                        <h2 class="mb-5">45,6334</h2>
-                                        <h6 class="card-text">Decreased by 10%</h6>
+                                        <h4>Total Products</h4>
+                                        <h2>{{ $totalProducts }}</h2>
+                                        <small>Categories: {{ $totalCategories }}</small>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 stretch-card grid-margin">
-                                <div class="card bg-gradient-success card-img-holder text-white">
+
+                            {{-- REQUESTS --}}
+                            <div class="col-md-3 grid-margin">
+                                <div class="card bg-gradient-info text-white">
                                     <div class="card-body">
-                                        <img src="admin/assets/images/dashboard/circle.svg" class="card-img-absolute"
-                                            alt="circle-image" />
-                                        <h4 class="font-weight-normal mb-3">Visitors Online <i
-                                                class="mdi mdi-diamond mdi-24px float-end"></i>
-                                        </h4>
-                                        <h2 class="mb-5">95,5741</h2>
-                                        <h6 class="card-text">Increased by 5%</h6>
+                                        <h4>Total Requests</h4>
+                                        <h2>{{ $totalRequests }}</h2>
+                                        <small>Admin Pending: {{ $pendingAdmin }}</small>
                                     </div>
                                 </div>
                             </div>
+
+                            {{-- DONOR STATUS --}}
+                            <div class="col-md-3 grid-margin">
+                                <div class="card bg-gradient-warning text-white">
+                                    <div class="card-body">
+                                        <h4>Donor Decisions</h4>
+                                        <p>Pending: {{ $pendingDonor }}</p>
+                                        <p>Accepted: {{ $acceptedByDonor }}</p>
+                                        <p>Rejected: {{ $rejectedByDonor }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     @endif
 
+                    @if (Auth::user()->role === 'donor')
+                        <div class="row">
 
+                            <div class="col-md-4 grid-margin">
+                                <div class="card bg-gradient-primary text-white">
+                                    <div class="card-body">
+                                        <h4>My Products</h4>
+                                        <h2>{{ $myProducts }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 grid-margin">
+                                <div class="card bg-gradient-info text-white">
+                                    <div class="card-body">
+                                        <h4>Incoming Requests</h4>
+                                        <h2>{{ $incomingRequests }}</h2>
+                                        <small>Pending: {{ $pendingRequests }}</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 grid-margin">
+                                <div class="card bg-gradient-success text-white">
+                                    <div class="card-body">
+                                        <h4>Accepted Requests</h4>
+                                        <h2>{{ $acceptedRequests }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    @endif
+                    @if (Auth::user()->role === 'beneficiary')
+                        <div class="row">
+
+                            <div class="col-md-3 grid-margin">
+                                <div class="card bg-gradient-primary text-white">
+                                    <div class="card-body">
+                                        <h4>My Requests</h4>
+                                        <h2>{{ $myRequests }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 grid-margin">
+                                <div class="card bg-gradient-warning text-white">
+                                    <div class="card-body">
+                                        <h4>Pending</h4>
+                                        <h2>{{ $pending }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 grid-margin">
+                                <div class="card bg-gradient-info text-white">
+                                    <div class="card-body">
+                                        <h4>Approved</h4>
+                                        <h2>{{ $approved }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 grid-margin">
+                                <div class="card bg-gradient-success text-white">
+                                    <div class="card-body">
+                                        <h4>Accepted</h4>
+                                        <h2>{{ $accepted }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    @endif
 
                 </div>
 

@@ -29,7 +29,7 @@
 
   <!-- REQUESTS -->
   <li class="nav-item">
-    <a class="nav-link" href="#">
+    <a class="nav-link" href="{{ route('donor.requests') }}">
       <span class="menu-title">Requests</span>
       <i class="mdi mdi-clipboard-text menu-icon"></i>
     </a>
