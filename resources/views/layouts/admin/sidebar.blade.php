@@ -8,7 +8,7 @@
                      @if (Auth::user()->image)
                          <img src="{{ asset('admin/asset/profilephoto/' . Auth::user()->image) }}" alt="profile" />
                      @else
-                         <img src="{{ asset('admin/default.png') }}" alt="profile" />
+                         <img src="{{ asset('admin/asset/dummy/dummy.jpg') }}" alt="profile" />
                      @endif
 
                      <span class="login-status online"></span>

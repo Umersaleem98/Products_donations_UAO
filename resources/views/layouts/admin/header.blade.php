@@ -129,7 +129,7 @@
                               <img src="{{ asset('admin/asset/profilephoto/' . Auth::user()->image) }}"
                                   alt="image">
                           @else
-                              <img src="{{ asset('admin/default.png') }}" alt="image">
+                              <img src="{{ asset('admin/asset/dummy/dummy.jpg') }}" alt="image">
                           @endif
 
                           <span class="availability-status online"></span>

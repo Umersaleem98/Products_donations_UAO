@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminCategorytController;
 use App\Http\Controllers\Admin\AdminProductsController;
+use App\Http\Controllers\Admin\AdminRequestController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Beneficiary\BeneficiaryProductController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Donor\DonorProfileController;
 use App\Http\Controllers\Donor\DonorRequestController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -45,6 +47,12 @@ Route::post('admin/user/store', [AdminUserController::class,'store'])->name('adm
 Route::get('admin/user/edit/{id}', [AdminUserController::class,'edit'])->name('admin.user.edit');
 Route::put('admin/user/update/{id}', [AdminUserController::class,'update'])->name('admin.user.update');
 Route::delete('admin/user/delete/{id}', [AdminUserController::class,'destroy'])->name('admin.user.destroy');
+
+// VIEW PAGE
+Route::get('admin/requests', [AdminRequestController::class, 'index'])->name('admin.requests');
+
+// APPROVE / REJECT
+Route::post('admin/request/{id}/update', [AdminRequestController::class, 'update'])->name('admin.request.update');
 
 
 

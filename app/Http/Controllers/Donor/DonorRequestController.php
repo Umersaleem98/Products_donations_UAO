@@ -12,6 +12,7 @@ class DonorRequestController extends Controller
 {
     $requests = ProductRequest::with(['product', 'beneficiary'])
         ->where('donor_id', auth()->id())
+        ->where('admin_status', 'approved') // 🔥 IMPORTANT FILTER
         ->latest()
         ->get();
 
