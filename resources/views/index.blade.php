@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NUST Gift Store - Empowering Students Through Generosity</title>
+    <title>NUST Gift Store - Donate Gadgets, Change Lives</title>
+    
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #3B71B8;
-            --primary-dark: #2a5a9e;
-            --primary-light: #e8f0fc;
-            --secondary: #FABD4D;
-            --secondary-dark: #e5a832;
-            --dark: #1a1a2e;
-            --light: #f8f9fa;
-            --gray: #6c757d;
+            --primary-color: #3B71B8;
+            --secondary-color: #FABD4D;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+            --white: #ffffff;
         }
 
         * {
@@ -28,19 +32,6 @@
         body {
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
-            background: #fff;
-        }
-
-        /* Scroll Progress Bar */
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            z-index: 9999;
-            width: 0%;
-            transition: width 0.1s;
         }
 
         /* Custom Scrollbar */
@@ -48,51 +39,44 @@
             width: 10px;
         }
         ::-webkit-scrollbar-track {
-            background: var(--light);
+            background: #f1f1f1;
         }
         ::-webkit-scrollbar-thumb {
-            background: var(--primary);
+            background: var(--primary-color);
             border-radius: 5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
         }
 
         /* Navbar */
         .navbar {
-            transition: all 0.4s ease;
-            padding: 1rem 0;
-            background: transparent;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            padding: 15px 0;
         }
 
         .navbar.scrolled {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
-            padding: 0.5rem 0;
+            padding: 10px 0;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.15);
         }
 
         .navbar-brand {
             font-weight: 800;
-            font-size: 1.5rem;
-            color: var(--primary) !important;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 1.8rem;
+            color: var(--primary-color) !important;
         }
 
         .navbar-brand i {
-            color: var(--secondary);
-            font-size: 1.8rem;
-            animation: float 3s ease-in-out infinite;
+            color: var(--secondary-color);
+            margin-right: 10px;
         }
 
         .nav-link {
             font-weight: 500;
-            color: var(--dark) !important;
+            color: var(--dark-color) !important;
+            margin: 0 15px;
             position: relative;
-            margin: 0 0.5rem;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
         .nav-link::after {
@@ -102,9 +86,9 @@
             left: 0;
             width: 0;
             height: 3px;
-            background: var(--secondary);
-            border-radius: 2px;
+            background: var(--secondary-color);
             transition: width 0.3s ease;
+            border-radius: 2px;
         }
 
         .nav-link:hover::after {
@@ -112,418 +96,420 @@
         }
 
         .nav-link:hover {
-            color: var(--primary) !important;
+            color: var(--primary-color) !important;
         }
 
         .btn-donate-nav {
-            background: var(--secondary);
-            color: var(--dark) !important;
-            font-weight: 600;
-            padding: 0.5rem 1.5rem;
+            background: var(--secondary-color);
+            color: var(--dark-color) !important;
+            padding: 10px 25px;
             border-radius: 50px;
+            font-weight: 600;
             border: none;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(250, 189, 77, 0.4);
+            transition: all 0.3s ease;
         }
 
         .btn-donate-nav:hover {
+            background: var(--primary-color);
+            color: var(--white) !important;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(250, 189, 77, 0.6);
-            background: var(--secondary-dark);
+            box-shadow: 0 5px 20px rgba(59, 113, 184, 0.4);
         }
 
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--primary) 0%, #1e3a5f 100%);
+        /* Hero Slider */
+        .hero-slider {
             position: relative;
+            height: 100vh;
+            min-height: 600px;
             overflow: hidden;
-            display: flex;
-            align-items: center;
         }
 
-        .hero::before {
-            content: '';
+        .slide {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-
-        /* Floating Shapes */
-        .shape {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .shape-1 {
-            width: 300px;
-            height: 300px;
-            top: -100px;
-            right: -100px;
-            animation-delay: 0s;
-        }
-
-        .shape-2 {
-            width: 200px;
-            height: 200px;
-            bottom: 10%;
-            left: -50px;
-            animation-delay: 2s;
-        }
-
-        .shape-3 {
-            width: 150px;
-            height: 150px;
-            top: 40%;
-            right: 20%;
-            animation-delay: 4s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(10deg); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-badge {
-            display: inline-flex;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(250, 189, 77, 0.2);
-            border: 1px solid rgba(250, 189, 77, 0.4);
-            color: var(--secondary);
-            padding: 0.5rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-            animation: fadeInDown 1s ease;
+            justify-content: center;
         }
 
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: #fff;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-            animation: fadeInUp 1s ease 0.2s both;
+        .slide.active {
+            opacity: 1;
         }
 
-        .hero-title span {
-            color: var(--secondary);
-            position: relative;
-        }
-
-        .hero-title span::after {
-            content: '';
+        .slide-bg {
             position: absolute;
-            bottom: 5px;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 8px;
-            background: rgba(250, 189, 77, 0.3);
-            border-radius: 4px;
-            z-index: -1;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.4);
         }
 
-        .hero-subtitle {
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--white);
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .slide-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .slide-content h1 span {
+            color: var(--secondary-color);
+        }
+
+        .slide-content p {
             font-size: 1.2rem;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 2rem;
-            max-width: 500px;
-            animation: fadeInUp 1s ease 0.4s both;
+            margin-bottom: 30px;
+            line-height: 1.8;
         }
 
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            animation: fadeInUp 1s ease 0.6s both;
-        }
-
-        .btn-hero-primary {
-            background: var(--secondary);
-            color: var(--dark);
-            font-weight: 600;
-            padding: 1rem 2.5rem;
+        .btn-hero {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            text-decoration: none;
             border-radius: 50px;
-            border: none;
+            font-weight: 700;
             font-size: 1.1rem;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(250, 189, 77, 0.4);
+            transition: all 0.3s ease;
+            margin: 0 10px;
+            border: 2px solid var(--secondary-color);
         }
 
-        .btn-hero-primary:hover {
+        .btn-hero:hover {
+            background: transparent;
+            color: var(--white);
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(250, 189, 77, 0.6);
-            background: var(--secondary-dark);
+            box-shadow: 0 10px 30px rgba(250, 189, 77, 0.3);
         }
 
         .btn-hero-outline {
             background: transparent;
-            color: #fff;
-            font-weight: 600;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            border: 2px solid rgba(255,255,255,0.3);
-            font-size: 1.1rem;
-            transition: all 0.3s;
+            color: var(--white);
+            border: 2px solid var(--white);
         }
 
         .btn-hero-outline:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: #fff;
-            transform: translateY(-3px);
+            background: var(--white);
+            color: var(--primary-color);
         }
 
-        /* Hero Stats */
-        .hero-stats {
+        /* Slider Controls */
+        .slider-controls {
             position: absolute;
             bottom: 50px;
-            left: 0;
-            right: 0;
-            z-index: 2;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 15px;
         }
 
-        .stat-card {
-            background: rgba(255,255,255,0.1);
+        .slider-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .slider-dot.active {
+            background: var(--secondary-color);
+            transform: scale(1.3);
+            border-color: var(--white);
+        }
+
+        .slider-arrows {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            transform: translateY(-50%);
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .slider-arrow {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 1.5rem;
-            text-align: center;
-            color: #fff;
-            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
         }
 
-        .stat-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255,255,255,0.15);
+        .slider-arrow:hover {
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            border-color: var(--secondary-color);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: var(--primary-color);
+            padding: 60px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(250, 189, 77, 0.1);
+            border-radius: 50%;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: var(--white);
+            padding: 20px;
+        }
+
+        .stat-item i {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            display: block;
         }
 
         .stat-number {
             font-size: 2.5rem;
             font-weight: 800;
-            color: var(--secondary);
+            margin-bottom: 5px;
         }
 
         .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
+            font-size: 1rem;
+            opacity: 0.9;
         }
 
-        /* Floating Cards Animation */
-        .floating-cards {
-            position: relative;
-            height: 500px;
-        }
-
-        .float-card {
-            position: absolute;
-            background: #fff;
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            animation: cardFloat 5s ease-in-out infinite;
-        }
-
-        .float-card-1 {
-            top: 10%;
-            right: 10%;
-            width: 220px;
-            animation-delay: 0s;
-        }
-
-        .float-card-2 {
-            top: 40%;
-            right: 30%;
-            width: 200px;
-            animation-delay: 1.5s;
-        }
-
-        .float-card-3 {
-            top: 60%;
-            right: 5%;
-            width: 240px;
-            animation-delay: 3s;
-        }
-
-        @keyframes cardFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(2deg); }
-        }
-
-        .float-card-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .float-card-1 .float-card-icon { background: var(--primary-light); color: var(--primary); }
-        .float-card-2 .float-card-icon { background: #fff3cd; color: var(--secondary-dark); }
-        .float-card-3 .float-card-icon { background: #d4edda; color: #28a745; }
-
-        /* Section Styles */
-        .section-padding {
-            padding: 100px 0;
-        }
-
+        /* Section Headers */
         .section-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 60px;
         }
 
-        .section-label {
-            display: inline-block;
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 0.4rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .section-title {
-            font-size: 2.8rem;
+        .section-header h2 {
+            font-size: 2.5rem;
             font-weight: 800;
-            color: var(--dark);
-            margin-bottom: 1rem;
-        }
-
-        .section-title span {
-            color: var(--primary);
-        }
-
-        .section-subtitle {
-            color: var(--gray);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            background: linear-gradient(180deg, #fff 0%, var(--primary-light) 100%);
-        }
-
-        .step-card {
-            background: #fff;
-            border-radius: 24px;
-            padding: 2.5rem;
-            text-align: center;
+            color: var(--dark-color);
+            margin-bottom: 15px;
             position: relative;
-            transition: all 0.4s;
-            border: 2px solid transparent;
-            height: 100%;
+            display: inline-block;
         }
 
-        .step-card:hover {
-            transform: translateY(-15px);
-            border-color: var(--primary);
-            box-shadow: 0 25px 50px rgba(59, 113, 184, 0.15);
-        }
-
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: var(--primary);
-            color: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 auto 1.5rem;
-            position: relative;
-        }
-
-        .step-number::after {
+        .section-header h2::after {
             content: '';
             position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid var(--secondary);
-            top: -5px;
-            right: -5px;
-            z-index: -1;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary-color);
+            border-radius: 2px;
         }
 
-        .step-icon {
+        .section-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 20px auto 0;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 100px 0;
+            background: var(--light-color);
+        }
+
+        .about-img {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .about-img img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.5s ease;
+        }
+
+        .about-img:hover img {
+            transform: scale(1.05);
+        }
+
+        .about-img .experience-badge {
+            position: absolute;
+            bottom: 30px;
+            right: -20px;
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .about-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+        }
+
+        .about-content p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .feature-list li i {
+            color: var(--secondary-color);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 100px 0;
+            background: var(--white);
+        }
+
+        .service-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(59, 113, 184, 0.2);
+        }
+
+        .service-icon {
             width: 80px;
             height: 80px;
-            background: var(--primary-light);
+            background: linear-gradient(135deg, var(--primary-color), #5a8fd4);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto 25px;
             font-size: 2rem;
-            color: var(--primary);
-            margin: 0 auto 1.5rem;
-            transition: all 0.3s;
+            color: var(--white);
+            transition: all 0.4s ease;
+            position: relative;
         }
 
-        .step-card:hover .step-icon {
-            background: var(--primary);
-            color: #fff;
+        .service-card:hover .service-icon {
+            background: var(--secondary-color);
+            color: var(--dark-color);
             transform: rotateY(360deg);
         }
 
-        .step-title {
+        .service-card h4 {
             font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 0.8rem;
-            color: var(--dark);
+            color: var(--dark-color);
+            margin-bottom: 15px;
         }
 
-        .step-desc {
-            color: var(--gray);
-            font-size: 0.95rem;
+        .service-card p {
+            color: #666;
             line-height: 1.7;
+            font-size: 0.95rem;
         }
 
-        /* Categories */
+        /* Products Categories */
+        .categories-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
         .category-card {
             position: relative;
-            border-radius: 24px;
+            border-radius: 20px;
             overflow: hidden;
-            height: 300px;
+            height: 350px;
             cursor: pointer;
-            transition: all 0.4s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        .category-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
-        }
-
-        .category-img {
+        .category-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: all 0.5s;
+            transition: transform 0.5s ease;
         }
 
-        .category-card:hover .category-img {
+        .category-card:hover img {
             transform: scale(1.1);
         }
 
@@ -531,409 +517,274 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            right: 0;
-            padding: 2rem;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            color: #fff;
-            transition: all 0.3s;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(59, 113, 184, 0.9), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            transition: height 0.4s ease;
         }
 
         .category-card:hover .category-overlay {
-            padding-bottom: 2.5rem;
-        }
-
-        .category-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--secondary);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: var(--dark);
-            margin-bottom: 1rem;
-        }
-
-        .category-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
-        }
-
-        .category-count {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        /* Featured Products */
-        .product-card {
-            background: #fff;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            transition: all 0.4s;
             height: 100%;
-            border: 1px solid rgba(0,0,0,0.05);
+            background: linear-gradient(to top, rgba(59, 113, 184, 0.95), rgba(59, 113, 184, 0.7));
         }
 
-        .product-card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 25px 60px rgba(59, 113, 184, 0.2);
+        .category-overlay h4 {
+            color: var(--white);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
 
-        .product-img-wrapper {
+        .category-overlay p {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .category-card:hover .category-overlay p {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .category-btn {
+            display: inline-block;
+            padding: 8px 25px;
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .category-card:hover .category-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 100px 0;
+            background: var(--white);
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 30px;
             position: relative;
-            height: 220px;
-            overflow: hidden;
-            background: var(--primary-light);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .product-img {
-            width: 60%;
-            height: auto;
-            transition: all 0.5s;
-        }
-
-        .product-card:hover .product-img {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .product-badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: var(--secondary);
-            color: var(--dark);
-            padding: 0.3rem 1rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .product-body {
-            padding: 1.5rem;
-        }
-
-        .product-category {
-            color: var(--primary);
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-        }
-
-        .product-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .product-desc {
-            color: var(--gray);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-
-        .product-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
-        }
-
-        .product-condition {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.85rem;
-            color: #28a745;
-            font-weight: 500;
-        }
-
-        .btn-request {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            padding: 0.5rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-request:hover {
-            background: var(--primary-dark);
-            transform: scale(1.05);
-        }
-
-        /* Impact Section */
-        .impact-section {
-            background: var(--primary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .impact-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 600px;
-            height: 600px;
-            background: rgba(250, 189, 77, 0.1);
-            border-radius: 50%;
-        }
-
-        .impact-section::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 400px;
-            height: 400px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
-        }
-
-        .impact-content {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 auto 20px;
             position: relative;
             z-index: 2;
         }
 
-        .impact-title {
-            color: #fff;
+        .step-card::after {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            z-index: 1;
+        }
+
+        .col-lg-4:last-child .step-card::after {
+            display: none;
+        }
+
+        .step-icon {
             font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
         }
 
-        .impact-title span {
-            color: var(--secondary);
+        .step-card h4 {
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 10px;
         }
 
-        .impact-text {
-            color: rgba(255,255,255,0.85);
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 2rem;
-        }
-
-        .impact-stat-box {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            color: #fff;
-            transition: all 0.3s;
-        }
-
-        .impact-stat-box:hover {
-            transform: translateY(-10px);
-            background: rgba(255,255,255,0.15);
-        }
-
-        .impact-number {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--secondary);
-            line-height: 1;
-        }
-
-        .impact-label {
-            margin-top: 0.5rem;
-            font-size: 1rem;
-            opacity: 0.9;
+        .step-card p {
+            color: #666;
+            font-size: 0.95rem;
         }
 
         /* Testimonials */
-        .testimonial-card {
-            background: #fff;
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        .testimonials-section {
+            padding: 100px 0;
+            background: var(--primary-color);
             position: relative;
-            margin-top: 2rem;
-            transition: all 0.3s;
+            overflow: hidden;
         }
 
-        .testimonial-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .testimonial-quote {
+        .testimonials-section::before {
+            content: '\201C';
             position: absolute;
-            top: -20px;
-            left: 30px;
-            width: 50px;
-            height: 50px;
-            background: var(--secondary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--dark);
+            top: -50px;
+            left: 50px;
+            font-size: 300px;
+            color: rgba(255,255,255,0.05);
+            font-family: serif;
+            line-height: 1;
+        }
+
+        .testimonials-section .section-header h2,
+        .testimonials-section .section-header p {
+            color: var(--white);
+        }
+
+        .testimonial-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .testimonial-card .stars {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
             font-size: 1.2rem;
         }
 
-        .testimonial-text {
-            font-size: 1.05rem;
-            color: var(--gray);
+        .testimonial-card p {
+            font-size: 1.1rem;
             line-height: 1.8;
-            margin-bottom: 1.5rem;
+            margin-bottom: 25px;
             font-style: italic;
         }
 
         .testimonial-author {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 15px;
         }
 
-        .author-avatar {
-            width: 50px;
-            height: 50px;
+        .testimonial-author img {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background: var(--primary-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.2rem;
+            border: 3px solid var(--secondary-color);
         }
 
-        .author-info h5 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 0.2rem;
-            color: var(--dark);
-        }
-
-        .author-info p {
-            font-size: 0.85rem;
-            color: var(--gray);
+        .testimonial-author h5 {
             margin: 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-author span {
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         /* CTA Section */
         .cta-section {
-            background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-color), #2a5a9e);
+            text-align: center;
+            color: var(--white);
             position: relative;
             overflow: hidden;
         }
 
-        .cta-pattern {
+        .cta-section::before,
+        .cta-section::after {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(250, 189, 77, 0.1);
         }
 
-        .cta-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
+        .cta-section::before {
+            top: -100px;
+            left: -100px;
         }
 
-        .cta-title {
-            font-size: 3rem;
+        .cta-section::after {
+            bottom: -100px;
+            right: -100px;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
             font-weight: 800;
-            color: #fff;
-            margin-bottom: 1.5rem;
+            margin-bottom: 20px;
         }
 
-        .cta-title span {
-            color: var(--secondary);
-        }
-
-        .cta-text {
-            color: rgba(255,255,255,0.8);
+        .cta-section p {
             font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
             max-width: 600px;
-            margin: 0 auto 2rem;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .btn-cta-primary {
-            background: var(--secondary);
-            color: var(--dark);
-            font-weight: 700;
-            padding: 1.2rem 3rem;
+        .btn-cta {
+            display: inline-block;
+            padding: 18px 50px;
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            text-decoration: none;
             border-radius: 50px;
-            border: none;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(250, 189, 77, 0.4);
-            margin: 0.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--secondary-color);
         }
 
-        .btn-cta-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(250, 189, 77, 0.6);
-            background: var(--secondary-dark);
-        }
-
-        .btn-cta-outline {
+        .btn-cta:hover {
             background: transparent;
-            color: #fff;
-            font-weight: 700;
-            padding: 1.2rem 3rem;
-            border-radius: 50px;
-            border: 2px solid rgba(255,255,255,0.3);
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            margin: 0.5rem;
-        }
-
-        .btn-cta-outline:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: #fff;
+            color: var(--white);
             transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
         /* Footer */
         .footer {
-            background: var(--dark);
-            color: #fff;
-            padding: 80px 0 30px;
+            background: var(--dark-color);
+            color: var(--white);
+            padding: 80px 0 0;
         }
 
-        .footer-brand {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 1.5rem;
+        .footer-widget h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--secondary-color);
         }
 
-        .footer-brand i {
-            color: var(--secondary);
-        }
-
-        .footer-desc {
+        .footer-widget p {
             color: rgba(255,255,255,0.7);
             line-height: 1.8;
-            margin-bottom: 2rem;
-        }
-
-        .footer-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--secondary);
+            margin-bottom: 20px;
         }
 
         .footer-links {
@@ -942,30 +793,35 @@
         }
 
         .footer-links li {
-            margin-bottom: 0.8rem;
+            margin-bottom: 12px;
         }
 
         .footer-links a {
             color: rgba(255,255,255,0.7);
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .footer-links a:hover {
-            color: var(--secondary);
+            color: var(--secondary-color);
             padding-left: 5px;
         }
 
-        .footer-social {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
+        .footer-links a i {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
         }
 
-        .social-icon {
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
             width: 45px;
             height: 45px;
             border-radius: 50%;
@@ -973,128 +829,156 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-size: 1.1rem;
-            transition: all 0.3s;
+            color: var(--white);
             text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
         }
 
-        .social-icon:hover {
-            background: var(--secondary);
-            color: var(--dark);
-            transform: translateY(-5px);
+        .social-links a:hover {
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-contact li {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .footer-contact li i {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            margin-top: 5px;
         }
 
         .footer-bottom {
             border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: 3rem;
-            padding-top: 2rem;
+            margin-top: 60px;
+            padding: 25px 0;
             text-align: center;
             color: rgba(255,255,255,0.5);
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .footer-bottom a {
+            color: var(--secondary-color);
+            text-decoration: none;
         }
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-on-scroll {
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s ease;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
 
-        .animate-on-scroll.animated {
+        .back-to-top.show {
             opacity: 1;
-            transform: translateY(0);
+            visibility: visible;
         }
 
-        /* Pulse Animation for CTA */
-        .pulse {
-            animation: pulse 2s infinite;
+        .back-to-top:hover {
+            background: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(250, 189, 77, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(250, 189, 77, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(250, 189, 77, 0); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
-        /* Wave Separator */
-        .wave-separator {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
-        }
-
-        .wave-separator svg {
-            position: relative;
-            display: block;
-            width: calc(100% + 1.3px);
-            height: 80px;
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
         }
 
         /* Responsive */
         @media (max-width: 991px) {
-            .hero-title { font-size: 2.5rem; }
-            .section-title { font-size: 2rem; }
-            .cta-title { font-size: 2rem; }
-            .floating-cards { display: none; }
-            .hero-stats { position: relative; bottom: auto; margin-top: 3rem; }
+            .slide-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .step-card::after {
+                display: none;
+            }
+            
+            .about-img .experience-badge {
+                right: 20px;
+            }
         }
 
         @media (max-width: 768px) {
-            .hero-title { font-size: 2rem; }
-            .hero-buttons { justify-content: center; }
-            .section-padding { padding: 60px 0; }
+            .slide-content h1 {
+                font-size: 2rem;
+            }
+            
+            .slide-content p {
+                font-size: 1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+            }
         }
 
-        /* Loading Spinner */
-        .spinner-wrapper {
+        /* Loading Animation */
+        .loader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #fff;
+            background: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 99999;
-            transition: opacity 0.5s;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
         }
 
-        .spinner-wrapper.hidden {
+        .loader.hidden {
             opacity: 0;
             pointer-events: none;
         }
 
-        .custom-spinner {
+        .loader-spinner {
             width: 60px;
             height: 60px;
-            border: 4px solid var(--primary-light);
-            border-top-color: var(--primary);
+            border: 5px solid var(--light-color);
+            border-top-color: var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -1102,35 +986,20 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        /* Particle Canvas */
-        #particles-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
     </style>
 </head>
 <body>
 
-    <!-- Loading Spinner -->
-    <div class="spinner-wrapper" id="spinner">
-        <div class="custom-spinner"></div>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
     </div>
 
-    <!-- Scroll Progress -->
-    <div class="scroll-progress" id="scrollProgress"></div>
-
-    <!-- Navbar -->
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top" id="navbar">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-gift"></i>
-                NUST Gift Store
+                <i class="fas fa-gift"></i>NUST Gift Store
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -1138,418 +1007,306 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#how-it-works">How It Works</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
                     <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#impact">Impact</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                    <li class="nav-item ms-lg-3">
-                        <a href="#donate" class="btn btn-donate-nav">
-                            <i class="fas fa-heart me-2"></i>Donate Now
-                        </a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#how-it-works">How It Works</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#testimonials">Stories</a></li>
+                    <li class="nav-item"><a class="btn btn-donate-nav" href="#donate">Donate Now</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <canvas id="particles-canvas"></canvas>
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
+    <!-- Hero Slider -->
+    <section class="hero-slider" id="home">
+        <div class="slide active">
+            <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1920');"></div>
+            <div class="slide-content" data-aos="fade-up">
+                <h1>Donate <span>Gadgets</span>, Change Lives</h1>
+                <p>Join NUST Gift Store in bridging the digital divide. Your unused laptops, books, and mobile devices can empower students and transform futures.</p>
+                <div>
+                    <a href="#donate" class="btn-hero">Start Donating</a>
+                    <a href="#how-it-works" class="btn-hero btn-hero-outline">Learn More</a>
+                </div>
+            </div>
+        </div>
         
+        <div class="slide">
+            <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1920');"></div>
+            <div class="slide-content">
+                <h1>Education <span>For All</span></h1>
+                <p>Every book donated opens a door to knowledge. Every laptop shared creates an opportunity. Be the reason someone achieves their dreams.</p>
+                <div>
+                    <a href="#categories" class="btn-hero">Browse Categories</a>
+                    <a href="#about" class="btn-hero btn-hero-outline">Our Mission</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1920');"></div>
+            <div class="slide-content">
+                <h1>Connect <span>Communities</span></h1>
+                <p>From donors to beneficiaries, we build bridges of hope. Your generosity creates ripples of positive change across NUST and beyond.</p>
+                <div>
+                    <a href="#services" class="btn-hero">Our Services</a>
+                    <a href="#testimonials" class="btn-hero btn-hero-outline">Success Stories</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-arrows">
+            <div class="slider-arrow" id="prevSlide"><i class="fas fa-chevron-left"></i></div>
+            <div class="slider-arrow" id="nextSlide"><i class="fas fa-chevron-right"></i></div>
+        </div>
+
+        <div class="slider-controls">
+            <div class="slider-dot active" data-slide="0"></div>
+            <div class="slider-dot" data-slide="1"></div>
+            <div class="slider-dot" data-slide="2"></div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
         <div class="container">
-            <div class="row align-items-center min-vh-100 pt-5">
-                <div class="col-lg-6 hero-content">
-                    <div class="hero-badge">
-                        <i class="fas fa-sparkles"></i>
-                        Empowering NUST Students Since 2024
-                    </div>
-                    <h1 class="hero-title">
-                        Give a Gift,<br>
-                        Change a <span>Student's Life</span>
-                    </h1>
-                    <p class="hero-subtitle">
-                        Join our community of donors and help NUST students access the gadgets, 
-                        books, and tools they need to succeed in their academic journey.
-                    </p>
-                    <div class="hero-buttons">
-                        <a href="#donate" class="btn btn-hero-primary pulse">
-                            <i class="fas fa-hand-holding-heart me-2"></i>Donate a Product
-                        </a>
-                        <a href="#products" class="btn btn-hero-outline">
-                            <i class="fas fa-search me-2"></i>Browse Products
-                        </a>
+            <div class="row">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="0">
+                    <div class="stat-item">
+                        <i class="fas fa-laptop"></i>
+                        <div class="stat-number" data-count="1250">0</div>
+                        <div class="stat-label">Gadgets Donated</div>
                     </div>
                 </div>
-                <div class="col-lg-6 d-none d-lg-block">
-                    <div class="floating-cards">
-                        <div class="float-card float-card-1">
-                            <div class="float-card-icon">
-                                <i class="fas fa-laptop"></i>
-                            </div>
-                            <h5>Laptop Donated</h5>
-                            <p class="text-muted mb-0" style="font-size: 0.9rem;">Helped 50+ students</p>
-                        </div>
-                        <div class="float-card float-card-2">
-                            <div class="float-card-icon">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <h5>Books Shared</h5>
-                            <p class="text-muted mb-0" style="font-size: 0.9rem;">200+ textbooks</p>
-                        </div>
-                        <div class="float-card float-card-3">
-                            <div class="float-card-icon">
-                                <i class="fas fa-calculator"></i>
-                            </div>
-                            <h5>Calculators</h5>
-                            <p class="text-muted mb-0" style="font-size: 0.9rem;">Engineering tools</p>
-                        </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-item">
+                        <i class="fas fa-users"></i>
+                        <div class="stat-number" data-count="850">0</div>
+                        <div class="stat-label">Beneficiaries Helped</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-item">
+                        <i class="fas fa-book"></i>
+                        <div class="stat-number" data-count="3200">0</div>
+                        <div class="stat-label">Books Distributed</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-item">
+                        <i class="fas fa-heart"></i>
+                        <div class="stat-number" data-count="500">0</div>
+                        <div class="stat-label">Happy Donors</div>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Hero Stats -->
-        <div class="hero-stats">
-            <div class="container">
-                <div class="row g-4">
-                    <div class="col-6 col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-number" data-count="500">0</div>
-                            <div class="stat-label">Products Donated</div>
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="about-img">
+                        <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800" alt="About NUST Gift Store">
+                        <div class="experience-badge">
+                            <div style="font-size: 2rem; line-height: 1;">5+</div>
+                            <div style="font-size: 0.9rem;">Years of Service</div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-number" data-count="1200">0</div>
-                            <div class="stat-label">Students Helped</div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="about-content">
+                        <div class="section-header text-start mb-4">
+                            <h2 style="display: block; text-align: left;">About Us</h2>
+                            <p style="text-align: left; margin-left: 0;">Empowering through generosity</p>
                         </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-number" data-count="350">0</div>
-                            <div class="stat-label">Active Donors</div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-number" data-count="15">0</div>
-                            <div class="stat-label">Categories</div>
-                        </div>
+                        <h3>Making Technology Accessible for Everyone</h3>
+                        <p>NUST Gift Store is a pioneering donation platform dedicated to bridging the digital divide within our academic community. We connect generous donors with deserving beneficiaries, ensuring that essential gadgets and educational resources reach those who need them most.</p>
+                        <p>Our mission is simple yet powerful: to ensure no student is left behind due to lack of access to technology. From laptops for programming courses to books for research, every donation makes a tangible difference.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check-circle"></i> Secure and transparent donation process</li>
+                            <li><i class="fas fa-check-circle"></i> Verified beneficiaries and donors</li>
+                            <li><i class="fas fa-check-circle"></i> Wide range of acceptable items</li>
+                            <li><i class="fas fa-check-circle"></i> Community-driven impact tracking</li>
+                        </ul>
+                        <a href="#services" class="btn-hero mt-4">Explore Our Services</a>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="wave-separator">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#ffffff"></path>
-            </svg>
+    <!-- Services Section -->
+    <section class="services-section" id="services">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Our Services</h2>
+                <p>Comprehensive solutions for donors and beneficiaries</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="0">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <h4>Gadget Donation</h4>
+                        <p>Donate laptops, tablets, smartphones, and other electronic devices. We ensure secure data wiping and proper refurbishment before delivery to beneficiaries.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h4>Book Exchange</h4>
+                        <p>Share textbooks, reference materials, and novels. Our book donation service helps students access educational resources without financial burden.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4>Mobile Device Program</h4>
+                        <p>Donate smartphones and mobile accessories. Help students stay connected with online classes, research resources, and academic communities.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h4>Repair & Refurbish</h4>
+                        <p>Our technical team repairs and refurbishes donated items to ensure beneficiaries receive fully functional, quality devices ready for immediate use.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <h4>Matching Service</h4>
+                        <p>We intelligently match donations with beneficiaries based on specific needs, academic requirements, and urgency levels for maximum impact.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Impact Tracking</h4>
+                        <p>Track the journey of your donation from drop-off to delivery. Receive updates on how your contribution is making a difference in someone's life.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section" id="categories">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Product Categories</h2>
+                <p>Browse items you can donate or request</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="0">
+                    <div class="category-card">
+                        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600" alt="Laptops">
+                        <div class="category-overlay">
+                            <h4>Laptops & Computers</h4>
+                            <p>Notebooks, desktops, monitors, and accessories for academic and professional use.</p>
+                            <a href="#" class="category-btn">View Items</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="category-card">
+                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600" alt="Books">
+                        <div class="category-overlay">
+                            <h4>Books & Journals</h4>
+                            <p>Textbooks, reference books, research papers, and educational magazines.</p>
+                            <a href="#" class="category-btn">View Items</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="category-card">
+                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600" alt="Mobile">
+                        <div class="category-overlay">
+                            <h4>Mobile Devices</h4>
+                            <p>Smartphones, tablets, power banks, chargers, and mobile accessories.</p>
+                            <a href="#" class="category-btn">View Items</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="category-card">
+                        <img src="https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=600" alt="Accessories">
+                        <div class="category-overlay">
+                            <h4>Accessories</h4>
+                            <p>Headphones, keyboards, mice, webcams, bags, and other peripherals.</p>
+                            <a href="#" class="category-btn">View Items</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="category-card">
+                        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600" alt="Stationery">
+                        <div class="category-overlay">
+                            <h4>Stationery & Supplies</h4>
+                            <p>Calculators, scientific instruments, art supplies, and writing materials.</p>
+                            <a href="#" class="category-btn">View Items</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="category-card">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600" alt="Software">
+                        <div class="category-overlay">
+                            <h4>Software & Licenses</h4>
+                            <p>Educational software, OS licenses, antivirus, and productivity tools.</p>
+                            <a href="#" class="category-btn">View Items</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- How It Works -->
-    <section class="section-padding how-it-works" id="how-it-works">
+    <section class="how-it-works" id="how-it-works">
         <div class="container">
-            <div class="section-header animate-on-scroll">
-                <span class="section-label">Process</span>
-                <h2 class="section-title">How It <span>Works</span></h2>
-                <p class="section-subtitle">Simple steps to donate or receive products that can make a real difference in student life.</p>
+            <div class="section-header" data-aos="fade-up">
+                <h2>How It Works</h2>
+                <p>Simple steps to make a difference</p>
             </div>
-            <div class="row g-4">
-                <div class="col-md-4 animate-on-scroll">
+            <div class="row">
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
                     <div class="step-card">
                         <div class="step-number">1</div>
-                        <div class="step-icon">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <h4 class="step-title">Register & List</h4>
-                        <p class="step-desc">Create your account as a donor or beneficiary. List the products you want to donate or browse available items.</p>
+                        <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                        <h4>Register</h4>
+                        <p>Create your account as a donor or beneficiary. Complete your profile with necessary details and verification.</p>
                     </div>
                 </div>
-                <div class="col-md-4 animate-on-scroll">
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="step-card">
                         <div class="step-number">2</div>
-                        <div class="step-icon">
-                            <i class="fas fa-handshake"></i>
-                        </div>
-                        <h4 class="step-title">Connect & Request</h4>
-                        <p class="step-desc">Beneficiaries browse categories and send requests for products they need. Donors review and approve requests.</p>
+                        <div class="step-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                        <h4>Donate or Request</h4>
+                        <p>List items you wish to donate or browse available items. Specify condition, specifications, and urgency level.</p>
                     </div>
                 </div>
-                <div class="col-md-4 animate-on-scroll">
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
                     <div class="step-card">
                         <div class="step-number">3</div>
-                        <div class="step-icon">
-                            <i class="fas fa-gift"></i>
-                        </div>
-                        <h4 class="step-title">Receive & Share</h4>
-                        <p class="step-desc">Products are handed over to beneficiaries. Share your success story and inspire others to join the community.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Categories -->
-    <section class="section-padding" id="categories" style="background: #fff;">
-        <div class="container">
-            <div class="section-header animate-on-scroll">
-                <span class="section-label">Browse</span>
-                <h2 class="section-title">Product <span>Categories</span></h2>
-                <p class="section-subtitle">Explore all categories of study and student life essentials available for donation.</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4 col-lg-3 animate-on-scroll">
-                    <div class="category-card">
-                        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop" alt="Laptops" class="category-img">
-                        <div class="category-overlay">
-                            <div class="category-icon"><i class="fas fa-laptop"></i></div>
-                            <h4 class="category-title">Laptops & Computers</h4>
-                            <p class="category-count">45 Products Available</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-3 animate-on-scroll">
-                    <div class="category-card">
-                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=300&fit=crop" alt="Books" class="category-img">
-                        <div class="category-overlay">
-                            <div class="category-icon"><i class="fas fa-book"></i></div>
-                            <h4 class="category-title">Books & Textbooks</h4>
-                            <p class="category-count">120 Products Available</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-3 animate-on-scroll">
-                    <div class="category-card">
-                        <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=300&fit=crop" alt="Electronics" class="category-img">
-                        <div class="category-overlay">
-                            <div class="category-icon"><i class="fas fa-plug"></i></div>
-                            <h4 class="category-title">Electronics</h4>
-                            <p class="category-count">35 Products Available</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-3 animate-on-scroll">
-                    <div class="category-card">
-                        <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&h=300&fit=crop" alt="Stationery" class="category-img">
-                        <div class="category-overlay">
-                            <div class="category-icon"><i class="fas fa-pen"></i></div>
-                            <h4 class="category-title">Stationery & Supplies</h4>
-                            <p class="category-count">80 Products Available</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-3 animate-on-scroll">
-                    <div class="category-card">
-                        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop" alt="Calculators" class="category-img">
-                        <div class="category-overlay">
-                            <div class="category-icon"><i class="fas fa-calculator"></i></div>
-                            <h4 class="category-title">Calculators</h4>
-                            <p class="category-count">25 Products Available</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-3 animate-on-scroll">
-                    <div class="category-card">
-                        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=300&fit=crop" alt="Lab Equipment" class="category-img">
-                        <div class="category-overlay">
-                            <div class="category-icon"><i class="fas fa-flask"></i></div>
-                            <h4 class="category-title">Lab Equipment</h4>
-                            <p class="category-count">15 Products Available</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-3 animate-on-scroll">
-                    <div class="category-card">
-                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop" alt="Audio" class="category-img">
-                        <div class="category-overlay">
-                            <div class="category-icon"><i class="fas fa-headphones"></i></div>
-                            <h4 class="category-title">Audio & Headphones</h4>
-                            <p class="category-count">30 Products Available</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-3 animate-on-scroll">
-                    <div class="category-card">
-                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=300&fit=crop" alt="Accessories" class="category-img">
-                        <div class="category-overlay">
-                            <div class="category-icon"><i class="fas fa-backpack"></i></div>
-                            <h4 class="category-title">Bags & Accessories</h4>
-                            <p class="category-count">40 Products Available</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Products -->
-    <section class="section-padding" id="products" style="background: linear-gradient(180deg, #fff 0%, var(--primary-light) 100%);">
-        <div class="container">
-            <div class="section-header animate-on-scroll">
-                <span class="section-label">Available Now</span>
-                <h2 class="section-title">Featured <span>Products</span></h2>
-                <p class="section-subtitle">Browse recently donated products ready to be claimed by deserving students.</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-4 animate-on-scroll">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <span class="product-badge">New</span>
-                            <i class="fas fa-laptop product-img" style="font-size: 5rem; color: var(--primary);"></i>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-category">Laptops</div>
-                            <h4 class="product-title">Dell Latitude 5490</h4>
-                            <p class="product-desc">Intel Core i5, 8GB RAM, 256GB SSD. Perfect for programming and research work.</p>
-                            <div class="product-footer">
-                                <span class="product-condition"><i class="fas fa-check-circle"></i> Good Condition</span>
-                                <button class="btn btn-request">Request</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 animate-on-scroll">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <span class="product-badge">Popular</span>
-                            <i class="fas fa-book product-img" style="font-size: 5rem; color: var(--primary);"></i>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-category">Textbooks</div>
-                            <h4 class="product-title">Calculus - Early Transcendentals</h4>
-                            <p class="product-desc">8th Edition by James Stewart. Essential for engineering mathematics courses.</p>
-                            <div class="product-footer">
-                                <span class="product-condition"><i class="fas fa-check-circle"></i> Like New</span>
-                                <button class="btn btn-request">Request</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 animate-on-scroll">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <i class="fas fa-calculator product-img" style="font-size: 5rem; color: var(--primary);"></i>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-category">Calculators</div>
-                            <h4 class="product-title">Casio fx-991ES PLUS</h4>
-                            <p class="product-desc">Scientific calculator with 417 functions. Approved for all NUST exams.</p>
-                            <div class="product-footer">
-                                <span class="product-condition"><i class="fas fa-check-circle"></i> Excellent</span>
-                                <button class="btn btn-request">Request</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 animate-on-scroll">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <i class="fas fa-headphones product-img" style="font-size: 5rem; color: var(--primary);"></i>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-category">Audio</div>
-                            <h4 class="product-title">Sony WH-1000XM4</h4>
-                            <p class="product-desc">Noise cancelling wireless headphones. Great for focused study sessions.</p>
-                            <div class="product-footer">
-                                <span class="product-condition"><i class="fas fa-check-circle"></i> Good Condition</span>
-                                <button class="btn btn-request">Request</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 animate-on-scroll">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <span class="product-badge">Urgent</span>
-                            <i class="fas fa-tablet-alt product-img" style="font-size: 5rem; color: var(--primary);"></i>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-category">Tablets</div>
-                            <h4 class="product-title">iPad Air (4th Gen)</h4>
-                            <p class="product-desc">64GB WiFi. Ideal for digital note-taking and online classes.</p>
-                            <div class="product-footer">
-                                <span class="product-condition"><i class="fas fa-check-circle"></i> Very Good</span>
-                                <button class="btn btn-request">Request</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 animate-on-scroll">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <i class="fas fa-flask product-img" style="font-size: 5rem; color: var(--primary);"></i>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-category">Lab Equipment</div>
-                            <h4 class="product-title">Digital Multimeter Kit</h4>
-                            <p class="product-desc">Professional multimeter with probes and carrying case. For EE/CS labs.</p>
-                            <div class="product-footer">
-                                <span class="product-condition"><i class="fas fa-check-circle"></i> New</span>
-                                <button class="btn btn-request">Request</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center mt-5 animate-on-scroll">
-                <a href="#" class="btn btn-donate-nav" style="padding: 1rem 2.5rem; font-size: 1.1rem;">
-                    View All Products <i class="fas fa-arrow-right ms-2"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Impact Section -->
-    <section class="section-padding impact-section" id="impact">
-        <div class="container impact-content">
-            <div class="row align-items-center">
-                <div class="col-lg-6 animate-on-scroll">
-                    <h2 class="impact-title">Making Real <span>Impact</span></h2>
-                    <p class="impact-text">
-                        Every donated product opens a door to opportunity. From laptops that enable online learning 
-                        to textbooks that reduce financial burden, your generosity creates ripples of positive change 
-                        across the NUST community. Join hundreds of donors who believe in the power of sharing.
-                    </p>
-                    <div class="d-flex gap-3 flex-wrap">
-                        <a href="#donate" class="btn btn-hero-primary">
-                            <i class="fas fa-heart me-2"></i>Start Donating
-                        </a>
-                        <a href="#" class="btn btn-hero-outline">
-                            <i class="fas fa-play-circle me-2"></i>Watch Stories
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="row g-4">
-                        <div class="col-6 animate-on-scroll">
-                            <div class="impact-stat-box">
-                                <div class="impact-number" data-count="95">0</div>
-                                <div class="impact-label">% Satisfaction Rate</div>
-                            </div>
-                        </div>
-                        <div class="col-6 animate-on-scroll">
-                            <div class="impact-stat-box">
-                                <div class="impact-number" data-count="48">0</div>
-                                <div class="impact-label">Hours Avg. Response</div>
-                            </div>
-                        </div>
-                        <div class="col-6 animate-on-scroll">
-                            <div class="impact-stat-box">
-                                <div class="impact-number" data-count="100">0</div>
-                                <div class="impact-label">% Free Service</div>
-                            </div>
-                        </div>
-                        <div class="col-6 animate-on-scroll">
-                            <div class="impact-stat-box">
-                                <div class="impact-number" data-count="50">0</div>
-                                <div class="impact-label">+ Departments Covered</div>
-                            </div>
-                        </div>
+                        <div class="step-icon"><i class="fas fa-people-carry"></i></div>
+                        <h4>Connect & Deliver</h4>
+                        <p>We match and facilitate the exchange. Track your donation journey and receive confirmation of delivery.</p>
                     </div>
                 </div>
             </div>
@@ -1557,61 +1314,66 @@
     </section>
 
     <!-- Testimonials -->
-    <section class="section-padding" style="background: #fff;">
+    <section class="testimonials-section" id="testimonials">
         <div class="container">
-            <div class="section-header animate-on-scroll">
-                <span class="section-label">Stories</span>
-                <h2 class="section-title">What People <span>Say</span></h2>
-                <p class="section-subtitle">Hear from our donors and beneficiaries about their experience with NUST Gift Store.</p>
+            <div class="section-header" data-aos="fade-up">
+                <h2>Success Stories</h2>
+                <p>Hear from our community members</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-4 animate-on-scroll">
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
                     <div class="testimonial-card">
-                        <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
-                        <p class="testimonial-text">
-                            "I received a laptop through this platform that completely changed my academic life. 
-                            I can now attend online classes and complete my programming assignments without any issues. 
-                            Forever grateful to the donor!"
-                        </p>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"NUST Gift Store helped me get a laptop for my final year project. I couldn't afford one, and this platform connected me with a generous donor. Forever grateful!"</p>
                         <div class="testimonial-author">
-                            <div class="author-avatar">AK</div>
-                            <div class="author-info">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="Student">
+                            <div>
                                 <h5>Ahmed Khan</h5>
-                                <p>SEECS, 3rd Year</p>
+                                <span>Computer Science Student</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 animate-on-scroll">
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="testimonial-card">
-                        <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
-                        <p class="testimonial-text">
-                            "Donating my old engineering textbooks was the best decision. Knowing that a junior 
-                            student is using them to excel in their courses gives me immense satisfaction. 
-                            This platform makes giving so easy and meaningful."
-                        </p>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"Donating my old books through this platform was seamless. Knowing they helped multiple students with their studies gives me immense satisfaction."</p>
                         <div class="testimonial-author">
-                            <div class="author-avatar">SR</div>
-                            <div class="author-info">
-                                <h5>Sara Rizvi</h5>
-                                <p>Alumni, Class of 2023</p>
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" alt="Donor">
+                            <div>
+                                <h5>Dr. Sarah Ahmad</h5>
+                                <span>Faculty Member & Donor</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 animate-on-scroll">
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="testimonial-card">
-                        <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
-                        <p class="testimonial-text">
-                            "As a faculty member, I've seen firsthand how this initiative bridges the resource gap. 
-                            Students who couldn't afford lab equipment are now fully participating in practical sessions. 
-                            Truly a remarkable community effort."
-                        </p>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"The mobile phone I received helped me attend online classes during the pandemic. This initiative truly changes lives. Highly recommended!"</p>
                         <div class="testimonial-author">
-                            <div class="author-avatar">DA</div>
-                            <div class="author-info">
-                                <h5>Dr. Ali</h5>
-                                <p>Faculty, SMME</p>
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" alt="Student">
+                            <div>
+                                <h5>Fatima Ali</h5>
+                                <span>Engineering Student</span>
                             </div>
                         </div>
                     </div>
@@ -1621,249 +1383,241 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="section-padding cta-section" id="donate">
-        <div class="cta-pattern"></div>
-        <div class="container">
-            <div class="cta-content animate-on-scroll">
-                <h2 class="cta-title">Ready to Make a <span>Difference?</span></h2>
-                <p class="cta-text">
-                    Whether you have a gadget to donate or you're a student in need, 
-                    NUST Gift Store is here to connect generosity with opportunity.
-                </p>
-                <div class="d-flex justify-content-center flex-wrap">
-                    <a href="#" class="btn btn-cta-primary pulse">
-                        <i class="fas fa-hand-holding-heart me-2"></i>Donate a Product
-                    </a>
-                    <a href="#" class="btn btn-cta-outline">
-                        <i class="fas fa-search me-2"></i>Browse & Request
-                    </a>
-                </div>
-            </div>
+    <section class="cta-section" id="donate">
+        <div class="container" data-aos="zoom-in">
+            <h2>Ready to Make a Difference?</h2>
+            <p>Join hundreds of donors and beneficiaries in creating a more equitable academic environment. Your contribution, no matter how small, creates lasting impact.</p>
+            <a href="#" class="btn-cta pulse">Donate Now</a>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-4">
-                    <div class="footer-brand">
-                        <i class="fas fa-gift"></i>
-                        NUST Gift Store
-                    </div>
-                    <p class="footer-desc">
-                        A community-driven platform connecting donors with NUST students in need. 
-                        Together, we can ensure every student has access to the tools they need to succeed.
-                    </p>
-                    <div class="footer-social">
-                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-widget">
+                        <h4><i class="fas fa-gift me-2"></i>NUST Gift Store</h4>
+                        <p>Empowering education through technology. We bridge the gap between those who have and those who need, creating a stronger academic community.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4">
-                    <h4 class="footer-title">Quick Links</h4>
-                    <ul class="footer-links">
-                        <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
-                        <li><a href="#how-it-works"><i class="fas fa-chevron-right"></i> How It Works</a></li>
-                        <li><a href="#categories"><i class="fas fa-chevron-right"></i> Categories</a></li>
-                        <li><a href="#products"><i class="fas fa-chevron-right"></i> Products</a></li>
-                    </ul>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <div class="footer-widget">
+                        <h4>Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
+                            <li><a href="#about"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                            <li><a href="#services"><i class="fas fa-chevron-right"></i> Services</a></li>
+                            <li><a href="#categories"><i class="fas fa-chevron-right"></i> Categories</a></li>
+                            <li><a href="#how-it-works"><i class="fas fa-chevron-right"></i> How It Works</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-lg-2 col-md-4">
-                    <h4 class="footer-title">For Donors</h4>
-                    <ul class="footer-links">
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Donate Item</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Track Donation</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Tax Benefits</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Success Stories</a></li>
-                    </ul>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <div class="footer-widget">
+                        <h4>Categories</h4>
+                        <ul class="footer-links">
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Laptops</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Books</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Mobiles</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Accessories</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Software</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-lg-2 col-md-4">
-                    <h4 class="footer-title">For Students</h4>
-                    <ul class="footer-links">
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Browse Products</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Send Request</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> My Requests</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Guidelines</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-4">
-                    <h4 class="footer-title">Contact</h4>
-                    <ul class="footer-links">
-                        <li><a href="#"><i class="fas fa-envelope"></i> info@nustgiftstore.edu</a></li>
-                        <li><a href="#"><i class="fas fa-phone"></i> +92-51-9085-1234</a></li>
-                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> NUST H-12, Islamabad</a></li>
-                    </ul>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-widget">
+                        <h4>Contact Us</h4>
+                        <ul class="footer-contact" style="list-style: none; padding: 0;">
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>NUST Main Campus, H-12, Islamabad, Pakistan</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone"></i>
+                                <span>+92 51 9085 1234</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <span>info@nustgiftstore.edu.pk</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-clock"></i>
+                                <span>Mon - Fri: 9:00 AM - 5:00 PM</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p class="mb-0">© {{ date('Y') }} NUST Gift Store. All rights reserved. Made with <i class="fas fa-heart text-danger"></i> for NUST Students.</p>
+                <p>&copy; 2026 NUST Gift Store. All Rights Reserved. Designed with <i class="fas fa-heart" style="color: #FABD4D;"></i> for the NUST Community</p>
             </div>
         </div>
     </footer>
 
+    <!-- Back to Top -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
-        // Loading Spinner
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('spinner').classList.add('hidden');
-            }, 500);
-        });
+        $(document).ready(function() {
+            // Remove loader
+            setTimeout(function() {
+                $('#loader').addClass('hidden');
+            }, 1000);
 
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
+            // Initialize AOS Animation Library
+            AOS.init({
+                duration: 1000,
+                once: true,
+                offset: 100,
+                easing: 'ease-out-cubic'
+            });
 
-            // Scroll Progress
-            const scrollProgress = document.getElementById('scrollProgress');
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollPercent = (scrollTop / docHeight) * 100;
-            scrollProgress.style.width = scrollPercent + '%';
-        });
+            // Navbar scroll effect
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 50) {
+                    $('#navbar').addClass('scrolled');
+                } else {
+                    $('#navbar').removeClass('scrolled');
+                }
 
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+                // Back to top button
+                if ($(this).scrollTop() > 300) {
+                    $('#backToTop').addClass('show');
+                } else {
+                    $('#backToTop').removeClass('show');
+                }
+            });
+
+            // Back to top functionality
+            $('#backToTop').click(function() {
+                $('html, body').animate({scrollTop: 0}, 800);
+            });
+
+            // Smooth scrolling for navigation links
+            $('a[href^="#"]').on('click', function(e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                var target = $(this.getAttribute('href'));
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 70
+                    }, 800);
                 }
             });
-        });
 
-        // Intersection Observer for Animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+            // Hero Slider
+            let currentSlide = 0;
+            const slides = $('.slide');
+            const dots = $('.slider-dot');
+            const totalSlides = slides.length;
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animated');
+            function showSlide(index) {
+                slides.removeClass('active');
+                dots.removeClass('active');
+                slides.eq(index).addClass('active');
+                dots.eq(index).addClass('active');
+                
+                // Reset and trigger AOS animation for slide content
+                slides.eq(index).find('[data-aos]').removeClass('aos-animate');
+                setTimeout(function() {
+                    slides.eq(index).find('[data-aos]').addClass('aos-animate');
+                }, 100);
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            // Auto slide
+            let slideInterval = setInterval(nextSlide, 5000);
+
+            // Manual controls
+            $('#nextSlide').click(function() {
+                clearInterval(slideInterval);
+                nextSlide();
+                slideInterval = setInterval(nextSlide, 5000);
+            });
+
+            $('#prevSlide').click(function() {
+                clearInterval(slideInterval);
+                prevSlide();
+                slideInterval = setInterval(nextSlide, 5000);
+            });
+
+            $('.slider-dot').click(function() {
+                clearInterval(slideInterval);
+                currentSlide = $(this).data('slide');
+                showSlide(currentSlide);
+                slideInterval = setInterval(nextSlide, 5000);
+            });
+
+            // Counter Animation
+            function animateCounter($element) {
+                var countTo = $element.attr('data-count');
+                $({countNum: $element.text()}).animate({
+                    countNum: countTo
+                }, {
+                    duration: 2000,
+                    easing: 'swing',
+                    step: function() {
+                        $element.text(Math.floor(this.countNum));
+                    },
+                    complete: function() {
+                        $element.text(this.countNum);
+                    }
+                });
+            }
+
+            // Trigger counters when in viewport
+            var countersTriggered = false;
+            $(window).scroll(function() {
+                var statsSection = $('.stats-section');
+                if (statsSection.length) {
+                    var sectionTop = statsSection.offset().top - $(window).height() + 100;
+                    if ($(this).scrollTop() > sectionTop && !countersTriggered) {
+                        $('.stat-number').each(function() {
+                            animateCounter($(this));
+                        });
+                        countersTriggered = true;
+                    }
                 }
             });
-        }, observerOptions);
 
-        document.querySelectorAll('.animate-on-scroll').forEach(el => {
-            observer.observe(el);
-        });
+            // Parallax effect for hero slides
+            $(window).scroll(function() {
+                var scrolled = $(this).scrollTop();
+                $('.slide-bg').css('transform', 'translateY(' + (scrolled * 0.5) + 'px)');
+            });
 
-        // Counter Animation
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const counters = entry.target.querySelectorAll('[data-count]');
-                    counters.forEach(counter => {
-                        const target = parseInt(counter.getAttribute('data-count'));
-                        const duration = 2000;
-                        const step = target / (duration / 16);
-                        let current = 0;
-                        
-                        const updateCounter = () => {
-                            current += step;
-                            if (current < target) {
-                                counter.textContent = Math.floor(current);
-                                requestAnimationFrame(updateCounter);
-                            } else {
-                                counter.textContent = target + (target > 100 ? '+' : '');
-                            }
-                        };
-                        updateCounter();
-                    });
-                    counterObserver.unobserve(entry.target);
+            // Add hover effect to service cards
+            $('.service-card').hover(
+                function() {
+                    $(this).find('.service-icon').addClass('floating');
+                },
+                function() {
+                    $(this).find('.service-icon').removeClass('floating');
                 }
-            });
-        }, { threshold: 0.5 });
-
-        document.querySelectorAll('.hero-stats, .impact-section').forEach(section => {
-            counterObserver.observe(section);
-        });
-
-        // Particle Animation
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-                this.opacity = Math.random() * 0.5 + 0.1;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < 50; i++) {
-                particles.push(new Particle());
-            }
-        }
-        initParticles();
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        // Parallax Effect for Hero Shapes
-        window.addEventListener('scroll', () => {
-            const scrolled = window.scrollY;
-            document.querySelectorAll('.shape').forEach((shape, index) => {
-                const speed = 0.5 + (index * 0.2);
-                shape.style.transform = `translateY(${scrolled * speed}px)`;
-            });
-        });
-
-        // Button Click Feedback
-        document.querySelectorAll('.btn-request').forEach(btn => {
-            btn.addEventListener('click', function() {
-                this.innerHTML = '<i class="fas fa-check me-1"></i> Requested';
-                this.style.background = '#28a745';
-                setTimeout(() => {
-                    this.innerHTML = 'Request';
-                    this.style.background = '';
-                }, 2000);
-            });
+            );
         });
     </script>
 </body>

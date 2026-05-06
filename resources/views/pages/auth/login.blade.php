@@ -67,7 +67,7 @@
                     <input type="checkbox" name="remember" class="form-check-input"> Keep me signed in
                   </label>
                 </div>
-                <a href="#" class="auth-link text-primary">Forgot password?</a>
+                <a href="#" class="auth-link text-info">Forgot password?</a>
               </div>
 
             </form>

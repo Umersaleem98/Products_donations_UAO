@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminCategorytController;
+use App\Http\Controllers\Admin\AdminExcelController;
 use App\Http\Controllers\Admin\AdminProductsController;
 use App\Http\Controllers\Admin\AdminRequestController;
 use App\Http\Controllers\Admin\AdminUserController;
@@ -46,14 +47,14 @@ Route::get('admin/user/create', [AdminUserController::class,'create'])->name('ad
 Route::post('admin/user/store', [AdminUserController::class,'store'])->name('admin.user.store');
 Route::get('admin/user/edit/{id}', [AdminUserController::class,'edit'])->name('admin.user.edit');
 Route::put('admin/user/update/{id}', [AdminUserController::class,'update'])->name('admin.user.update');
-Route::delete('admin/user/delete/{id}', [AdminUserController::class,'destroy'])->name('admin.user.destroy');
+Route::get('admin/user/delete/{id}', [AdminUserController::class,'destroy'])->name('admin.user.destroy');
+// excel Routes 
+Route::post('/admin/users/import', [AdminUserController::class, 'importUsers'])->name('admin.user.import');
+Route::get('/admin/users/export', [AdminUserController::class, 'exportUsers'])->name('admin.user.export');
+Route::post('/admin/users/export-selected', [AdminUserController::class, 'exportSelected'])->name('admin.user.export.selected');
 
-// VIEW PAGE
 Route::get('admin/requests', [AdminRequestController::class, 'index'])->name('admin.requests');
-
-// APPROVE / REJECT
 Route::post('admin/request/{id}/update', [AdminRequestController::class, 'update'])->name('admin.request.update');
-
 
 
 Route::get('donor/product/index', [DonorProductController::class, 'index'])->name('donor.product.index');

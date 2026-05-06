@@ -8390,8 +8390,8 @@
   --bs-danger: #fe7c96;
   --bs-light: #f8f9fa;
   --bs-dark: #3e4b5b;
-  --bs-primary-rgb: 182, 109, 255;
-  --bs-secondary-rgb: 195, 189, 189;
+  --bs-primary-rgb: #3B71B8;
+  --bs-secondary-rgb:#3B71B8;
   --bs-success-rgb: 27, 207, 180;
   --bs-info-rgb: 25, 138, 227;
   --bs-warning-rgb: 254, 215, 19;
@@ -11585,7 +11585,7 @@ textarea.is-invalid.tt-hint, .select2-container--default .select2-selection--sin
   --bs-btn-hover-color: #000;
   --bs-btn-hover-bg: #c3bdbd;
   --bs-btn-hover-border-color: #c3bdbd;
-  --bs-btn-focus-shadow-rgb: 195, 189, 189;
+  --bs-btn-focus-shadow-rgb:#3B71B8;
   --bs-btn-active-color: #000;
   --bs-btn-active-bg: #c3bdbd;
   --bs-btn-active-border-color: #c3bdbd;
@@ -21210,7 +21210,7 @@ code {
 }
 
 .bg-gradient-primary {
-  background: linear-gradient(to right, #da8cff, #9a55ff) !important;
+  background: linear-gradient(to right, #FABD4D) !important;
 }
 
 .bg-gradient-secondary {
@@ -21845,7 +21845,7 @@ code {
 
 /*Badge gradient variations*/
 .badge-gradient-primary {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #FABD4D);
   color: #ffffff;
 }
 
@@ -22293,7 +22293,7 @@ code {
 }
 
 .btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #FABD4D);
   color: #000000;
 }
 
@@ -22593,7 +22593,7 @@ code {
 
 /* gradient buttons */
 .btn-gradient-primary {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #FABD4D);
   border: 0;
   -webkit-transition: opacity 0.3s ease;
   -moz-transition: opacity 0.3s ease;
@@ -22602,7 +22602,7 @@ code {
   transition: opacity 0.3s ease;
 }
 .btn-gradient-primary:not([disabled]):not(.disabled):active, .btn-gradient-primary:not([disabled]):not(.disabled).active, .show > .btn-gradient-primary.dropdown-toggle {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #FABD4D);
 }
 .btn-gradient-primary:hover {
   opacity: 0.8;
@@ -23351,7 +23351,7 @@ code {
   color: #ffffff;
 }
 .form-check .form-check-label input[type=checkbox]:checked + .input-helper:before {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #FABD4D);
   border-width: 0;
 }
 .form-check .form-check-label input[type=checkbox]:checked + .input-helper:after {
@@ -23421,7 +23421,7 @@ code {
   right: 6px;
 }
 .form-check .form-check-label input[type=radio]:checked + .input-helper:before {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #FABD4D);
   border-width: 0;
 }
 .form-check .form-check-label input[type=radio]:checked + .input-helper:after {
@@ -23449,7 +23449,7 @@ code {
 }
 .form-check-primary.form-check label input[type=checkbox]:checked + .input-helper:before,
 .form-check-primary.form-check label input[type=radio]:checked + .input-helper:before {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #FABD4D);
 }
 
 .form-check-secondary.form-check label input[type=checkbox] + .input-helper:before,
@@ -23896,7 +23896,7 @@ dl li {
   background: linear-gradient(to right, #84d9d2, #07cdae);
 }
 .gradient-bullet-list li:nth-child(5):before {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #FABD4D);
 }
 
 .bullet-line-list {
@@ -24743,7 +24743,7 @@ dl li {
   color: #3B71B8;
 }
 .pws_tabs_container ul.pws_tabs_controll li a.pws_tab_active {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #FABD4D);
   color: #fff;
 }
 .pws_tabs_container .demo-tabs {
@@ -25064,7 +25064,7 @@ dl li {
   font-size: 0.875rem;
 }
 .auth form .auth-link:hover {
-  color: initial;
+  color: #FABD4D;
 }
 .auth.multi-step-login {
   height: 100%;
@@ -25473,7 +25473,7 @@ dl li {
 }
 /* Navbar color variations */
 .navbar.navbar-primary .navbar-menu-wrapper {
-  background: linear-gradient(to right, #da8cff, #9a55ff);
+  background: linear-gradient(to right, #FABD4D);
   color: #ffffff;
 }
 .navbar.navbar-primary .navbar-menu-wrapper .search-field .input-group input:-ms-input-placeholder {
