@@ -15,6 +15,15 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/notification/read/{id}', function ($id) {
+    $notification = auth()->user()->notifications()->find($id);
+
+    if ($notification) {
+        $notification->markAsRead();
+    }
+
+    return back();
+})->name('notification.read');
 
 
 
@@ -48,6 +57,7 @@ Route::post('admin/user/store', [AdminUserController::class,'store'])->name('adm
 Route::get('admin/user/edit/{id}', [AdminUserController::class,'edit'])->name('admin.user.edit');
 Route::put('admin/user/update/{id}', [AdminUserController::class,'update'])->name('admin.user.update');
 Route::get('admin/user/delete/{id}', [AdminUserController::class,'destroy'])->name('admin.user.destroy');
+Route::post('/admin/user/delete-selected', [AdminUserController::class, 'deleteSelected'])->name('admin.user.delete.selected');
 // excel Routes 
 Route::post('/admin/users/import', [AdminUserController::class, 'importUsers'])->name('admin.user.import');
 Route::get('/admin/users/export', [AdminUserController::class, 'exportUsers'])->name('admin.user.export');

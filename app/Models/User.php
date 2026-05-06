@@ -11,6 +11,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+        use Notifiable;
     
    protected $fillable = [
         'name', 'email', 'password', 'image','role', 'qalam_id'
@@ -47,6 +49,7 @@ public function isBeneficiary()
 {
     return $this->hasMany(Product::class);
 }
+
 
 
   

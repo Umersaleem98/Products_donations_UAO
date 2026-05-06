@@ -1,164 +1,150 @@
-  <!-- partial:partials/_navbar.html -->
-  <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-          <a class="navbar-brand brand-logo" href="index.html"><img src="{{ asset('admins/assets/images/logo.svg') }}"
-                  alt="logo" /></a>
-          <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}"><img
-                  src="{{ asset('admins/assets/images/logo-mini.svg') }}" alt="logo" /></a>
-      </div>
-      <div class="navbar-menu-wrapper d-flex align-items-stretch">
-          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-              <span class="mdi mdi-menu"></span>
-          </button>
-          <div class="search-field d-none d-md-block">
-              <form class="d-flex align-items-center h-100" action="#">
-                  <div class="input-group">
-                      <div class="input-group-prepend bg-transparent">
-                          <i class="input-group-text border-0 mdi mdi-magnify"></i>
-                      </div>
-                      <input type="text" class="form-control bg-transparent border-0" placeholder="Search projects">
-                  </div>
-              </form>
-          </div>
-          <ul class="navbar-nav navbar-nav-right">
+<nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row" style="background-color: #0880E0;">
 
-              <li class="nav-item d-none d-lg-block full-screen-link">
-                  <a class="nav-link">
-                      <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
-                  </a>
-              </li>
-              <li class="nav-item dropdown">
-                  <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#"
-                      data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class="mdi mdi-email-outline"></i>
-                      <span class="count-symbol bg-warning"></span>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list"
-                      aria-labelledby="messageDropdown">
-                      <h6 class="p-3 mb-0">Messages</h6>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item preview-item">
-                          <div class="preview-thumbnail">
-                              <img src="admins/assets/images/faces/face4.jpg" alt="image" class="profile-pic">
-                          </div>
-                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                              <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
-                              <p class="text-gray mb-0"> 1 Minutes ago </p>
-                          </div>
-                      </a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item preview-item">
-                          <div class="preview-thumbnail">
-                              <img src="admins/assets/images/faces/face2.jpg" alt="image" class="profile-pic">
-                          </div>
-                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                              <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
-                              <p class="text-gray mb-0"> 15 Minutes ago </p>
-                          </div>
-                      </a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item preview-item">
-                          <div class="preview-thumbnail">
-                              <img src="admins/assets/images/faces/face3.jpg" alt="image" class="profile-pic">
-                          </div>
-                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                              <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>
-                              <p class="text-gray mb-0"> 18 Minutes ago </p>
-                          </div>
-                      </a>
-                      <div class="dropdown-divider"></div>
-                      <h6 class="p-3 mb-0 text-center">4 new messages</h6>
-                  </div>
-              </li>
-              <li class="nav-item dropdown">
-                  <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
-                      data-bs-toggle="dropdown">
-                      <i class="mdi mdi-bell-outline"></i>
-                      <span class="count-symbol bg-danger"></span>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list"
-                      aria-labelledby="notificationDropdown">
-                      <h6 class="p-3 mb-0">Notifications</h6>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item preview-item">
-                          <div class="preview-thumbnail">
-                              <div class="preview-icon bg-success">
-                                  <i class="mdi mdi-calendar"></i>
-                              </div>
-                          </div>
-                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                              <h6 class="preview-subject font-weight-normal mb-1">Event today</h6>
-                              <p class="text-gray ellipsis mb-0"> Just a reminder that you have an event today </p>
-                          </div>
-                      </a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item preview-item">
-                          <div class="preview-thumbnail">
-                              <div class="preview-icon bg-warning">
-                                  <i class="mdi mdi-cog"></i>
-                              </div>
-                          </div>
-                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                              <h6 class="preview-subject font-weight-normal mb-1">Settings</h6>
-                              <p class="text-gray ellipsis mb-0"> Update dashboard </p>
-                          </div>
-                      </a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item preview-item">
-                          <div class="preview-thumbnail">
-                              <div class="preview-icon bg-info">
-                                  <i class="mdi mdi-link-variant"></i>
-                              </div>
-                          </div>
-                          <div
-                              class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                              <h6 class="preview-subject font-weight-normal mb-1">Launch Admin</h6>
-                              <p class="text-gray ellipsis mb-0"> New admin wow! </p>
-                          </div>
-                      </a>
-                      <div class="dropdown-divider"></div>
-                      <h6 class="p-3 mb-0 text-center">See all notifications</h6>
-                  </div>
-              </li>
-              <li class="nav-item nav-profile dropdown">
-                  <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown"
-                      aria-expanded="false">
+    <!-- LOGO -->
+    <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+        <a class="navbar-brand brand-logo" href="#">
+            <img src="{{ asset('admins/assets/images/logos/NGS.png') }}" alt="logo" />
+        </a>
 
-                      <div class="nav-profile-img">
-                          @if (Auth::user()->image)
-                              <img src="{{ asset('admin/asset/profilephoto/' . Auth::user()->image) }}"
-                                  alt="image">
-                          @else
-                              <img src="{{ asset('admin/asset/dummy/dummy.jpg') }}" alt="image">
-                          @endif
+        <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}">
+            <img src="{{ asset('admins/assets/images/logos/logo 4.png') }}" alt="logo" />
+        </a>
+    </div>
 
-                          <span class="availability-status online"></span>
-                      </div>
+    <!-- RIGHT SIDE -->
+    <div class="navbar-menu-wrapper d-flex align-items-stretch">
 
-                      <div class="nav-profile-text">
-                          <p class="mb-1 text-black">{{ Auth::user()->name }}</p>
-                      </div>
-                  </a>
+        <!-- TOGGLE -->
+        <button class="navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu text-light"></span>
+        </button>
 
-                  <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+        <!-- SEARCH -->
+        <div class="search-field d-none d-md-block">
+            <form class="d-flex align-items-center h-100">
+                <div class="input-group">
+                    <div class="input-group-prepend text-light">
+                        <i class="input-group-text border-0 mdi mdi-magnify text-light"></i>
+                    </div>
+                    <input type="text" class="form-control bg-transparent border-0 text-light" placeholder="Search">
+                </div>
+            </form>
+        </div>
 
-                      <a class="dropdown-item" href="#">
-                          <i class="mdi mdi-cached me-2 text-success"></i> Activity Log
-                      </a>
+        <ul class="navbar-nav navbar-nav-right">
 
-                      <div class="dropdown-divider"></div>
+            <!-- FULL SCREEN -->
+            <li class="nav-item d-none d-lg-block">
+                <a class="nav-link">
+                    <i class="mdi mdi-fullscreen text-light" id="fullscreen-button"></i>
+                </a>
+            </li>
 
-                      <form method="POST" action="{{ route('logout') }}" style="margin:0;">
-                          @csrf
+            <!-- ===================== -->
+            <!-- 🔔 NOTIFICATIONS (ADMIN ONLY) -->
+            <!-- ===================== -->
 
-                          <button type="submit" class="dropdown-item text-danger mx-4">
-                              <i class="mdi mdi-logout me-2 text-primary"></i> Signout
-                          </button>
-                      </form>
+            @if(auth()->check() && auth()->user()->role === 'admin')
 
-                  </div>
-              </li>
-          </ul>
+            <li class="nav-item dropdown">
+                <a class="nav-link count-indicator dropdown-toggle" href="#"
+                   data-bs-toggle="dropdown">
 
-      </div>
-  </nav>
+                    <i class="mdi mdi-bell-outline text-light"></i>
+
+                    @if(auth()->user()->unreadNotifications->count() > 0)
+                        <span class="count-symbol bg-danger"></span>
+                    @endif
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list">
+
+                    <h6 class="p-3 mb-0">
+                        Notifications ({{ auth()->user()->unreadNotifications->count() }})
+                    </h6>
+
+                    <div class="dropdown-divider"></div>
+
+                    @forelse(auth()->user()->unreadNotifications as $notification)
+
+                        <a href="{{ route('notification.read', $notification->id) }}"
+                           class="dropdown-item preview-item">
+
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon">
+                                    <i class="mdi mdi-package-variant text-light"></i>
+                                </div>
+                            </div>
+
+                            <div class="preview-item-content d-flex flex-column">
+
+                                <h6 class="preview-subject mb-1">
+                                    {{ $notification->data['title'] ?? 'Notification' }}
+                                </h6>
+
+                                <p class="text-gray mb-0">
+                                    <strong>{{ $notification->data['user_name'] ?? '' }}</strong>
+                                    {{ $notification->data['message'] ?? '' }}
+                                </p>
+
+                            </div>
+
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+
+                    @empty
+
+                        <p class="p-3 text-center">No notifications</p>
+
+                    @endforelse
+
+                </div>
+            </li>
+
+            @endif
+
+            <!-- ===================== -->
+            <!-- PROFILE -->
+            <!-- ===================== -->
+
+            <li class="nav-item nav-profile dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+
+                    <div class="nav-profile-img">
+
+                        @if (auth()->user()->image)
+                            <img src="{{ asset('admin/asset/profilephoto/' . auth()->user()->image) }}">
+                        @else
+                            <img src="{{ asset('admin/asset/dummy/dummy.jpg') }}">
+                        @endif
+
+                        <span class="availability-status online"></span>
+                    </div>
+
+                    <div class="nav-profile-text">
+                        <p class="mb-1 text-light">{{ auth()->user()->name }}</p>
+                    </div>
+                </a>
+
+                <div class="dropdown-menu navbar-dropdown">
+
+                    <a class="dropdown-item">
+                        <i class="mdi mdi-cached me-2 text-success"></i> Activity Log
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item text-danger">
+                            <i class="mdi mdi-logout me-2 text-danger"></i> Logout
+                        </button>
+                    </form>
+
+                </div>
+            </li>
+
+        </ul>
+    </div>
+</nav>

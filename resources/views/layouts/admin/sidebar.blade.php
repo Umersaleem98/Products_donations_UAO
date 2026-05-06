@@ -31,7 +31,7 @@
          <li class="nav-item">
              <a class="nav-link" href="{{ route('dashboard') }}">
                  <span class="menu-title">Dashboard</span>
-                 <i class="mdi mdi-home menu-icon"></i>
+                 <i class="mdi mdi-home menu-icon text-primary"></i>
              </a>
          </li>
 

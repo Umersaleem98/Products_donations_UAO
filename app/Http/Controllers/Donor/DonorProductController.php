@@ -3,16 +3,18 @@
 namespace App\Http\Controllers\Donor;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
+use App\Models\User;
+use App\Notifications\ProductCreatedNotification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 
 class DonorProductController extends Controller
 {
-
     public function index()
     {
         $products = Product::with(['category', 'user'])
@@ -26,6 +28,7 @@ class DonorProductController extends Controller
     public function create()
     {
         $categories = Category::all();
+
         return view('pages.donor.products.create', compact('categories'));
     }
 
@@ -42,31 +45,37 @@ class DonorProductController extends Controller
         $imageNames = [];
 
         if ($request->hasFile('images')) {
-
             foreach ($request->file('images') as $image) {
 
-                // 🔥 generate unique filename
-                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $filename = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
 
-                // 🔥 move to public/admin/products
                 $image->move(public_path('admin/products'), $filename);
 
-                // 🔥 store ONLY filename
                 $imageNames[] = $filename;
             }
         }
 
-        Product::create([
+        // ✅ CREATE PRODUCT
+        $products = Product::create([
             'user_id' => auth()->id(),
             'category_id' => $request->category_id,
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
-            'images' => json_encode($imageNames), // ONLY names saved
+            'images' => json_encode($imageNames),
             'status' => $request->status,
         ]);
 
-        return redirect()->route('donor.product.index')->with('success', 'Product created successfully');
+
+        // ✅ GET ALL USERS (EXCEPT CURRENT USER)
+        $users = User::where('id', '!=', auth()->id())->get();
+
+        // ✅ SEND NOTIFICATION (BEST METHOD)
+        Notification::send($users, new ProductCreatedNotification($products));
+
+        return redirect()
+            ->route('donor.product.index')
+            ->with('success', 'Product created successfully');
     }
 
     public function edit($id)
@@ -76,7 +85,6 @@ class DonorProductController extends Controller
 
         return view('pages.donor.products.edit', compact('product', 'categories'));
     }
-
 
     public function update(Request $request, $id)
     {
@@ -95,9 +103,9 @@ class DonorProductController extends Controller
         if ($request->hasFile('images')) {
 
             // 🔥 delete old images from folder
-            if (!empty($imageNames)) {
+            if (! empty($imageNames)) {
                 foreach ($imageNames as $oldImage) {
-                    $oldPath = public_path('admin/products/' . $oldImage);
+                    $oldPath = public_path('admin/products/'.$oldImage);
 
                     if (file_exists($oldPath)) {
                         unlink($oldPath);
@@ -110,7 +118,7 @@ class DonorProductController extends Controller
             // 🔥 upload new images
             foreach ($request->file('images') as $image) {
 
-                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $filename = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
 
                 $image->move(public_path('admin/products'), $filename);
 
@@ -131,6 +139,7 @@ class DonorProductController extends Controller
         return redirect()->route('donor.product.index')
             ->with('success', 'Product updated successfully');
     }
+
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
@@ -140,10 +149,10 @@ class DonorProductController extends Controller
 
             $images = json_decode($product->images, true);
 
-            if (!empty($images)) {
+            if (! empty($images)) {
                 foreach ($images as $image) {
 
-                    $path = public_path('admin/products/' . $image);
+                    $path = public_path('admin/products/'.$image);
 
                     if (file_exists($path)) {
                         unlink($path);

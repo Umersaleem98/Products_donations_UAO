@@ -13,13 +13,26 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class AdminUserController extends Controller
 {
-    public function index()
-    {
-        $users = User::latest()->paginate(10);
+    public function index(Request $request)
+{
+    $perPage = $request->get('per_page', 10); // default 10
+    $search = $request->get('search');
 
-        return view('pages.admin.users.index', compact('users'));
-    }
+    $users = User::query()
 
+        // 🔍 SEARCH
+        ->when($search, function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('qalam_id', 'like', "%{$search}%");
+        })
+
+        ->latest()
+        ->paginate($perPage)
+        ->withQueryString(); // keep params in pagination
+
+    return view('pages.admin.users.index', compact('users', 'perPage', 'search'));
+}
     public function create()
     {
         return view('pages.admin.users.create');
@@ -119,6 +132,19 @@ class AdminUserController extends Controller
         return redirect()->route('admin.user.index')
             ->with('success', 'User deleted successfully');
     }
+
+
+    public function deleteSelected(Request $request)
+{
+    if (!$request->ids) {
+        return back()->with('error', 'No users selected');
+    }
+
+    User::whereIn('id', $request->ids)->delete();
+
+    return back()->with('success', 'Selected users deleted successfully');
+}
+
 
 
    // IMPORT
