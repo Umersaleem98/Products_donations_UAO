@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Admin User',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('12345678'),
             'role' => 'admin',
         ]);
 
@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Donor User',
             'email' => 'donor@gmail.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('12345678'),
             'role' => 'donor',
         ]);
 
@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Beneficiary User',
             'email' => 'beneficiary@gmail.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('12345678'),
             'role' => 'beneficiary',
             'qalam_id' => '12345',
         ]);

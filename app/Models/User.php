@@ -35,15 +35,15 @@ public function isBeneficiary()
     return $this->role === 'beneficiary';
 }
 
-   public function beneficiaryProfile()
-    {
-        return $this->hasOne(BeneficiaryProfile::class);
-    }
+ public function beneficiaryProfile()
+{
+    return $this->hasOne(BeneficiaryProfile::class);
+}
 
-    public function donorProfile()
-    {
-        return $this->hasOne(DonorProfile::class);
-    }
+public function donorProfile()
+{
+    return $this->hasOne(DonorProfile::class);
+}
 
     public function products()
 {

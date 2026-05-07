@@ -992,14 +992,16 @@
 
     <!-- Loader -->
     <div class="loader" id="loader">
-        <div class="loader-spinner"></div>
+        <div class="loader-spinner">
+              <img src="{{ asset('admins/assets/images/logos/logo.png') }}" alt="NUST Gift Store" class="navbar-brand-img" style="width: 80px; height: 80px">
+        </div>
     </div>
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top" id="navbar">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-gift"></i>NUST Gift Store
+                 <img src="{{ asset('admins/assets/images/logos/logo.png') }}" alt="NUST Gift Store" class="navbar-brand-img" style="width: 80px; height: 80px"> <span style="color: var(--secondary-color);">NUST</span> Gift Store
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -1120,7 +1122,7 @@
                 <div class="col-lg-6" data-aos="fade-left">
                     <div class="about-content">
                         <div class="section-header text-start mb-4">
-                            <h2 style="display: block; text-align: left;">About Us</h2>
+                            <h2 style="display: block; text-align: left;">Who Are We?</h2>
                             <p style="text-align: left; margin-left: 0;">Empowering through generosity</p>
                         </div>
                         <h3>Making Technology Accessible for Everyone</h3>

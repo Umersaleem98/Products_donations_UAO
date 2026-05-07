@@ -10,10 +10,10 @@
         <div class="col-lg-6 mx-auto">
           <div class="auth-form-light text-left p-5">
 
-            <div class="brand-logo">
+            <div class="brand-logo text-center mb-4">
               <div>
-                <span class="brand-name">NUST Gift Store</span>
-                <span class="brand-sub">Donate · Connect · Empower</span>
+                
+                 <img src="{{ asset('admins/assets/images/logos/logo.png') }}" alt="NUST Gift Store" class="navbar-brand-img" style="width: 80px; height: 80px"> <br><span><h1><b style="color: #FABD4D ;">NUST</b><b style="color: #3B71B8 ;"> Gift Store</b></h1></span>
               </div>
             </div>
 

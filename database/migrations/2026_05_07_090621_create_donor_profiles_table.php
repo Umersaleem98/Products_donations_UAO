@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('donor_profiles', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-    $table->string('organization')->nullable();
-    $table->string('phone')->nullable();
+             $table->foreignId('user_id')
+                ->constrained()
+                ->onDelete('cascade');
+
+            $table->string('organization')->nullable();
+            $table->string('designation')->nullable();
+            $table->string('country')->nullable();
+            $table->text('address')->nullable();
             $table->timestamps();
         });
     }

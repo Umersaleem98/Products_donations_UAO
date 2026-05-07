@@ -14,25 +14,37 @@ use Maatwebsite\Excel\Facades\Excel;
 class AdminUserController extends Controller
 {
     public function index(Request $request)
-{
-    $perPage = $request->get('per_page', 10); // default 10
-    $search = $request->get('search');
+    {
+        $perPage = $request->get('per_page', 10);
+        $search = $request->get('search');
 
-    $users = User::query()
+        $users = User::query()
 
-        // 🔍 SEARCH
-        ->when($search, function ($query, $search) {
-            $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('qalam_id', 'like', "%{$search}%");
-        })
+            // SEARCH
+            ->when($search, function ($query, $search) {
 
-        ->latest()
-        ->paginate($perPage)
-        ->withQueryString(); // keep params in pagination
+                $query->where(function ($q) use ($search) {
 
-    return view('pages.admin.users.index', compact('users', 'perPage', 'search'));
-}
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('qalam_id', 'like', "%{$search}%")
+                        ->orWhere('role', 'like', "%{$search}%");
+
+                });
+
+            })
+
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+
+        return view('pages.admin.users.index', compact(
+            'users',
+            'perPage',
+            'search'
+        ));
+    }
+
     public function create()
     {
         return view('pages.admin.users.create');
@@ -133,25 +145,22 @@ class AdminUserController extends Controller
             ->with('success', 'User deleted successfully');
     }
 
-
     public function deleteSelected(Request $request)
-{
-    if (!$request->ids) {
-        return back()->with('error', 'No users selected');
+    {
+        if (! $request->ids) {
+            return back()->with('error', 'No users selected');
+        }
+
+        User::whereIn('id', $request->ids)->delete();
+
+        return back()->with('success', 'Selected users deleted successfully');
     }
 
-    User::whereIn('id', $request->ids)->delete();
-
-    return back()->with('success', 'Selected users deleted successfully');
-}
-
-
-
-   // IMPORT
+    // IMPORT
     public function importUsers(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,csv'
+            'file' => 'required|mimes:xlsx,csv',
         ]);
 
         Excel::import(new UsersImport, $request->file('file'));
@@ -170,7 +179,7 @@ class AdminUserController extends Controller
     {
         $ids = $request->ids;
 
-        if (!$ids) {
+        if (! $ids) {
             return back()->with('error', 'Please select at least one user.');
         }
 

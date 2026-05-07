@@ -12,11 +12,14 @@ class DonorRequestController extends Controller
 {
     $requests = ProductRequest::with(['product', 'beneficiary'])
         ->where('donor_id', auth()->id())
-        ->where('admin_status', 'approved') // 🔥 IMPORTANT FILTER
+        ->where('admin_status', 'approved')
         ->latest()
         ->get();
 
-    return view('pages.donor.request.index', compact('requests'));
+    // UNIQUE BENEFICIARIES ONLY
+    $beneficiaries = $requests->pluck('beneficiary')->unique('id');
+
+    return view('pages.donor.request.index', compact('requests', 'beneficiaries'));
 }
 
 public function updateRequestStatus(Request $request, $id)

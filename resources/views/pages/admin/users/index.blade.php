@@ -37,7 +37,7 @@
                                         <div class="d-flex gap-2 flex-wrap">
 
                                             <!-- EXPORT ALL -->
-                                            <a href="{{ route('admin.user.export') }}" class="btn btn- btn-sm">
+                                            <a href="{{ route('admin.user.export') }}" class="btn btn-dark btn-sm">
                                                 Export All
                                             </a>
 
