@@ -25649,7 +25649,7 @@ dl li {
   overflow: hidden;
   flex-wrap: nowrap;
   flex-direction: column;
-  margin-bottom: 60px;
+  margin-bottom: 20px;
 }
 .sidebar .nav .nav-item {
   padding: 0 2.25rem;
@@ -25669,7 +25669,7 @@ dl li {
   -webkit-align-items: center;
   align-items: center;
   white-space: nowrap;
-  padding: 1.125rem 0 1.125rem 0;
+  padding: 15 0 15 0;
   color: #3e4b5b;
   -webkit-transition-duration: 0.45s;
   -moz-transition-duration: 0.45s;
@@ -25743,10 +25743,11 @@ dl li {
   font-family: "ubuntu-medium", sans-serif;
 }
 .sidebar .nav .nav-item.active > .nav-link i {
-  color: #3B71B8;
+  color: white;
 }
 .sidebar .nav .nav-item:hover {
-  background: #fcfcfc;
+  background: #FABD4D;
+  color: #ffffff;
 }
 .sidebar .nav .nav-item.nav-profile .nav-link {
   height: auto;
@@ -25859,7 +25860,7 @@ dl li {
   color: #9e9da0;
 }
 .sidebar-dark .sidebar .nav .nav-item .nav-link i.menu-arrow:before {
-  color: inherit;
+  color: #FABD4D;
 }
 .sidebar-dark .sidebar .nav .nav-item .nav-link .menu-title {
   color: inherit;

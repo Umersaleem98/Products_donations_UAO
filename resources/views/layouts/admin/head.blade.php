@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('admins/assets/vendors/css/vendor.bundle.base.css') }}">
     <link rel="stylesheet" href="{{ asset('admins/assets/vendors/font-awesome/css/font-awesome.min.css') }}">
     <!-- endinject -->
+    <!-- FONT AWESOME CDN -->
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
     <!-- Plugin css for this page -->
     <link rel="stylesheet" href="{{ asset('admins/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">

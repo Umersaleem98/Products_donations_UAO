@@ -3,11 +3,12 @@
     <!-- LOGO -->
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
         <a class="navbar-brand brand-logo" href="#">
-            <img src="{{ asset('admins/assets/images/logos/NGS.png') }}" alt="logo" />
+            {{-- <img src="{{ asset('admins/assets/images/logos/logo.svg') }}" alt="logo"  /> --}}
+             <b><span>NUST</span> Gift Store</b>
         </a>
 
         <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}">
-            <img src="{{ asset('admins/assets/images/logos/logo 4.png') }}" alt="logo" />
+            <img src="{{ asset('admins/assets/images/logos/logo.svg') }}" alt="logo" />
         </a>
     </div>
 
