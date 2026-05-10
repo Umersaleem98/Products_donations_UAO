@@ -11,3 +11,10 @@
         <i class="mdi mdi-home menu-icon"></i>
     </a>
 </li>
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('Beneficiary.profile.index') }}">
+        <span class="menu-title">My Profile</span>
+        <i class="mdi mdi-home menu-icon"></i>
+    </a>
+</li>

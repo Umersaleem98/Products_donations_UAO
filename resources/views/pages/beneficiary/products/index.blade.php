@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>All Products </title>
 <body>
     <div class="container-scroller">
 
@@ -34,14 +34,7 @@
                                 </button>
                             </li>
 
-                            @foreach ($categories as $category)
-                                <li class="nav-item">
-                                    <button class="nav-link" data-bs-toggle="tab"
-                                        data-bs-target="#cat-{{ $category->id }}" type="button">
-                                        {{ $category->name }}
-                                    </button>
-                                </li>
-                            @endforeach
+                           @include('layouts.admin.alert')
 
                         </ul>
 

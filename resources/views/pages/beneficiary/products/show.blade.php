@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>My products request</title>
 <body>
     <div class="container-scroller">
 
@@ -18,7 +18,7 @@
                             Product Details
                         </h3>
                     </div>
-
+                           @include('layouts.admin.alert')
                     <div class="container mt-4">
 
                         <div class="row">

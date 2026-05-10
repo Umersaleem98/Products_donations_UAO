@@ -4,7 +4,7 @@
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
         <a class="navbar-brand brand-logo" href="#">
             {{-- <img src="{{ asset('admins/assets/images/logos/logo.svg') }}" alt="logo"  /> --}}
-             <b><span>NUST</span> Gift Store</b>
+             <b><span style="color: #FABD4D">N</span><span style="color: #0880E0">GS</span></b>
         </a>
 
         <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}">

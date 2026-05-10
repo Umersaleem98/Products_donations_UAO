@@ -61,13 +61,7 @@
                                 <!-- BODY -->
                                 <div class="card-body">
 
-                                    @if (session('success'))
-                                        <div class="alert alert-success">{{ session('success') }}</div>
-                                    @endif
-
-                                    @if (session('error'))
-                                        <div class="alert alert-danger">{{ session('error') }}</div>
-                                    @endif
+                                    @include('layouts.admin.alert')
 
                                     <!-- 🔍 SEARCH + PER PAGE -->
                                     <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">

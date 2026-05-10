@@ -16,6 +16,7 @@
                                 <i class="mdi mdi-home"></i>
                             </span> Dashboard
                         </h3>
+                        @include('layouts.admin.alert')
                         <nav aria-label="breadcrumb">
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item active" aria-current="page">

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use Illuminate\Http\Request;
 use App\Models\Category;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
+use App\Models\User;
+use App\Notifications\ProductCreatedNotification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class AdminProductsController extends Controller
@@ -14,35 +16,34 @@ class AdminProductsController extends Controller
     public function index()
     {
         $products = Product::latest()->paginate(10);
+
         // $categories = Category::latest()->paginate(10);
         return view('pages.admin.products.index', compact('products'));
     }
 
-
     public function create()
     {
         $categories = Category::all();
+
         return view('pages.admin.products.create', compact('categories'));
     }
-
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
             'category_id' => 'required',
-            'price' => 'required',
-            'status' => 'required|in:active,inactive',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'status' => 'required|in:active,inactive',
         ]);
 
         $imageNames = [];
 
-        // ✅ Upload Images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
 
-                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $filename = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
 
                 $image->move(public_path('admin/products'), $filename);
 
@@ -50,18 +51,25 @@ class AdminProductsController extends Controller
             }
         }
 
-        Product::create([
-            'user_id' => Auth::id(),
+        // ✅ CREATE PRODUCT
+        $products = Product::create([
+            'user_id' => auth()->id(),
             'category_id' => $request->category_id,
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
-            'price' => $request->price,
-            'status' => $request->status,
             'images' => json_encode($imageNames),
+            'status' => $request->status,
         ]);
 
-        return redirect()->route('admin.products.index')
+        // ✅ GET ALL USERS (EXCEPT CURRENT USER)
+        $users = User::where('id', '!=', auth()->id())->get();
+
+        // ✅ SEND NOTIFICATION (BEST METHOD)
+        Notification::send($users, new ProductCreatedNotification($products));
+
+        return redirect()
+            ->route('admin.products.index')
             ->with('success', 'Product created successfully');
     }
 
@@ -78,8 +86,7 @@ class AdminProductsController extends Controller
         $request->validate([
             'name' => 'required',
             'category_id' => 'required',
-            'price' => 'required',
-            'status' => 'required|in:active,inactive',
+            'price' => 'nullable',
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
@@ -87,22 +94,26 @@ class AdminProductsController extends Controller
 
         $imageNames = json_decode($product->images, true) ?? [];
 
-        // ✅ If new images uploaded → delete old ones
+        // ✅ IF NEW IMAGES UPLOADED → DELETE OLD ONES
         if ($request->hasFile('images')) {
 
-            foreach ($imageNames as $oldImage) {
-                $path = public_path('admin/products/' . $oldImage);
+            // 🔥 delete old images from folder
+            if (! empty($imageNames)) {
+                foreach ($imageNames as $oldImage) {
+                    $oldPath = public_path('admin/products/'.$oldImage);
 
-                if (file_exists($path)) {
-                    unlink($path);
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
                 }
             }
 
             $imageNames = [];
 
+            // 🔥 upload new images
             foreach ($request->file('images') as $image) {
 
-                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $filename = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
 
                 $image->move(public_path('admin/products'), $filename);
 
@@ -110,14 +121,13 @@ class AdminProductsController extends Controller
             }
         }
 
-        // ✅ Update Product
+        // ✅ UPDATE PRODUCT
         $product->update([
             'category_id' => $request->category_id,
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
             'price' => $request->price,
-            'status' => $request->status,
             'images' => json_encode($imageNames),
         ]);
 

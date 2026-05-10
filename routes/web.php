@@ -7,12 +7,14 @@ use App\Http\Controllers\Admin\AdminRequestController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Beneficiary\BeneficiaryProductController;
+use App\Http\Controllers\Beneficiary\BeneficiaryProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Donor\DonorProductController;
 use App\Http\Controllers\Donor\DonorProfileController;
 use App\Http\Controllers\Donor\DonorRequestController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+
 
 
 Route::get('/notification/read/{id}', function ($id) {
@@ -78,19 +80,17 @@ Route::get('donor/profile/index', [DonorProfileController::class, 'index'])->nam
 Route::post('/donor/profile/update', [DonorProfileController::class, 'update'])->name('donor.profile.update');
 
 Route::get('donor/requests', [DonorRequestController::class, 'donorRequests'])->name('donor.requests');
-
 Route::post('donor/request/{id}', [DonorRequestController::class, 'updateRequestStatus'])->name('donor.request.update');
 
 
 // beneficiary routes
 Route::get('beneficiary/products/index', [BeneficiaryProductController::class, 'index'])->name('beneficiary.products.index');
-
 // PRODUCT DETAIL
 Route::get('beneficiary/products/detail/{id}', [BeneficiaryProductController::class, 'show'])->name('beneficiary.products.detail.show');
 
-// SEND REQUEST TO DONOR
-Route::post('product/{id}/request', [BeneficiaryProductController::class, 'sendRequest'])
-    ->name('product.request.send');
+Route::get('Beneficiary/profile/index', [BeneficiaryProfileController::class, 'index'])->name('Beneficiary.profile.index');
+Route::post('/Beneficiary/profile/update', [BeneficiaryProfileController::class, 'update'])->name('Beneficiary.profile.update');
 
-    Route::get('beneficiary/my-requests', [BeneficiaryProductController::class, 'myRequests'])
-    ->name('beneficiary.my.requests');
+// SEND REQUEST TO DONOR
+Route::post('product/{id}/request', [BeneficiaryProductController::class, 'sendRequest'])->name('product.request.send');
+Route::get('beneficiary/my-requests', [BeneficiaryProductController::class, 'myRequests'])->name('beneficiary.my.requests');

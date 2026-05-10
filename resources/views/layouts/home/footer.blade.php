@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="footer-widget">
-                        <h4><i class="fas fa-gift me-2"></i>NUST Gift Store</h4>
+                        <h4><i class="fas fa-gift me-2"></i>NUST <span style="color: #3B71B8;">Gift Store</span></h4>
                         <p>Empowering education through technology. We bridge the gap between those who have and those
                             who need, creating a stronger academic community.</p>
                         <div class="social-links">

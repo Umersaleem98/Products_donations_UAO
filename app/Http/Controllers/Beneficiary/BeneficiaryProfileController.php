@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Donor;
+namespace App\Http\Controllers\Beneficiary;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,19 +8,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-
-class DonorProfileController extends Controller
+class BeneficiaryProfileController extends Controller
 {
+      // SHOW PROFILE PAGE
     public function index()
     {
         $user = Auth::user();
 
-        // Load donor profile
-        $user->load('donorProfile');
+        // LOAD BENEFICIARY PROFILE
+        $user->load('beneficiaryProfile');
 
-        return view('pages.donor.profile.index', compact('user'));
+        return view('pages.beneficiary.profile.index', compact('user'));
     }
 
+
+    // UPDATE PROFILE
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -30,22 +32,33 @@ class DonorProfileController extends Controller
 
             'name' => 'required|string|max:255',
 
-            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
 
-            // DONOR PROFILE
-            'organization' => 'nullable|string|max:255',
-            'designation' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'address' => 'nullable|string|max:500',
+            // BENEFICIARY PROFILE
+            'institution' => 'nullable|string|max:255',
+
+            'father_status' => 'nullable|string|max:255',
+
+            'guardian_profession' => 'nullable|string|max:255',
+
+            'monthly_income' => 'nullable|numeric',
+
+            'province' => 'nullable|string|max:255',
+
+            'domicile' => 'nullable|string|max:255',
+
+            'home_address' => 'nullable|string|max:1000',
 
             // IMAGE
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
             // PASSWORD
             'current_password' => 'nullable|required_with:password',
+
             'password' => 'nullable|min:6|confirmed',
 
         ]);
+
 
         // IMAGE UPLOAD
         if ($request->hasFile('image')) {
@@ -53,7 +66,7 @@ class DonorProfileController extends Controller
             $uploadPath = public_path('admin/asset/profilephoto');
 
             // CREATE FOLDER
-            if (! File::exists($uploadPath)) {
+            if (!File::exists($uploadPath)) {
 
                 File::makeDirectory($uploadPath, 0777, true);
 
@@ -62,7 +75,7 @@ class DonorProfileController extends Controller
             // DELETE OLD IMAGE
             if ($user->image) {
 
-                $oldImage = $uploadPath.'/'.$user->image;
+                $oldImage = $uploadPath . '/' . $user->image;
 
                 if (File::exists($oldImage)) {
 
@@ -71,25 +84,28 @@ class DonorProfileController extends Controller
                 }
             }
 
-            // NEW FILE NAME
-            $filename = time().'_'.Str::random(10).'.'.
+            // NEW IMAGE NAME
+            $filename = time() . '_' . Str::random(10) . '.' .
                         $request->image->getClientOriginalExtension();
 
-            // MOVE FILE
+            // MOVE IMAGE
             $request->image->move($uploadPath, $filename);
 
-            // SAVE FILE NAME
+            // SAVE IMAGE NAME
             $user->image = $filename;
         }
 
+
         // UPDATE USER
         $user->name = $request->name;
+
         $user->email = $request->email;
+
 
         // PASSWORD UPDATE
         if ($request->filled('password')) {
 
-            if (! Hash::check($request->current_password, $user->password)) {
+            if (!Hash::check($request->current_password, $user->password)) {
 
                 return back()->withErrors([
 
@@ -103,18 +119,30 @@ class DonorProfileController extends Controller
 
         $user->save();
 
-        // UPDATE DONOR PROFILE
-        $user->donorProfile()->updateOrCreate(
+
+        // UPDATE BENEFICIARY PROFILE
+        $user->beneficiaryProfile()->updateOrCreate(
 
             [
-                'user_id' => $user->id,
+                'user_id' => $user->id
             ],
 
             [
-                'organization' => $request->organization,
-                'designation' => $request->designation,
-                'country' => $request->country,
-                'address' => $request->address,
+
+                'institution' => $request->institution,
+
+                'father_status' => $request->father_status,
+
+                'guardian_profession' => $request->guardian_profession,
+
+                'monthly_income' => $request->monthly_income,
+
+                'province' => $request->province,
+
+                'domicile' => $request->domicile,
+
+                'home_address' => $request->home_address,
+
             ]
 
         );

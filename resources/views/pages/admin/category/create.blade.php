@@ -1,77 +1,131 @@
 @include('layouts.admin.head')
+
 <title>Create Categories</title>
+
+<style>
+
+    .card{
+        border:none;
+        border-radius:15px;
+        box-shadow:0 0 20px rgba(0,0,0,0.05);
+    }
+
+    .form-control{
+        border-radius:10px;
+        height:45px;
+    }
+
+    label{
+        font-weight:600;
+        margin-bottom:8px;
+    }
+
+    .btn{
+        border-radius:8px;
+    }
+
+</style>
+
 <body>
-    <div class="container-scroller">
+<div class="container-scroller">
 
-        @include('layouts.admin.header')
-        <!-- partial -->
-        <div class="container-fluid page-body-wrapper">
-            @include('layouts.admin.sidebar')
-            <!-- partial -->
-            <div class="main-panel">
-                <div class="content-wrapper">
-                    <div class="page-header">
-                        <h3 class="page-title">
-                            <span class="page-title-icon bg-gradient-primary text-white me-2">
-                                <i class="mdi mdi-home"></i>
-                            </span> Dashboard
-                        </h3>
-                        <nav aria-label="breadcrumb">
-                            <ul class="breadcrumb">
-                                <li class="breadcrumb-item active" aria-current="page">
-                                    <span></span>Overview <i
-                                        class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
-                                </li>
-                            </ul>
-                        </nav>
+    @include('layouts.admin.header')
+
+    <div class="container-fluid page-body-wrapper">
+
+        @include('layouts.admin.sidebar')
+
+        <div class="main-panel">
+
+            <div class="content-wrapper">
+
+                <!-- PAGE HEADER -->
+                <div class="page-header">
+
+                    <h3 class="page-title">
+                        <span class="page-title-icon bg-gradient-primary text-white me-2">
+                            <i class="mdi mdi-folder-plus"></i>
+                        </span>
+                        Create Category
+                    </h3>
+
+                </div>
+
+                <!-- ALERTS -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
                     </div>
-                  
+                @endif
 
- <!-- FORM CARD -->
-        <div class="row">
-          <div class="col-md-6">
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-            <div class="card">
+                <!-- FORM -->
+                <div class="row">
 
-              <div class="card-body">
+                    <div class="col-md-6">
 
-                <form action="{{ route('admin.category.store') }}" method="POST">
-                  @csrf
+                        <div class="card">
 
-                  <!-- Category Name -->
-                  <div class="form-group">
-                    <label>Category Name</label>
-                    <input type="text"
-                           name="name"
-                           class="form-control"
-                           placeholder="Enter category name"
-                           required>
-                  </div>
+                            <div class="card-body">
 
-                  <!-- Submit -->
-                  <button type="submit" class="btn btn-primary">
-                    Save Category
-                  </button>
+                                <form action="{{ route('admin.category.store') }}" method="POST">
 
-                  <a href="{{ route('admin.category.index') }}"
-                     class="btn btn-secondary">
-                    Back
-                  </a>
+                                    @csrf
 
-                </form>
+                                    <!-- CATEGORY NAME -->
+                                    <div class="form-group mb-3">
 
-              </div>
-            </div>
+                                        <label>Category Name</label>
 
-          </div>
-        </div>
+                                        <input type="text"
+                                               name="name"
+                                               class="form-control"
+                                               placeholder="Enter category name"
+                                               value="{{ old('name') }}"
+                                               required>
+
+                                    </div>
+
+                                    <!-- BUTTONS -->
+                                    <div class="d-flex gap-2">
+
+                                        <button type="submit" class="btn btn-primary">
+                                            Save Category
+                                        </button>
+
+                                        <a href="{{ route('admin.category.index') }}"
+                                           class="btn btn-secondary">
+                                            Back
+                                        </a>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
             </div>
-            <!-- main-panel ends -->
+
         </div>
-        <!-- page-body-wrapper ends -->
+
     </div>
-    <!-- container-scroller -->
-    @include('layouts.admin.script')
+
+</div>
+
+@include('layouts.admin.script')
+</body>

@@ -2,18 +2,29 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
-class DonorProfile extends Model
+class BeneficiaryProfile extends Model
 {
-      
-    protected $fillable = [
+     protected $fillable = [
+
         'user_id',
+
         'institution',
-        'course',
+
         'father_status',
-        'father_profession',
+
+        'guardian_profession',
+
+        'monthly_income',
+
+        'province',
+
+        'domicile',
+
+        'home_address',
+
     ];
 
     public function user()

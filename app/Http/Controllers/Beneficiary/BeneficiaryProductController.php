@@ -10,13 +10,24 @@ use Illuminate\Http\Request;
 
 class BeneficiaryProductController extends Controller
 {
-    public function index()
-    {
-        $products = Product::with('category')->get();
-        $categories = Category::all();
+   public function index()
+{
+    $beneficiaryId = auth()->id();
 
-        return view('pages.beneficiary.products.index', compact('products', 'categories'));
-    }
+    // GET PRODUCT IDS WHICH ALREADY REQUESTED
+    $requestedProductIds = ProductRequest::where('beneficiary_id', $beneficiaryId)
+        ->pluck('product_id');
+
+    // SHOW ONLY PRODUCTS WHICH ARE NOT REQUESTED
+    $products = Product::with('category')
+        ->whereNotIn('id', $requestedProductIds)
+        ->get();
+
+    $categories = Category::all();
+
+    return view('pages.beneficiary.products.index', compact('products', 'categories'));
+}
+
 
     // PRODUCT DETAIL PAGE
     public function show($id)
