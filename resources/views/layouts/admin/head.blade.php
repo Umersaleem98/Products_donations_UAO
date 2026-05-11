@@ -21,5 +21,5 @@
     <link rel="stylesheet" href="{{ asset('admins/assets/css/style.css') }}">
     <!-- End layout styles -->
 
-    <link rel="shortcut icon" href="{{ asset('admins/assets/images/favicon.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('admins/assets/images/logos/logo.png') }}" />
 </head>

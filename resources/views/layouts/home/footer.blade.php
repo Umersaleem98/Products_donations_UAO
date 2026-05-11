@@ -50,12 +50,12 @@
                             </li>
                             <li>
                                 <i class="fas fa-phone"></i>
-                                <span>+92 51 9085 6821</span>
+                                <span>+92 336 5317822</span>
                                 <span>+92 51 9085 6825</span>
                             </li>
                             <li>
                                 <i class="fas fa-envelope"></i>
-                                <span>info@nust.uao.edu.pk</span>
+                                <span>advancement@nust.edu.pk</span>
                             </li>
                             <li>
                                 <i class="fas fa-clock"></i>

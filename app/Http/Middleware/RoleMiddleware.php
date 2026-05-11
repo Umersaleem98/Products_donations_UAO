@@ -11,15 +11,22 @@ class RoleMiddleware
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $role): Response
     {
 
-        if (Auth::check() && Auth::user()->role === $role) {
-            return $next($request);
+        // Check login
+        if (!Auth::check()) {
+
+            return redirect()->route('login');
         }
+
+        // Check role
+        if (Auth::user()->role !== $role) {
+
+            abort(403, 'Unauthorized Access');
+        }
+
         return $next($request);
     }
 }

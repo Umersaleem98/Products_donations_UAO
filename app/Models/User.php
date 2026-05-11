@@ -52,7 +52,37 @@ public function donorProfile()
 
 
 
-  
+  public function profileCompletion()
+    {
+
+        $fields = [
+
+            $this->name,
+            $this->email,
+            $this->phone,
+            $this->cnic,
+            $this->institution,
+            $this->father_status,
+            $this->guardian_profession,
+            $this->total_monthly_income,
+            $this->province,
+            $this->domicile,
+            $this->home_address,
+
+        ];
+
+        $filled = 0;
+
+        foreach ($fields as $field) {
+
+            if (!empty($field)) {
+
+                $filled++;
+            }
+        }
+
+        return round(($filled / count($fields)) * 100);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
