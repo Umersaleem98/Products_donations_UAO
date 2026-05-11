@@ -2,7 +2,7 @@
 
     <!-- LOGO -->
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-        <a class="navbar-brand brand-logo" href="#">
+        <a class="navbar-brand brand-logo" href="{{ route('dashboard') }}">
             {{-- <img src="{{ asset('admins/assets/images/logos/logo.svg') }}" alt="logo"  /> --}}
              <b><span style="color: #FABD4D">N</span><span style="color: #0880E0">GS</span></b>
         </a>
