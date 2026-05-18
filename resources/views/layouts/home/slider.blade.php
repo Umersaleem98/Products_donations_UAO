@@ -1,5 +1,5 @@
+<!-- HERO SLIDER STYLE -->
 <style>
-    /* HERO SLIDER */
     .hero-slider {
         position: relative;
         height: 100vh;
@@ -22,35 +22,28 @@
         z-index: 2;
     }
 
-    /* BACKGROUND IMAGE */
     .slide-bg {
         position: absolute;
         inset: 0;
         background-size: cover;
-        background-position: center center;
+        background-position: center;
         background-repeat: no-repeat;
         transform: scale(1.05);
     }
 
-    /* DARK OVERLAY */
     .slide::before {
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(
-            to right,
-            rgba(0,0,0,0.75),
-            rgba(0,0,0,0.45)
-        );
+        background: linear-gradient(to right, rgba(0,0,0,0.75), rgba(0,0,0,0.45));
         z-index: 1;
     }
 
-    /* CONTENT */
     .slide-content {
         position: relative;
         z-index: 3;
         text-align: center;
-        color: var(--white);
+        color: #fff;
         max-width: 850px;
         padding: 0 20px;
     }
@@ -65,7 +58,7 @@
     }
 
     .slide-content h1 span {
-        color: var(--secondary-color);
+        color: #fabc4d;
     }
 
     .slide-content p {
@@ -75,139 +68,84 @@
         color: rgba(255,255,255,0.9);
     }
 
-    /* BUTTONS */
     .btn-hero {
         display: inline-block;
         padding: 14px 38px;
-        background: var(--secondary-color);
-        color: var(--dark-color);
+        background: #fabc4d;
+        color: #111;
         text-decoration: none;
         border-radius: 50px;
         font-weight: 700;
-        font-size: 1rem;
-        transition: 0.3s ease;
         margin: 8px;
-        border: 2px solid var(--secondary-color);
+        transition: 0.3s ease;
+        border: 2px solid #fabc4d;
     }
 
     .btn-hero:hover {
         background: transparent;
-        color: var(--white);
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(250, 189, 77, 0.3);
+        color: #fff;
     }
 
     .btn-hero-outline {
         background: transparent;
-        color: var(--white);
-        border: 2px solid var(--white);
+        color: #fff;
+        border: 2px solid #fff;
     }
 
     .btn-hero-outline:hover {
-        background: var(--white);
-        color: var(--primary-color);
+        background: #fff;
+        color: #111;
     }
 
-    /* ARROWS */
     .slider-arrows {
         position: absolute;
         top: 50%;
-        left: 0;
         width: 100%;
-        transform: translateY(-50%);
-        z-index: 10;
         display: flex;
         justify-content: space-between;
         padding: 0 30px;
+        z-index: 10;
+        transform: translateY(-50%);
     }
 
     .slider-arrow {
-        width: 60px;
-        height: 60px;
+        width: 55px;
+        height: 55px;
         border-radius: 50%;
         background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(10px);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--white);
-        font-size: 1.3rem;
+        color: #fff;
         cursor: pointer;
-        transition: 0.3s ease;
-        border: 1px solid rgba(255,255,255,0.2);
     }
 
     .slider-arrow:hover {
-        background: var(--secondary-color);
-        color: var(--dark-color);
+        background: #fabc4d;
+        color: #111;
     }
 
-    /* DOTS */
     .slider-controls {
         position: absolute;
         bottom: 40px;
         left: 50%;
         transform: translateX(-50%);
-        z-index: 10;
         display: flex;
-        gap: 12px;
+        gap: 10px;
+        z-index: 10;
     }
 
     .slider-dot {
-        width: 14px;
-        height: 14px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
         background: rgba(255,255,255,0.5);
         cursor: pointer;
-        transition: 0.3s ease;
     }
 
     .slider-dot.active {
-        background: var(--secondary-color);
+        background: #fabc4d;
         transform: scale(1.3);
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 991px) {
-
-        .hero-slider {
-            min-height: 650px;
-        }
-
-        .slide-content h1 {
-            font-size: 3rem;
-        }
-
-        .slide-content p {
-            font-size: 1rem;
-        }
-    }
-
-    @media (max-width: 576px) {
-
-        .hero-slider {
-            min-height: 600px;
-        }
-
-        .slide-content h1 {
-            font-size: 2.2rem;
-        }
-
-        .slide-content p {
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        .btn-hero {
-            padding: 12px 25px;
-            font-size: 0.95rem;
-        }
-
-        .slider-arrow {
-            width: 45px;
-            height: 45px;
-            font-size: 1rem;
-        }
     }
 </style>
 
@@ -216,92 +154,50 @@
 
     <!-- SLIDE 1 -->
     <div class="slide active">
+        <div class="slide-bg" style="background-image: url('{{ asset('templates/assets/sliders/slider1.png') }}');"></div>
 
-        <div class="slide-bg"
-            style="background-image: url('{{ asset('templates/assets/sliders/slider1.png') }}');">
-        </div>
-
-        <div class="slide-content" data-aos="fade-up">
-
-            <h1>
-                Donate <span>Gadgets</span>, Change Lives
-            </h1>
-
+        <div class="slide-content">
+            <h1>NUST <span>Support Circle</span></h1>
             <p>
-                Join NUST Gift Store in bridging the digital divide.
-                Your unused laptops, books, and mobile devices can
-                empower students and transform futures.
+                A centralized platform connecting donors and students to reduce educational inequality.
+                We facilitate the donation of laptops, books, and essential learning resources.
             </p>
 
-            <div>
-                <a href="#donate" class="btn-hero">Start Donating</a>
-                <a href="#how-it-works" class="btn-hero btn-hero-outline">
-                    Learn More
-                </a>
-            </div>
-
+           <a href="#categories" class="btn-hero">Explore Needs</a>
+            <a href="#impact" class="btn-hero btn-hero-outline">Our Impact</a>
         </div>
-
     </div>
 
     <!-- SLIDE 2 -->
     <div class="slide">
-
-        <div class="slide-bg"
-            style="background-image: url('{{ asset('templates/assets/sliders/slider2.png') }}');">
-        </div>
+        <div class="slide-bg" style="background-image: url('{{ asset('templates/assets/sliders/slider2.png') }}');"></div>
 
         <div class="slide-content">
-
-            <h1>
-                Education <span>For All</span>
-            </h1>
-
+           <h1>NUST <span>Support Circle</span></h1>
             <p>
-                Every book donated opens a door to knowledge.
-                Every laptop shared creates an opportunity.
-                Be the reason someone achieves their dreams.
+                A centralized platform connecting donors and students to reduce educational inequality.
+                We facilitate the donation of laptops, books, and essential learning resources.
             </p>
 
-            <div>
-                <a href="#categories" class="btn-hero">Browse Categories</a>
-                <a href="#about" class="btn-hero btn-hero-outline">
-                    Our Mission
-                </a>
-            </div>
-
+            <a href="#categories" class="btn-hero">Explore Needs</a>
+            <a href="#impact" class="btn-hero btn-hero-outline">Our Impact</a>
         </div>
-
     </div>
 
     <!-- SLIDE 3 -->
     <div class="slide">
-
-        <div class="slide-bg"
-            style="background-image: url('{{ asset('templates/assets/sliders/slider3.png') }}');">
-        </div>
+        <div class="slide-bg" style="background-image: url('{{ asset('templates/assets/sliders/slider3.png') }}');"></div>
 
         <div class="slide-content">
-
-            <h1>
-                Connect <span>Communities</span>
-            </h1>
-
+           <h1>NUST <span>Support Circle</span></h1>
             <p>
-                From donors to beneficiaries, we build bridges of hope.
-                Your generosity creates ripples of positive change across
-                NUST and beyond.
+                A centralized platform connecting donors and students to reduce educational inequality.
+                We facilitate the donation of laptops, books, and essential learning resources.
             </p>
 
-            <div>
-                <a href="#services" class="btn-hero">Our Services</a>
-                <a href="#testimonials" class="btn-hero btn-hero-outline">
-                    Success Stories
-                </a>
-            </div>
-
+             <a href="#categories" class="btn-hero">Explore Needs</a>
+            <a href="#impact" class="btn-hero btn-hero-outline">Our Impact</a>
         </div>
-
     </div>
 
     <!-- ARROWS -->
@@ -309,7 +205,6 @@
         <div class="slider-arrow" id="prevSlide">
             <i class="fas fa-chevron-left"></i>
         </div>
-
         <div class="slider-arrow" id="nextSlide">
             <i class="fas fa-chevron-right"></i>
         </div>
@@ -334,18 +229,11 @@
     let currentSlide = 0;
 
     function showSlide(index) {
-
-        slides.forEach((slide) => {
-            slide.classList.remove("active");
-        });
-
-        dots.forEach((dot) => {
-            dot.classList.remove("active");
-        });
+        slides.forEach(s => s.classList.remove("active"));
+        dots.forEach(d => d.classList.remove("active"));
 
         slides[index].classList.add("active");
         dots[index].classList.add("active");
-
     }
 
     function nextSlide() {
@@ -368,6 +256,5 @@
         });
     });
 
-    // AUTO SLIDE
     setInterval(nextSlide, 5000);
 </script>

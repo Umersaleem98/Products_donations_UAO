@@ -8,10 +8,9 @@ use App\Models\Product;
 use App\Models\User;
 use App\Notifications\ProductCreatedNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-
 
 class DonorProductController extends Controller
 {
@@ -35,16 +34,18 @@ class DonorProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'category_id' => 'required',
+            'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:1024',
             'status' => 'required|in:active,inactive',
         ]);
 
         $imageNames = [];
 
+        // ✅ IMAGE UPLOAD
         if ($request->hasFile('images')) {
+
             foreach ($request->file('images') as $image) {
 
                 $filename = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
@@ -55,23 +56,28 @@ class DonorProductController extends Controller
             }
         }
 
-        // ✅ CREATE PRODUCT
-        $products = Product::create([
-            'user_id' => auth()->id(),
-            'category_id' => $request->category_id,
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'images' => json_encode($imageNames),
-            'status' => $request->status,
-        ]);
+        // ✅ CREATE PRODUCT (SAFE VERSION)
+        $product = new Product;
 
+        $product->user_id = auth()->id(); // make sure auth middleware is applied
+        $product->category_id = $request->category_id;
+        $product->name = $request->name;
+        $product->slug = Str::slug($request->name);
+        $product->description = $request->description;
+        $product->images = json_encode($imageNames);
+        $product->status = $request->status;
 
-        // ✅ GET ALL USERS (EXCEPT CURRENT USER)
+        $saved = $product->save();
+
+        // ❗ DEBUG CHECK (TEMP)
+        if (! $saved) {
+            return back()->with('error', 'Product not saved. Check DB or fillable.');
+        }
+
+        // ✅ NOTIFICATION
         $users = User::where('id', '!=', auth()->id())->get();
 
-        // ✅ SEND NOTIFICATION (BEST METHOD)
-        Notification::send($users, new ProductCreatedNotification($products));
+        Notification::send($users, new ProductCreatedNotification($product));
 
         return redirect()
             ->route('donor.product.index')
@@ -87,58 +93,67 @@ class DonorProductController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required',
-            'category_id' => 'required',
-            'price' => 'nullable',
-            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'category_id' => 'required|exists:categories,id',
+        'price' => 'nullable|numeric|min:0',
+        'description' => 'nullable|string',
+        'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+    ]);
 
-        $product = Product::findOrFail($id);
+    $product = Product::findOrFail($id);
 
-        $imageNames = json_decode($product->images, true) ?? [];
+    // (OPTIONAL SECURITY CHECK)
+    if ($product->user_id !== auth()->id()) {
+        abort(403, 'Unauthorized action.');
+    }
 
-        // ✅ IF NEW IMAGES UPLOADED → DELETE OLD ONES
-        if ($request->hasFile('images')) {
+    $imageNames = json_decode($product->images, true) ?? [];
 
-            // 🔥 delete old images from folder
-            if (! empty($imageNames)) {
-                foreach ($imageNames as $oldImage) {
-                    $oldPath = public_path('admin/products/'.$oldImage);
+    // ✅ ONLY REPLACE IMAGES IF NEW ONES ARE UPLOADED
+    if ($request->hasFile('images')) {
 
-                    if (file_exists($oldPath)) {
-                        unlink($oldPath);
-                    }
+        $newImages = [];
+
+        foreach ($request->file('images') as $image) {
+
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+            $image->move(public_path('admin/products'), $filename);
+
+            $newImages[] = $filename;
+        }
+
+        // ✅ DELETE OLD ONLY AFTER SUCCESSFUL UPLOAD
+        if (!empty($imageNames)) {
+            foreach ($imageNames as $oldImage) {
+
+                $oldPath = public_path('admin/products/' . $oldImage);
+
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
                 }
-            }
-
-            $imageNames = [];
-
-            // 🔥 upload new images
-            foreach ($request->file('images') as $image) {
-
-                $filename = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
-
-                $image->move(public_path('admin/products'), $filename);
-
-                $imageNames[] = $filename;
             }
         }
 
-        // ✅ UPDATE PRODUCT
-        $product->update([
-            'category_id' => $request->category_id,
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'price' => $request->price,
-            'images' => json_encode($imageNames),
-        ]);
-
-        return redirect()->route('donor.product.index')
-            ->with('success', 'Product updated successfully');
+        $imageNames = $newImages;
     }
+
+    // ✅ UPDATE PRODUCT
+    $product->update([
+        'category_id' => $request->category_id,
+        'name' => $request->name,
+        'slug' => Str::slug($request->name),
+        'description' => $request->description,
+        'price' => $request->price,
+        'images' => json_encode($imageNames),
+    ]);
+
+    return redirect()
+        ->route('donor.product.index')
+        ->with('success', 'Product updated successfully');
+}
 
     public function destroy($id)
     {

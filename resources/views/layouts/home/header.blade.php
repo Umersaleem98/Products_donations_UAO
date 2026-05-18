@@ -31,8 +31,8 @@
     }
 
     .navbar-brand-img {
-        width: 70px !important;
-        height: 70px !important;
+        width: 150px !important;
+        height: 80px !important;
         object-fit: contain;
     }
 
@@ -174,11 +174,6 @@
             <img src="{{ asset('admins/assets/images/logos/logo.png') }}"
                  alt="NUST Gift Store"
                  class="navbar-brand-img">
-
-            <div>
-                <span>NUST</span> Gift Store
-            </div>
-
         </a>
 
         <!-- Mobile Toggle -->

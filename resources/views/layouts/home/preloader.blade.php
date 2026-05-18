@@ -1,12 +1,12 @@
 <style>
-    :root{
-        --white:#ffffff;
+    :root {
+        --white: #ffffff;
     }
 
     /* =========================
        PRELOADER
     ========================== */
-    .loader{
+    .loader {
         position: fixed;
         inset: 0;
         width: 100%;
@@ -21,38 +21,38 @@
     }
 
     /* Hide Loader */
-    .loader.hidden{
+    .loader.hidden {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
     }
 
     /* Logo Animation */
-.loader-logo{
-    width: 180px;
-    height: 180px;
-    object-fit: contain;
+    .loader-logo {
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
 
-    /* LEFT TO CENTER + FADE */
-    opacity: 0;
-    transform: translateX(-250px);
+        /* LEFT TO CENTER + FADE */
+        opacity: 0;
+        transform: translateX(-250px);
 
-    animation: logoMove 1.5s ease forwards;
-}
+        animation: logoMove 1.5s ease forwards;
+    }
 
-    @keyframes logoMove{
+    @keyframes logoMove {
 
-        0%{
+        0% {
             opacity: 0;
             transform: translateX(-250px);
         }
 
-        60%{
+        60% {
             opacity: 1;
             transform: translateX(20px);
         }
 
-        100%{
+        100% {
             opacity: 1;
             transform: translateX(0);
         }
@@ -64,11 +64,7 @@
 ========================= -->
 <div class="loader" id="loader">
 
-    <img
-        src="{{ asset('admins/assets/images/logos/logo.png') }}"
-        alt="Logo"
-        class="loader-logo"
-    >
+    <img src="{{ asset('admins/assets/images/logos/logo.png') }}" alt="Logo" class="loader-logo">
 
 </div>
 
@@ -76,7 +72,7 @@
      SCRIPT
 ========================= -->
 <script>
-    window.addEventListener('load', function () {
+    window.addEventListener('load', function() {
 
         const loader = document.getElementById('loader');
 

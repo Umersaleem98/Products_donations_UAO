@@ -13,7 +13,7 @@
             <div class="brand-logo text-center mb-4">
               <div>
                 
-                 <img src="{{ asset('admins/assets/images/logos/logo.png') }}" alt="NUST Gift Store" class="navbar-brand-img" style="width: 80px; height: 80px"> <br><span><h1><b style="color: #FABD4D ;">NUST</b><b style="color: #3B71B8 ;"> Gift Store</b></h1></span>
+                 <img src="{{ asset('admins/assets/images/logos/logo.png') }}" alt="NUST Gift Store" class="navbar-brand-img" style="width: 250px; height: auto;"> 
               </div>
             </div>
 

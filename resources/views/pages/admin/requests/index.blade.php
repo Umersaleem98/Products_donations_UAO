@@ -106,11 +106,6 @@
                                             {{-- BENEFICIARY --}}
                                             <td>
 
-                                                <strong>{{ $beneficiary->name }}</strong><br>
-                                                <small>{{ $beneficiary->email }}</small>
-
-                                                <br>
-
                                                 <button class="btn btn-sm btn-info mt-1"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#beneficiaryModal{{ $beneficiary->id }}">
@@ -132,7 +127,7 @@
                                                 @elseif($request->admin_status == 'approved')
                                                     <span class="badge bg-success">Approved</span>
                                                 @else
-                                                    <span class="badge bg-danger">Rejected</span>
+                                                    <span class="badge bg-danger">Disapproved</span>
                                                 @endif
                                             </td>
 
@@ -143,7 +138,7 @@
                                                 @elseif($request->donor_status == 'accepted')
                                                     <span class="badge bg-success">Accepted</span>
                                                 @else
-                                                    <span class="badge bg-danger">Rejected</span>
+                                                    <span class="badge bg-danger">Disapproved</span>
                                                 @endif
                                             </td>
 
@@ -163,7 +158,7 @@
                                                       style="display:inline;">
                                                     @csrf
                                                     <input type="hidden" name="status" value="rejected">
-                                                    <button class="btn btn-sm btn-danger">Reject</button>
+                                                    <button class="btn btn-sm btn-danger">Disapproved</button>
                                                 </form>
 
                                             </td>

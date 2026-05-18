@@ -123,11 +123,6 @@
                                                     {{-- ADDED BY --}}
                                                     <td>
 
-                                                        <strong>{{ $user->name ?? 'N/A' }}</strong><br>
-                                                        <small>{{ $user->email ?? '' }}</small>
-
-                                                        <br>
-
                                                         <button class="btn btn-sm btn-info mt-1" data-bs-toggle="modal"
                                                             data-bs-target="#userModal{{ $user->id }}">
                                                             View Profile

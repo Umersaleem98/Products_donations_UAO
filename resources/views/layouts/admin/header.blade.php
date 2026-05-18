@@ -1,17 +1,17 @@
-<nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row" style="background-color: #0880E0;">
+<nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row"
+    style="background-color: #0880E0;">
 
-    <!-- LOGO -->
-    <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-        <a class="navbar-brand brand-logo" href="{{ route('dashboard') }}">
-            {{-- <img src="{{ asset('admins/assets/images/logos/logo.svg') }}" alt="logo"  /> --}}
-             <b><span style="color: #FABD4D">N</span><span style="color: #0880E0">GS</span></b>
-        </a>
+    <div class="navbar-brand-wrapper d-flex align-items-center justify-content-center">
 
-        <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}">
-            <img src="{{ asset('admins/assets/images/logos/logo.svg') }}" alt="logo" />
-        </a>
-    </div>
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start " ">
+            
+            <a class="navbar-brand brand-logo text-center" href="{{ route('dashboard') }}"> <img src="{{ asset('admins/assets/images/logos/logo1.png') }}" style="width: 50px; height: 50;" alt="NUST Gift Store" class="navbar-brand-img"> </a>
+            
+            <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}"> <img src="{{ asset('admins/assets/images/logos/logo1.png') }}" style="width: 100px; height: 80;" alt="NUST Gift Store" class="navbar-brand-img"> </a>
+        
+        </div>
 
+</div>
     <!-- RIGHT SIDE -->
     <div class="navbar-menu-wrapper d-flex align-items-stretch">
 
@@ -45,15 +45,14 @@
             <!-- 🔔 NOTIFICATIONS (ADMIN ONLY) -->
             <!-- ===================== -->
 
-            @if(auth()->check() && auth()->user()->role === 'admin')
+                @if (auth()->check() && auth()->user()->role === 'admin')
 
             <li class="nav-item dropdown">
-                <a class="nav-link count-indicator dropdown-toggle" href="#"
-                   data-bs-toggle="dropdown">
+                <a class="nav-link count-indicator dropdown-toggle" href="#" data-bs-toggle="dropdown">
 
                     <i class="mdi mdi-bell-outline text-light"></i>
 
-                    @if(auth()->user()->unreadNotifications->count() > 0)
+                    @if (auth()->user()->unreadNotifications->count() > 0)
                         <span class="count-symbol bg-danger"></span>
                     @endif
                 </a>
@@ -67,9 +66,8 @@
                     <div class="dropdown-divider"></div>
 
                     @forelse(auth()->user()->unreadNotifications as $notification)
-
                         <a href="{{ route('notification.read', $notification->id) }}"
-                           class="dropdown-item preview-item">
+                            class="dropdown-item preview-item">
 
                             <div class="preview-thumbnail">
                                 <div class="preview-icon">
@@ -97,7 +95,6 @@
                     @empty
 
                         <p class="p-3 text-center">No notifications</p>
-
                     @endforelse
 
                 </div>
@@ -146,6 +143,6 @@
                 </div>
             </li>
 
-        </ul>
-    </div>
+            </ul>
+        </div>
 </nav>

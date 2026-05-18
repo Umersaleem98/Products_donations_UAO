@@ -1,5 +1,5 @@
  <!-- partial:partials/_sidebar.html -->
- <nav class="sidebar sidebar-offcanvas" style="background-color: #f8f9fa;" id="sidebar">
+ <nav class="sidebar sidebar-offcanvas" style="background-color: #f8f9fa; border" id="sidebar">
      <ul class="nav">
          <li class="nav-item nav-profile">
              <a href="{{ route('dashboard') }}" class="nav-link">
