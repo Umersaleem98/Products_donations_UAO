@@ -24,5 +24,7 @@
         </div>
     </section>
 
+    @include('layouts.home.cookies')
     @include('layouts.home.footer')
     @include('layouts.home.script')
+

@@ -3,16 +3,20 @@
 use App\Http\Controllers\Admin\AdminCategorytController;
 use App\Http\Controllers\Admin\AdminProductsController;
 use App\Http\Controllers\Admin\AdminRequestController;
+use App\Http\Controllers\Admin\AdminTrafficReportController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Beneficiary\BeneficiaryProductController;
 use App\Http\Controllers\Beneficiary\BeneficiaryProfileController;
+use App\Http\Controllers\CookieConsentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Donor\DonorProductController;
 use App\Http\Controllers\Donor\DonorProfileController;
 use App\Http\Controllers\Donor\DonorRequestController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 
@@ -23,7 +27,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
+Route::post('/cookie-accept', [CookieConsentController::class, 'accept']);
+Route::post('/cookie-reject', [CookieConsentController::class, 'reject']);
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -98,6 +103,8 @@ Route::middleware('auth')->group(function () {
         // REQUESTS
         Route::get('requests', [AdminRequestController::class, 'index'])->name('admin.requests');
         Route::post('request/{id}/update', [AdminRequestController::class, 'update'])->name('admin.request.update');
+
+        Route::get('/reports/traffic',[AdminTrafficReportController::class, 'index'])->name('reports.traffic');
     });
 
 

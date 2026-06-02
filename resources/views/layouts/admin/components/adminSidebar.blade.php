@@ -46,3 +46,10 @@
         <i class="text-primary fa-solid fa-hand-holding-heart menu-icon"></i>
     </a>
 </li>
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('reports.traffic') }}">
+        <span class="menu-title">Traffic Reports</span>
+        <i class="text-primary fa-solid fa-chart-line menu-icon"></i>
+    </a>
+</li>
