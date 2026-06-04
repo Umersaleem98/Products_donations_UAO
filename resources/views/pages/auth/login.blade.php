@@ -10,20 +10,29 @@
         <div class="col-lg-6 mx-auto">
           <div class="auth-form-light text-left p-5">
 
+            <!-- Logo -->
             <div class="brand-logo text-center mb-4">
               <div>
-                
-                 <img src="{{ asset('admins/assets/images/logos/logo.png') }}" alt="NUST Gift Store" class="navbar-brand-img" style="width: 250px; height: auto;"> 
+                <img src="{{ asset('admins/assets/images/logos/logo.png') }}"
+                     alt="NUST Gift Store"
+                     class="navbar-brand-img"
+                     style="width: 250px; height: auto;">
               </div>
             </div>
 
-            <!-- Role Selection -->
+            <!-- Login Form -->
             <form method="POST" action="{{ route('login') }}" class="pt-3">
               @csrf
 
+              <!-- Role Selection -->
               <div class="form-group">
-                <select name="role" id="role" class="form-control form-control-lg" required>
-                  <option value="">Select Role</option>
+                <select name="role"
+                        id="role"
+                        class="form-control form-control-lg"
+                        required>
+                  <option value="" disabled selected>
+                    -- Select Role --
+                  </option>
                   <option value="beneficiary">Beneficiary</option>
                   <option value="donor">Donor</option>
                   <option value="admin">Admin</option>
@@ -32,42 +41,70 @@
 
               <!-- Qalam ID -->
               <div class="form-group" id="qalam_id_field" style="display:none;">
-                <input type="text" name="qalam_id" class="form-control form-control-lg" placeholder="Qalam ID">
+                <input type="text"
+                       name="qalam_id"
+                       class="form-control form-control-lg"
+                       placeholder="Enter Qalam ID">
               </div>
 
               <!-- Email -->
               <div class="form-group">
-                <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" required>
+                <input type="email"
+                       name="email"
+                       class="form-control form-control-lg"
+                       placeholder="Enter Email Address"
+                       required>
               </div>
 
-              <!-- Password with Toggle -->
+              <!-- Password -->
               <div class="form-group position-relative">
-                <input type="password" id="password" name="password"
-                       class="form-control form-control-lg"
-                       placeholder="Password" required>
 
-                <!-- Toggle Button -->
-                <span onclick="togglePassword()" 
-                      style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;">
+                <input type="password"
+                       id="password"
+                       name="password"
+                       class="form-control form-control-lg"
+                       placeholder="Enter Password"
+                       required>
+
+                <!-- Toggle Password -->
+                <span onclick="togglePassword()"
+                      style="
+                        position:absolute;
+                        right:15px;
+                        top:50%;
+                        transform:translateY(-50%);
+                        cursor:pointer;
+                        font-size:18px;
+                      ">
                   👁️
                 </span>
+
               </div>
 
-              <!-- Submit -->
+              <!-- Submit Button -->
               <div class="mt-3 d-grid gap-2">
-                <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium">
+                <button type="submit"
+                        class="btn btn-block btn-gradient-primary btn-lg font-weight-medium">
                   SIGN IN
                 </button>
               </div>
 
               <!-- Extras -->
               <div class="my-2 d-flex justify-content-between align-items-center">
+
                 <div class="form-check">
                   <label class="form-check-label text-muted">
-                    <input type="checkbox" name="remember" class="form-check-input"> Keep me signed in
+                    <input type="checkbox"
+                           name="remember"
+                           class="form-check-input">
+                    Keep me signed in
                   </label>
                 </div>
-                <a href="#" class="auth-link text-info">Forgot password?</a>
+
+                <a href="#" class="auth-link text-info">
+                  Forgot password?
+                </a>
+
               </div>
 
             </form>
@@ -84,8 +121,10 @@
 
 <!-- Scripts -->
 <script>
+
   // Role Toggle
   document.getElementById('role').addEventListener('change', function () {
+
     let qalamField = document.getElementById('qalam_id_field');
 
     if (this.value === 'beneficiary') {
@@ -93,10 +132,12 @@
     } else {
       qalamField.style.display = 'none';
     }
+
   });
 
   // Password Toggle
   function togglePassword() {
+
     let passwordInput = document.getElementById('password');
 
     if (passwordInput.type === "password") {
@@ -104,7 +145,9 @@
     } else {
       passwordInput.type = "password";
     }
+
   }
+
 </script>
 
 </body>

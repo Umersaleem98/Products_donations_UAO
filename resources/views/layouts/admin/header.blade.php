@@ -5,9 +5,13 @@
 
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start " ">
             
-            <a class="navbar-brand brand-logo text-center" href="{{ route('dashboard') }}"> <img src="{{ asset('admins/assets/images/logos/logo1.png') }}" style="width: 50px; height: 50;" alt="NUST Gift Store" class="navbar-brand-img"> </a>
+            <a class="navbar-brand brand-logo text-center" href="{{ route('dashboard') }}"> 
+                {{-- <img src="{{ asset('admins/assets/images/logos/logo1.png') }}" style="width: 50px; height: 50;" alt="NUST Gift Store" class="navbar-brand-img">  --}}
+            </a>
             
-            <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}"> <img src="{{ asset('admins/assets/images/logos/logo1.png') }}" style="width: 100px; height: 80;" alt="NUST Gift Store" class="navbar-brand-img"> </a>
+            <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}"> 
+                {{-- <img src="{{ asset('admins/assets/images/logos/logo1.png') }}" style="width: 100px; height: 80;" alt="NUST Gift Store" class="navbar-brand-img">  --}}
+            </a>
         
         </div>
 
