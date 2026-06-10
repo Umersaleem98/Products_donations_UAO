@@ -40,6 +40,10 @@ Route::post('/login', [AuthController::class, 'login']);
 |--------------------------------------------------------------------------
 */
 
+
+Route::post('/donor/accept-terms', [DashboardController::class, 'acceptTerms'])
+    ->name('donor.accept.terms');
+
 Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -132,6 +136,8 @@ Route::middleware('auth')->group(function () {
         // REQUESTS
         Route::get('requests', [DonorRequestController::class, 'donorRequests'])->name('donor.requests');
         Route::post('request/{id}', [DonorRequestController::class, 'updateRequestStatus'])->name('donor.request.update');
+
+
     });
 
 

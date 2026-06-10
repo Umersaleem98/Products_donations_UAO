@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\DonorTermAcceptance;
 use App\Models\Product;
 use App\Models\ProductRequest;
 use App\Models\User;
@@ -18,131 +18,131 @@ class DashboardController extends Controller
         $user = Auth::user();
         if ($user->role === 'admin') {
 
-    $totalUsers         = User::count();
-    $totalDonors        = User::where('role', 'donor')->count();
-    $totalBeneficiaries = User::where('role', 'beneficiary')->count();
+            $totalUsers = User::count();
+            $totalDonors = User::where('role', 'donor')->count();
+            $totalBeneficiaries = User::where('role', 'beneficiary')->count();
 
-    $totalProducts      = Product::count();
-    $totalCategories    = Category::count();
+            $totalProducts = Product::count();
+            $totalCategories = Category::count();
 
-    $totalRequests      = ProductRequest::count();
+            $totalRequests = ProductRequest::count();
 
-    $pendingAdmin       = ProductRequest::where('admin_status', 'pending')->count();
-    $approvedByAdmin    = ProductRequest::where('admin_status', 'approved')->count();
-    $rejectedByAdmin    = ProductRequest::where('admin_status', 'rejected')->count();
+            $pendingAdmin = ProductRequest::where('admin_status', 'pending')->count();
+            $approvedByAdmin = ProductRequest::where('admin_status', 'approved')->count();
+            $rejectedByAdmin = ProductRequest::where('admin_status', 'rejected')->count();
 
-    $pendingDonor       = ProductRequest::where('admin_status', 'approved')
-                                ->where('donor_status', 'pending')
-                                ->count();
+            $pendingDonor = ProductRequest::where('admin_status', 'approved')
+                ->where('donor_status', 'pending')
+                ->count();
 
-    $acceptedByDonor    = ProductRequest::where('donor_status', 'accepted')->count();
+            $acceptedByDonor = ProductRequest::where('donor_status', 'accepted')->count();
 
-    $rejectedByDonor    = ProductRequest::where('donor_status', 'rejected')->count();
+            $rejectedByDonor = ProductRequest::where('donor_status', 'rejected')->count();
 
-    /*
-    |--------------------------------------------------------------------------
-    | Charts Data
-    |--------------------------------------------------------------------------
-    */
+            /*
+            |--------------------------------------------------------------------------
+            | Charts Data
+            |--------------------------------------------------------------------------
+            */
 
-    $usersChart = [
-        $totalDonors,
-        $totalBeneficiaries
-    ];
+            $usersChart = [
+                $totalDonors,
+                $totalBeneficiaries,
+            ];
 
-    $requestChart = [
-        $pendingAdmin,
-        $approvedByAdmin,
-        $rejectedByAdmin
-    ];
+            $requestChart = [
+                $pendingAdmin,
+                $approvedByAdmin,
+                $rejectedByAdmin,
+            ];
 
-    $donorDecisionChart = [
-        $acceptedByDonor,
-        $rejectedByDonor,
-        $pendingDonor
-    ];
+            $donorDecisionChart = [
+                $acceptedByDonor,
+                $rejectedByDonor,
+                $pendingDonor,
+            ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Monthly Requests Chart
-    |--------------------------------------------------------------------------
-    */
+            /*
+            |--------------------------------------------------------------------------
+            | Monthly Requests Chart
+            |--------------------------------------------------------------------------
+            */
 
-    $monthlyRequests = ProductRequest::select(
-        DB::raw("MONTH(created_at) as month"),
-        DB::raw("COUNT(*) as total")
-    )
-    ->whereYear('created_at', date('Y'))
-    ->groupBy('month')
-    ->pluck('total', 'month');
+            $monthlyRequests = ProductRequest::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(*) as total')
+            )
+                ->whereYear('created_at', date('Y'))
+                ->groupBy('month')
+                ->pluck('total', 'month');
 
-    $requestMonths = [];
-    $requestCounts = [];
+            $requestMonths = [];
+            $requestCounts = [];
 
-    for ($i = 1; $i <= 12; $i++) {
-        $requestMonths[] = Carbon::create()->month($i)->format('M');
-        $requestCounts[] = $monthlyRequests[$i] ?? 0;
-    }
+            for ($i = 1; $i <= 12; $i++) {
+                $requestMonths[] = Carbon::create()->month($i)->format('M');
+                $requestCounts[] = $monthlyRequests[$i] ?? 0;
+            }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Recent Tables
-    |--------------------------------------------------------------------------
-    */
+            /*
+            |--------------------------------------------------------------------------
+            | Recent Tables
+            |--------------------------------------------------------------------------
+            */
 
-    $recentUsers = User::latest()
-        ->take(10)
-        ->get();
+            $recentUsers = User::latest()
+                ->take(10)
+                ->get();
 
-    $recentProducts = Product::with('user')
-        ->latest()
-        ->take(10)
-        ->get();
+            $recentProducts = Product::with('user')
+                ->latest()
+                ->take(10)
+                ->get();
 
-    $recentRequests = ProductRequest::with([
-        'beneficiary',
-        'donor',
-        'product'
-    ])
-    ->latest()
-    ->take(10)
-    ->get();
+            $recentRequests = ProductRequest::with([
+                'beneficiary',
+                'donor',
+                'product',
+            ])
+                ->latest()
+                ->take(10)
+                ->get();
 
-    return view('dashboard', compact(
-        'user',
+            return view('dashboard', compact(
+                'user',
 
-        'totalUsers',
-        'totalDonors',
-        'totalBeneficiaries',
-        'totalProducts',
-        'totalCategories',
-        'totalRequests',
+                'totalUsers',
+                'totalDonors',
+                'totalBeneficiaries',
+                'totalProducts',
+                'totalCategories',
+                'totalRequests',
 
-        'pendingAdmin',
-        'approvedByAdmin',
-        'rejectedByAdmin',
+                'pendingAdmin',
+                'approvedByAdmin',
+                'rejectedByAdmin',
 
-        'pendingDonor',
-        'acceptedByDonor',
-        'rejectedByDonor',
+                'pendingDonor',
+                'acceptedByDonor',
+                'rejectedByDonor',
 
-        'usersChart',
-        'requestChart',
-        'donorDecisionChart',
+                'usersChart',
+                'requestChart',
+                'donorDecisionChart',
 
-        'requestMonths',
-        'requestCounts',
+                'requestMonths',
+                'requestCounts',
 
-        'recentUsers',
-        'recentProducts',
-        'recentRequests'
-    ));
+                'recentUsers',
+                'recentProducts',
+                'recentRequests'
+            ));
         }
 
         // ===== DONOR DASHBOARD =====
         if ($user->role === 'donor') {
 
-            $myProducts      = Product::where('user_id', $user->id)->count();
+            $myProducts = Product::where('user_id', $user->id)->count();
 
             $incomingRequests = ProductRequest::where('donor_id', $user->id)
                 ->where('admin_status', 'approved')
@@ -191,5 +191,24 @@ class DashboardController extends Controller
                 'accepted'
             ));
         }
+    }
+
+    public function acceptTerms()
+    {
+        $donorId = Auth::id();
+
+        // Check if already accepted
+        $acceptance = DonorTermAcceptance::where('donor_id', $donorId)->first();
+
+        if (! $acceptance) {
+
+            DonorTermAcceptance::create([
+                'donor_id' => $donorId,
+                'accepted' => 1,
+                'accepted_at' => now(),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Terms accepted successfully.');
     }
 }

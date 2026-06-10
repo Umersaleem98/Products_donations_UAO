@@ -13,7 +13,7 @@ class User extends Authenticatable
 {
 
         use Notifiable;
-    
+
    protected $fillable = [
         'name', 'email', 'password', 'image','role', 'qalam_id'
     ];
@@ -50,7 +50,10 @@ public function donorProfile()
     return $this->hasMany(Product::class);
 }
 
-
+public function termAcceptance()
+{
+    return $this->hasOne(DonorTermAcceptance::class, 'donor_id');
+}
 
   public function profileCompletion()
     {

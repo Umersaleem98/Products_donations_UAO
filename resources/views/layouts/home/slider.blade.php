@@ -49,7 +49,7 @@
     }
 
     .slide-content h1 {
-        font-size: 4rem;
+        font-size: 3rem;
         font-weight: 800;
         margin-bottom: 20px;
         text-transform: uppercase;
@@ -157,7 +157,7 @@
         <div class="slide-bg" style="background-image: url('{{ asset('templates/assets/sliders/slider1.png') }}');"></div>
 
         <div class="slide-content">
-            <h1>NUST <span>Support Circle</span></h1>
+            <h1>NUST <span>Sharing Network</span></h1>
             <p>
                 A centralized platform connecting donors and students to reduce educational inequality.
                 We facilitate the donation of laptops, books, and essential learning resources.
@@ -173,7 +173,7 @@
         <div class="slide-bg" style="background-image: url('{{ asset('templates/assets/sliders/slider2.png') }}');"></div>
 
         <div class="slide-content">
-           <h1>NUST <span>Support Circle</span></h1>
+           <h1>NUST <span>Sharing Network</span></h1>
             <p>
                 A centralized platform connecting donors and students to reduce educational inequality.
                 We facilitate the donation of laptops, books, and essential learning resources.
@@ -189,7 +189,7 @@
         <div class="slide-bg" style="background-image: url('{{ asset('templates/assets/sliders/slider3.png') }}');"></div>
 
         <div class="slide-content">
-           <h1>NUST <span>Support Circle</span></h1>
+           <h1>NUST <span>Sharing Network</span></h1>
             <p>
                 A centralized platform connecting donors and students to reduce educational inequality.
                 We facilitate the donation of laptops, books, and essential learning resources.

@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="footer-widget">
-                        <h4><i class="fas fa-gift me-2"></i>NUST <span style="color: #3B71B8;">Gift Store</span></h4>
+                        <h4><i class="fas fa-gift me-2"></i>NUST <span style="color: #3B71B8;">Sharing Network</span></h4>
                         <p>Empowering education through technology. We bridge the gap between those who have and those
                             who need, creating a stronger academic community.</p>
                         <div class="social-links">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 NUST Gift Store. All Rights Reserved. Designed with <i class="fas fa-heart"
+                <p>&copy; 2026 NUST Sharing Network. All Rights Reserved. Designed with <i class="fas fa-heart"
                         style="color: #FABD4D;"></i> for the NUST Community</p>
             </div>
         </div>

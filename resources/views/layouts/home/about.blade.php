@@ -143,7 +143,7 @@
 
                     <div class="experience-badge">
                         <div style="font-size: 1.6rem;">NUST</div>
-                        <div style="font-size: 0.9rem;">Support Circle</div>
+                        <div style="font-size: 0.9rem;">Sharing Network</div>
                     </div>
 
                 </div>
@@ -160,7 +160,7 @@
                     <h3>Supporting Academic Continuity at NUST</h3>
 
                     <p>
-                        NUST Support Circle is a structured donation and resource-sharing platform
+                        NUST Sharing Network is a structured donation and resource-sharing platform
                         designed to assist students who face financial barriers in accessing essential academic tools.
                     </p>
 

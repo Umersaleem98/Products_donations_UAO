@@ -16,7 +16,7 @@
                 <img src="{{ asset('admins/assets/images/logos/logo.png') }}"
                      alt="NUST Gift Store"
                      class="navbar-brand-img"
-                     style="width: 250px; height: auto;">
+                     style="width: 120px; height: auto;">
               </div>
             </div>
 

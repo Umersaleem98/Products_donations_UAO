@@ -5,7 +5,7 @@
     ========================== */
 
     .navbar {
-        background: rgba(255, 255, 255, 0.96);
+        background: white;
         backdrop-filter: blur(10px);
         box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
         transition: all 0.3s ease;
@@ -31,7 +31,7 @@
     }
 
     .navbar-brand-img {
-        width: 150px !important;
+        width: 100px !important;
         height: 80px !important;
         object-fit: contain;
     }
