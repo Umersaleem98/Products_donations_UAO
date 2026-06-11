@@ -37,7 +37,7 @@
 
 
          @if (Auth::user()->role === 'admin')
-             @include('layouts.admin.components.adminSidebar')
+            @include('layouts.admin.components.adminSidebar')
          @endif
 
          @if (Auth::user()->role === 'donor')
