@@ -5,12 +5,12 @@
     </a>
 </li>
 
-<li class="nav-item">
+{{-- <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.category.create') }}">
         <span class="menu-title">Add Categories</span>
         <i class="text-primary fa-solid fa-plus menu-icon"></i>
     </a>
-</li>
+</li> --}}
 
 <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.products.index') }}">
@@ -19,12 +19,12 @@
     </a>
 </li>
 
-<li class="nav-item">
+{{-- <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.products.create') }}">
         <span class="menu-title">Add Products</span>
         <i class="text-primary fa-solid fa-square-plus menu-icon"></i>
     </a>
-</li>
+</li> --}}
 
 <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.user.index') }}">

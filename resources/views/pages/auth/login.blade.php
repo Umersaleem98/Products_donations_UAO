@@ -1,152 +1,252 @@
 @include('layouts.admin.head')
+
 <title>Login</title>
 
+<style>
+body {
+    background: linear-gradient(135deg, #306DB0, #4f46e5);
+    min-height: 100vh;
+}
+
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 520px;
+    background: rgba(255,255,255,0.96);
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+.logo {
+    width: 120px;
+    display: block;
+    margin: 0 auto 15px;
+}
+
+.title {
+    text-align: center;
+    font-weight: 700;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.form-control {
+    height: 50px;
+    border-radius: 12px;
+}
+
+.form-control:focus {
+    border-color: #4f46e5;
+    box-shadow: none;
+}
+
+.btn-login {
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #306DB0, #4f46e5);
+    color: #fff;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.captcha-box {
+    margin-top: 10px;
+}
+
+.captcha-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.captcha-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.captcha-item:hover {
+    border-color: #4f46e5;
+    transform: scale(1.02);
+}
+
+.captcha-item img {
+    width: 100%;
+    height: 90px;
+    object-fit: cover;
+}
+
+.captcha-item input {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    transform: scale(1.3);
+}
+
+@media(max-width:576px){
+    .login-card{
+        padding:25px;
+    }
+}
+</style>
+
 <body>
-<div class="container-scroller">
-  <div class="container-fluid page-body-wrapper full-page-wrapper">
-    <div class="content-wrapper d-flex align-items-center auth">
-      <div class="row flex-grow">
 
-        <div class="col-lg-6 mx-auto">
-          <div class="auth-form-light text-left p-5">
+<div class="login-wrapper">
 
-            <!-- Logo -->
-            <div class="brand-logo text-center mb-4">
-              <div>
-                <img src="{{ asset('admins/assets/images/logos/logo.png') }}"
-                     alt="NUST Gift Store"
-                     class="navbar-brand-img"
-                     style="width: 120px; height: auto;">
-              </div>
+    <div class="login-card">
+
+        <!-- Logo -->
+        <img src="{{ asset('admins/assets/images/logos/logo.png') }}" class="logo">
+
+        <h3 class="title">Welcome Back</h3>
+        <p class="subtitle">Sign in to continue</p>
+
+        <!-- Errors -->
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+
+            <!-- Role -->
+            <div class="form-group mb-3">
+                <select name="role" id="role" class="form-control" required>
+                    <option value="">Select Role</option>
+                    <option value="beneficiary" {{ old('role')=='beneficiary'?'selected':'' }}>Beneficiary</option>
+                    <option value="donor" {{ old('role')=='donor'?'selected':'' }}>Donor</option>
+                    <option value="admin" {{ old('role')=='admin'?'selected':'' }}>Admin</option>
+                </select>
             </div>
 
-            <!-- Login Form -->
-            <form method="POST" action="{{ route('login') }}" class="pt-3">
-              @csrf
+            <!-- Qalam ID -->
+            <div class="form-group mb-3"
+                 id="qalam_id_field"
+                 style="{{ old('role')=='beneficiary'?'':'display:none;' }}">
 
-              <!-- Role Selection -->
-              <div class="form-group">
-                <select name="role"
-                        id="role"
-                        class="form-control form-control-lg"
-                        required>
-                  <option value="" disabled selected>
-                    -- Select Role --
-                  </option>
-                  <option value="beneficiary">Beneficiary</option>
-                  <option value="donor">Donor</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-
-              <!-- Qalam ID -->
-              <div class="form-group" id="qalam_id_field" style="display:none;">
                 <input type="text"
                        name="qalam_id"
-                       class="form-control form-control-lg"
-                       placeholder="Enter Qalam ID">
-              </div>
+                       class="form-control"
+                       placeholder="Enter Qalam ID"
+                       value="{{ old('qalam_id') }}">
+            </div>
 
-              <!-- Email -->
-              <div class="form-group">
+            <!-- Email -->
+            <div class="form-group mb-3">
                 <input type="email"
                        name="email"
-                       class="form-control form-control-lg"
-                       placeholder="Enter Email Address"
+                       class="form-control"
+                       placeholder="Email Address"
+                       value="{{ old('email') }}"
                        required>
-              </div>
+            </div>
 
-              <!-- Password -->
-              <div class="form-group position-relative">
-
+            <!-- Password -->
+            <div class="form-group mb-3 position-relative">
                 <input type="password"
                        id="password"
                        name="password"
-                       class="form-control form-control-lg"
-                       placeholder="Enter Password"
+                       class="form-control"
+                       placeholder="Password"
                        required>
 
-                <!-- Toggle Password -->
-                <span onclick="togglePassword()"
-                      style="
-                        position:absolute;
-                        right:15px;
-                        top:50%;
-                        transform:translateY(-50%);
-                        cursor:pointer;
-                        font-size:18px;
-                      ">
-                  👁️
-                </span>
+                <span class="password-toggle" onclick="togglePassword()">👁️</span>
+            </div>
 
-              </div>
+            <!-- IMAGE CAPTCHA -->
+            <div class="form-group mb-3 captcha-box">
 
-              <!-- Submit Button -->
-              <div class="mt-3 d-grid gap-2">
-                <button type="submit"
-                        class="btn btn-block btn-gradient-primary btn-lg font-weight-medium">
-                  SIGN IN
-                </button>
-              </div>
+                <label class="font-weight-bold">
+                    {{ session('captcha_question') ?? 'Verify images' }}
+                </label>
 
-              <!-- Extras -->
-              <div class="my-2 d-flex justify-content-between align-items-center">
+                <div class="captcha-grid">
 
-                <div class="form-check">
-                  <label class="form-check-label text-muted">
-                    <input type="checkbox"
-                           name="remember"
-                           class="form-check-input">
-                    Keep me signed in
-                  </label>
+                    @if(session('captcha_images'))
+                        @foreach(session('captcha_images') as $index => $img)
+
+                            <label class="captcha-item">
+                                <input type="checkbox"
+                                       name="captcha_selected[]"
+                                       value="{{ $index }}">
+
+                                <img src="{{ asset('captcha/'.$img['img']) }}">
+                            </label>
+
+                        @endforeach
+                    @endif
+
                 </div>
 
-                <a href="#" class="auth-link text-info">
-                  Forgot password?
-                </a>
+            </div>
 
-              </div>
+            <!-- Remember -->
+            <div class="form-check mb-3">
+                <input type="checkbox" name="remember" class="form-check-input">
+                <label class="form-check-label">Remember Me</label>
+            </div>
 
-            </form>
+            <!-- Submit -->
+            <button type="submit" class="btn-login">
+                SIGN IN
+            </button>
 
-          </div>
-        </div>
+        </form>
 
-      </div>
     </div>
-  </div>
+
 </div>
 
 @include('layouts.admin.script')
 
-<!-- Scripts -->
 <script>
 
-  // Role Toggle
-  document.getElementById('role').addEventListener('change', function () {
+document.getElementById('role').addEventListener('change', function () {
+    let qalam = document.getElementById('qalam_id_field');
+    qalam.style.display = (this.value === 'beneficiary') ? 'block' : 'none';
+});
 
-    let qalamField = document.getElementById('qalam_id_field');
-
-    if (this.value === 'beneficiary') {
-      qalamField.style.display = 'block';
-    } else {
-      qalamField.style.display = 'none';
-    }
-
-  });
-
-  // Password Toggle
-  function togglePassword() {
-
-    let passwordInput = document.getElementById('password');
-
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-    } else {
-      passwordInput.type = "password";
-    }
-
-  }
+function togglePassword() {
+    let p = document.getElementById('password');
+    p.type = (p.type === 'password') ? 'text' : 'password';
+}
 
 </script>
 

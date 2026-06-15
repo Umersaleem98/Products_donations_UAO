@@ -16,20 +16,21 @@ class AdminProductsController extends Controller
     public function index()
     {
         $products = Product::latest()->paginate(10);
-
+         $categories = Category::all();
         // $categories = Category::latest()->paginate(10);
-        return view('pages.admin.products.index', compact('products'));
+        return view('pages.admin.products.index', compact('products', 'categories'));
     }
 
-    public function create()
-    {
-        $categories = Category::all();
+    // public function create()
+    // {
+    //     $categories = Category::all();
 
-        return view('pages.admin.products.create', compact('categories'));
-    }
+    //     return view('pages.admin.products.create', compact('categories'));
+    // }
 
     public function store(Request $request)
     {
+
         $request->validate([
             'category_id' => 'required',
             'name' => 'required|string|max:255',
@@ -64,6 +65,8 @@ class AdminProductsController extends Controller
 
         // ✅ GET ALL USERS (EXCEPT CURRENT USER)
         $users = User::where('id', '!=', auth()->id())->get();
+
+
 
         // ✅ SEND NOTIFICATION (BEST METHOD)
         Notification::send($users, new ProductCreatedNotification($products));

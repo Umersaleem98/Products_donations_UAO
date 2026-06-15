@@ -1,4 +1,5 @@
 @include('layouts.admin.head')
+
 <title>Index Users</title>
 
 <body>
@@ -14,7 +15,7 @@
                 <div class="content-wrapper">
 
                     <!-- PAGE HEADER -->
-                    <div class="page-header">
+                    <div class="page-header mb-3">
                         <h3 class="page-title">
                             <span class="page-title-icon bg-gradient-primary text-white me-2">
                                 <i class="mdi mdi-account"></i>
@@ -29,53 +30,41 @@
                             <div class="card shadow-sm border-0">
 
                                 <!-- HEADER -->
-                                <div class="card-header bg-white border-bottom py-3">
+                                <div class="card-header bg-white border-bottom">
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
 
-                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-
-                                        <!-- LEFT -->
                                         <div>
                                             <h5 class="mb-1 fw-bold">User Profiles</h5>
-
-                                            <!-- TOTAL USERS -->
                                             <small class="text-muted">
                                                 Total Users:
-                                                <span class="fw-bold text-dark">
-                                                    {{ $users->total() }}
-                                                </span>
+                                                <span class="fw-bold text-dark">{{ $users->total() }}</span>
                                             </small>
                                         </div>
 
-                                        <!-- RIGHT -->
-                                        <div class="d-flex gap-2 flex-wrap">
+                                        <div class="d-flex flex-wrap gap-2 align-items-center">
 
                                             <!-- EXPORT ALL -->
-                                            <a href="{{ route('admin.user.export') }}"
-                                                class="btn btn-dark btn-sm">
-                                                <i class="mdi mdi-download me-1"></i>
+                                            <a href="{{ route('admin.user.export') }}" class="btn btn-dark btn-sm">
                                                 Export All
                                             </a>
 
                                             <!-- IMPORT -->
-                                            <form action="{{ route('admin.user.import') }}"
-                                                method="POST"
-                                                enctype="multipart/form-data"
-                                                class="d-flex gap-2">
+                                            <form action="{{ route('admin.user.import') }}" method="POST"
+                                                enctype="multipart/form-data" class="d-flex gap-2 m-0">
                                                 @csrf
 
-                                                <input type="file"
-                                                    name="file"
-                                                    class="form-control form-control-sm"
-                                                    required>
+                                                <input type="file" name="file"
+                                                    class="form-control form-control-sm" required
+                                                    style="max-width:200px;">
 
-                                                <button type="submit"
-                                                    class="btn btn-success btn-sm">
-                                                    <i class="mdi mdi-upload me-1"></i>
+                                                <button type="submit" class="btn btn-success btn-sm">
                                                     Import
                                                 </button>
+
                                             </form>
 
                                         </div>
+
                                     </div>
                                 </div>
 
@@ -84,130 +73,78 @@
 
                                     @include('layouts.admin.alert')
 
-                                    <!-- SEARCH + PER PAGE -->
-                                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                                    <!-- SEARCH -->
+                                    <div class="d-flex justify-content-between flex-wrap gap-2 mb-3">
 
-                                        <!-- SEARCH -->
-                                        <form method="GET"
-                                            action="{{ route('admin.user.index') }}"
-                                            class="d-flex gap-2 flex-wrap">
+                                        <form method="GET" action="{{ route('admin.user.index') }}"
+                                            class="d-flex gap-2">
 
-                                            <input type="text"
-                                                name="search"
-                                                value="{{ request('search') }}"
-                                                class="form-control form-control-sm"
-                                                placeholder="Search name, email, qalam id"
-                                                style="min-width:250px;">
+                                            <input type="text" name="search" value="{{ request('search') }}"
+                                                class="form-control form-control-sm" placeholder="Search users...">
 
                                             <button class="btn btn-primary btn-sm">
-                                                <i class="mdi mdi-magnify"></i>
                                                 Search
                                             </button>
 
-                                            <a href="{{ route('admin.user.index') }}"
-                                                class="btn btn-dark btn-sm">
+                                            <a href="{{ route('admin.user.index') }}" class="btn btn-secondary btn-sm">
                                                 Reset
                                             </a>
-                                        </form>
 
-                                        <!-- PER PAGE -->
-                                        <form method="GET"
-                                            action="{{ route('admin.user.index') }}">
-
-                                            <select name="per_page"
-                                                onchange="this.form.submit()"
-                                                class="form-select form-select-sm">
-
-                                                <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>
-                                                    10
-                                                </option>
-
-                                                <option value="20" {{ $perPage == 20 ? 'selected' : '' }}>
-                                                    20
-                                                </option>
-
-                                                <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>
-                                                    50
-                                                </option>
-
-                                                <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>
-                                                    100
-                                                </option>
-
-                                            </select>
                                         </form>
 
                                     </div>
 
-                                    <!-- TABLE SECTION -->
-                                    <div class="border rounded-3 p-3 bg-light">
+                                    <!-- ✅ BULK FORM START (IMPORTANT FIX) -->
+                                    <form method="POST" id="bulkForm">
+                                        @csrf
 
-                                        <!-- SECTION HEADER -->
-                                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                        <div class="border rounded bg-light p-3">
 
-                                            <div>
-                                                <h6 class="mb-1 fw-bold">
-                                                    Users Table
-                                                </h6>
+                                            <!-- ACTION BUTTONS -->
+                                            <div class="d-flex justify-content-between flex-wrap gap-2 mb-3">
 
-                                                <small class="text-muted">
-                                                    Showing
-                                                    {{ $users->firstItem() ?? 0 }}
-                                                    to
-                                                    {{ $users->lastItem() ?? 0 }}
-                                                    of
-                                                    {{ $users->total() }}
-                                                    users
-                                                </small>
-                                            </div>
-
-                                            <!-- BULK FORM -->
-                                            <form method="POST" id="bulk-form">
-                                                @csrf
+                                                <h6 class="fw-bold mb-0">Users Table</h6>
 
                                                 <div class="d-flex gap-2">
 
+                                                    <!-- EXPORT SELECTED -->
                                                     <button type="submit"
                                                         formaction="{{ route('admin.user.export.selected') }}"
                                                         class="btn btn-dark btn-sm">
-                                                        <i class="mdi mdi-file-export"></i>
                                                         Export Selected
                                                     </button>
 
+                                                    <!-- DELETE SELECTED -->
                                                     <button type="submit"
                                                         formaction="{{ route('admin.user.delete.selected') }}"
                                                         class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Delete selected users?')">
-                                                        <i class="mdi mdi-delete"></i>
+                                                        onclick="return confirm('Are you sure you want to delete selected users?')">
                                                         Delete Selected
                                                     </button>
 
                                                 </div>
-                                            </form>
 
-                                        </div>
+                                            </div>
 
-                                        <!-- TABLE -->
-                                        <div class="table-responsive">
+                                            <!-- TABLE -->
+                                            <div class="table-responsive">
 
-                                            <form method="POST">
-                                                @csrf
-
-                                                <table class="table table-bordered table-hover align-middle mb-0 bg-white">
+                                                <table
+                                                    class="table table-hover table-bordered align-middle bg-white mb-0">
 
                                                     <thead class="table-light">
                                                         <tr>
                                                             <th width="40">
                                                                 <input type="checkbox" id="select-all">
                                                             </th>
-
                                                             <th>#</th>
-                                                            <th>Image</th>
+                                                            <th>Qalam ID</th>
                                                             <th>Name</th>
                                                             <th>Email</th>
+                                                            <th>Image</th>
                                                             <th>Role</th>
-                                                            <th>Qalam ID</th>
-                                                            <th width="160">Action</th>
+
+                                                            <th width="150">Action</th>
                                                         </tr>
                                                     </thead>
 
@@ -216,49 +153,34 @@
                                                         @forelse($users as $key => $user)
                                                             <tr>
 
+                                                                <!-- ✅ MUST BE INSIDE FORM -->
                                                                 <td>
-                                                                    <input type="checkbox"
-                                                                        name="ids[]"
+                                                                    <input type="checkbox" name="ids[]"
                                                                         value="{{ $user->id }}"
                                                                         class="user-checkbox">
                                                                 </td>
 
-                                                                <td>
-                                                                    {{ $users->firstItem() + $key }}
-                                                                </td>
+                                                                <td>{{ $users->firstItem() + $key }}</td>
+                                                                  <td>{{ $user->qalam_id ?? 'N/A' }}</td>
+
+
+                                                                <td>{{ $user->name }}</td>
+                                                                <td>{{ $user->email }}</td>
 
                                                                 <td>
                                                                     @if ($user->image)
-
                                                                         <img src="{{ asset('admin/asset/profilephoto/' . $user->image) }}"
-                                                                            width="50"
-                                                                            height="50"
+                                                                            width="40" height="40"
                                                                             class="rounded-circle border"
-                                                                            style="object-fit:cover;">
-
+                                                                            style="object-fit: cover;">
                                                                     @else
-
-                                                                        <span class="text-muted">
-                                                                            N/A
-                                                                        </span>
-
+                                                                        N/A
                                                                     @endif
                                                                 </td>
-
-                                                                <td class="fw-semibold">
-                                                                    {{ $user->name }}
-                                                                </td>
-
                                                                 <td>
-                                                                    {{ $user->email }}
-                                                                </td>
-
-                                                                <td>
-
                                                                     @php
                                                                         $role = strtolower($user->role);
-
-                                                                        $badgeClass = match ($role) {
+                                                                        $badge = match ($role) {
                                                                             'admin' => 'bg-primary',
                                                                             'donor' => 'bg-danger',
                                                                             'beneficiary' => 'bg-info',
@@ -266,64 +188,55 @@
                                                                         };
                                                                     @endphp
 
-                                                                    <span class="badge {{ $badgeClass }}">
+                                                                    <span class="badge {{ $badge }}">
                                                                         {{ ucfirst($user->role) }}
                                                                     </span>
-
                                                                 </td>
 
-                                                                <td>
-                                                                    {{ $user->qalam_id ?? 'N/A' }}
-                                                                </td>
 
-                                                                <td>
 
-                                                                    <div class="d-flex gap-1">
+                                                                <td class="d-flex gap-1">
 
-                                                                        <a href="{{ route('admin.user.edit', $user->id) }}"
-                                                                            class="btn btn-warning btn-sm">
-                                                                            Edit
-                                                                        </a>
+                                                                    <a href="{{ route('admin.user.edit', $user->id) }}"
+                                                                        class="btn btn-warning btn-sm">
+                                                                        Edit
+                                                                    </a>
 
-                                                                        <a href="{{ route('admin.user.destroy', $user->id) }}"
-                                                                            class="btn btn-danger btn-sm"
-                                                                            onclick="return confirm('Delete this user?')">
-                                                                            Delete
-                                                                        </a>
-
-                                                                    </div>
+                                                                    <a href="{{ route('admin.user.destroy', $user->id) }}"
+                                                                        class="btn btn-danger btn-sm"
+                                                                        onclick="return confirm('Delete this user?')">
+                                                                        Delete
+                                                                    </a>
 
                                                                 </td>
 
                                                             </tr>
-
                                                         @empty
-
                                                             <tr>
                                                                 <td colspan="8" class="text-center py-4">
                                                                     No users found
                                                                 </td>
                                                             </tr>
-
                                                         @endforelse
 
                                                     </tbody>
 
                                                 </table>
-                                            </form>
+
+                                            </div>
 
                                         </div>
 
-                                    </div>
+                                    </form>
+                                    <!-- ✅ BULK FORM END -->
 
                                 </div>
 
                                 <!-- PAGINATION -->
-                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-3 py-3 border-top">
+                                <div class="card-footer bg-white border-top d-flex justify-content-between">
 
                                     <small class="text-muted">
-                                        Total Records:
-                                        <strong>{{ $users->total() }}</strong>
+                                        Total: <strong>{{ $users->total() }}</strong>
                                     </small>
 
                                     {{ $users->links() }}
@@ -343,14 +256,11 @@
 
     @include('layouts.admin.script')
 
-    <!-- SELECT ALL -->
     <script>
         document.getElementById('select-all').addEventListener('click', function() {
-
             document.querySelectorAll('.user-checkbox').forEach(cb => {
                 cb.checked = this.checked;
             });
-
         });
     </script>
 

@@ -3,19 +3,21 @@
 
     <div class="navbar-brand-wrapper d-flex align-items-center justify-content-center">
 
-        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start " ">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
 
             <a class="navbar-brand brand-logo text-center" href="{{ route('dashboard') }}">
-                <img src="{{ asset('admins/assets/images/logos/logo1.png') }}" style="width: 150px; height: auto;" alt="NUST Sharing Network" class="navbar-brand-img">
+                <img src="{{ asset('admins/assets/images/logos/logo1.png') }}" style="width: 150px; height: auto;"
+                    alt="NUST Sharing Network" class="navbar-brand-img">
             </a>
 
             <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}">
-                <img src="{{ asset('admins/assets/images/logos/logo1.png') }}" style="width: 120px; height: auto;" alt="NUST Gift Store" class="navbar-brand-img">
+                <img src="{{ asset('admins/assets/images/logos/logo1.png') }}" style="width: 120px; height: auto;"
+                    alt="NUST Gift Store" class="navbar-brand-img">
             </a>
 
         </div>
 
-</div>
+    </div>
     <!-- RIGHT SIDE -->
     <div class="navbar-menu-wrapper d-flex align-items-stretch">
 
@@ -49,60 +51,60 @@
             <!-- 🔔 NOTIFICATIONS (ADMIN ONLY) -->
             <!-- ===================== -->
 
-                @if (auth()->check() && auth()->user()->role === 'admin')
+            @if (auth()->check() && auth()->user()->role === 'admin')
 
-            <li class="nav-item dropdown">
-                <a class="nav-link count-indicator dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <li class="nav-item dropdown">
+                    <a class="nav-link count-indicator dropdown-toggle" href="#" data-bs-toggle="dropdown">
 
-                    <i class="mdi mdi-bell-outline text-light"></i>
+                        <i class="mdi mdi-bell-outline text-light"></i>
 
-                    @if (auth()->user()->unreadNotifications->count() > 0)
-                        <span class="count-symbol bg-danger"></span>
-                    @endif
-                </a>
+                        @if (auth()->user()->unreadNotifications->count() > 0)
+                            <span class="count-symbol bg-danger"></span>
+                        @endif
+                    </a>
 
-                <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list">
+                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list">
 
-                    <h6 class="p-3 mb-0">
-                        Notifications ({{ auth()->user()->unreadNotifications->count() }})
-                    </h6>
-
-                    <div class="dropdown-divider"></div>
-
-                    @forelse(auth()->user()->unreadNotifications as $notification)
-                        <a href="{{ route('notification.read', $notification->id) }}"
-                            class="dropdown-item preview-item">
-
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon">
-                                    <i class="mdi mdi-package-variant text-light"></i>
-                                </div>
-                            </div>
-
-                            <div class="preview-item-content d-flex flex-column">
-
-                                <h6 class="preview-subject mb-1">
-                                    {{ $notification->data['title'] ?? 'Notification' }}
-                                </h6>
-
-                                <p class="text-gray mb-0">
-                                    <strong>{{ $notification->data['user_name'] ?? '' }}</strong>
-                                    {{ $notification->data['message'] ?? '' }}
-                                </p>
-
-                            </div>
-
-                        </a>
+                        <h6 class="p-3 mb-0">
+                            Notifications ({{ auth()->user()->unreadNotifications->count() }})
+                        </h6>
 
                         <div class="dropdown-divider"></div>
 
-                    @empty
+                        @forelse(auth()->user()->unreadNotifications as $notification)
+                            <a href="{{ route('notification.read', $notification->id) }}"
+                                class="dropdown-item preview-item">
 
-                        <p class="p-3 text-center">No notifications</p>
-                    @endforelse
+                                <div class="preview-thumbnail">
+                                    <div class="preview-icon">
+                                        <i class="mdi mdi-package-variant text-light"></i>
+                                    </div>
+                                </div>
 
-                </div>
-            </li>
+                                <div class="preview-item-content d-flex flex-column">
+
+                                    <h6 class="preview-subject mb-1">
+                                        {{ $notification->data['title'] ?? 'Notification' }}
+                                    </h6>
+
+                                    <p class="text-gray mb-0">
+                                        <strong>{{ $notification->data['user_name'] ?? '' }}</strong>
+                                        {{ $notification->data['message'] ?? '' }}
+                                    </p>
+
+                                </div>
+
+                            </a>
+
+                            <div class="dropdown-divider"></div>
+
+                        @empty
+
+                            <p class="p-3 text-center">No notifications</p>
+                        @endforelse
+
+                    </div>
+                </li>
 
             @endif
 
@@ -131,7 +133,7 @@
 
                 <div class="dropdown-menu navbar-dropdown">
 
-                    <a class="dropdown-item">
+                    <a class="dropdown-item" href="{{ route('reports.traffic') }}">
                         <i class="mdi mdi-cached me-2 text-success"></i> Activity Log
                     </a>
 
@@ -147,6 +149,6 @@
                 </div>
             </li>
 
-            </ul>
-        </div>
+        </ul>
+    </div>
 </nav>

@@ -1,11 +1,9 @@
 <style>
-
     /* =========================
        NAVBAR
     ========================== */
-
     .navbar {
-        background: white;
+        background: #fff;
         backdrop-filter: blur(10px);
         box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
         transition: all 0.3s ease;
@@ -20,158 +18,142 @@
     /* =========================
        BRAND
     ========================== */
-
     .navbar-brand {
-        font-weight: 800;
-        font-size: 1.7rem;
-        color: var(--primary-color) !important;
         display: flex;
         align-items: center;
-        gap: 10px;
     }
 
     .navbar-brand-img {
-        width: 100px !important;
-        height: 80px !important;
+        width: 150px;
+        height: 80px;
         object-fit: contain;
     }
 
-    .navbar-brand span {
-        color: var(--secondary-color);
-    }
-
     /* =========================
-       NAV LINKS
+       CENTER MENU
     ========================== */
-
-    .navbar-nav {
-        gap: 5px; /* Reduced gap between nav items */
+    .navbar-nav-center {
+        gap: 8px;
     }
 
-    .nav-item {
-        margin: 0;
-        padding: 0;
-    }
-
-    .nav-link {
+    .navbar-nav-center .nav-link {
         font-weight: 600;
         color: var(--dark-color) !important;
-        padding: 8px 12px !important; /* Reduced spacing */
+        padding: 8px 14px !important;
         position: relative;
         transition: all 0.3s ease;
         font-size: 15px;
     }
 
-    .nav-link::after {
+    .navbar-nav-center .nav-link::after {
         content: '';
         position: absolute;
+        left: 14px;
         bottom: 0;
-        left: 12px;
         width: 0;
         height: 3px;
         background: var(--secondary-color);
         transition: width 0.3s ease;
-        border-radius: 10px;
+        border-radius: 20px;
     }
 
-    .nav-link:hover::after {
-        width: calc(100% - 24px);
+    .navbar-nav-center .nav-link:hover::after {
+        width: calc(100% - 28px);
     }
 
-    .nav-link:hover {
+    .navbar-nav-center .nav-link:hover {
         color: var(--primary-color) !important;
     }
 
     /* =========================
-       DONATE BUTTON
+       LOGIN BUTTON
     ========================== */
-
     .btn-donate-nav {
         background: var(--secondary-color);
         color: var(--dark-color) !important;
-        padding: 9px 20px !important;
+        padding: 10px 24px !important;
         border-radius: 50px;
         font-weight: 700;
         border: none;
         transition: all 0.3s ease;
-        margin-left: 8px;
         font-size: 14px;
+        text-transform: capitalize;
     }
 
     .btn-donate-nav:hover {
         background: var(--primary-color);
-        color: var(--white) !important;
+        color: #fff !important;
         transform: translateY(-2px);
         box-shadow: 0 5px 20px rgba(59, 113, 184, 0.35);
     }
 
     /* =========================
-       TOGGLER
+       DESKTOP LAYOUT
     ========================== */
+    @media (min-width: 992px) {
+        .navbar-collapse {
+            position: relative;
+        }
 
-    .navbar-toggler {
-        border: none;
-        box-shadow: none !important;
-    }
+        .navbar-nav-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
 
-    .navbar-toggler:focus {
-        box-shadow: none !important;
+        .navbar-right {
+            margin-left: auto;
+        }
     }
 
     /* =========================
-       MOBILE RESPONSIVE
+       MOBILE
     ========================== */
-
     @media (max-width: 991px) {
 
         .navbar-collapse {
             background: #fff;
+            margin-top: 15px;
             padding: 20px;
             border-radius: 15px;
-            margin-top: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
 
-        .navbar-nav {
-            gap: 0;
+        .navbar-brand-img {
+            width: 120px;
+            height: 60px;
         }
 
-        .nav-link {
-            padding: 12px 10px !important;
-        }
-
-        .btn-donate-nav {
-            margin-top: 10px;
-            margin-left: 0;
-            display: inline-block;
+        .navbar-nav-center {
             text-align: center;
         }
 
-        .navbar-brand {
-            font-size: 1.4rem;
+        .navbar-nav-center .nav-link {
+            padding: 12px !important;
         }
 
-        .navbar-brand-img {
-            width: 60px !important;
-            height: 60px !important;
+        .navbar-right {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .btn-donate-nav {
+            width: 100%;
+            max-width: 220px;
         }
     }
-
 </style>
 
-
 <!-- =========================
-     NAVIGATION
-========================== -->
-
+     NAVBAR
+========================= -->
 <nav class="navbar navbar-expand-lg fixed-top" id="navbar">
 
     <div class="container-fluid px-lg-4 px-3">
 
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('home') }}">
-
-            <img src="{{ asset('admins/assets/images/logos/logo.png') }}"
+            <img src="{{ asset('admins/assets/images/logos/logo1.png') }}"
                  alt="NUST Gift Store"
                  class="navbar-brand-img">
         </a>
@@ -180,16 +162,19 @@
         <button class="navbar-toggler"
                 type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
 
             <span class="navbar-toggler-icon"></span>
-
         </button>
 
-        <!-- Navbar Links -->
+        <!-- Menu -->
         <div class="collapse navbar-collapse" id="navbarNav">
 
-            <ul class="navbar-nav ms-auto align-items-lg-center">
+            <!-- Center Navigation -->
+            <ul class="navbar-nav navbar-nav-center">
 
                 <li class="nav-item">
                     <a class="nav-link" href="#home">Home</a>
@@ -203,10 +188,6 @@
                     <a class="nav-link" href="#services">Services</a>
                 </li>
 
-                {{-- <li class="nav-item">
-                    <a class="nav-link" href="#categories">Categories</a>
-                </li> --}}
-
                 <li class="nav-item">
                     <a class="nav-link" href="#how-it-works">How It Works</a>
                 </li>
@@ -214,17 +195,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#testimonials">Stories</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('login') }}">Login</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="btn btn-donate-nav" href="#donate">
-                        Donate Now
-                    </a>
-                </li>
 
             </ul>
+
+            <!-- Right Side Button -->
+            <div class="navbar-right ms-lg-auto">
+                <a class="btn btn-donate-nav" href="{{ route('login') }}">
+                    Login
+                </a>
+            </div>
 
         </div>
 
