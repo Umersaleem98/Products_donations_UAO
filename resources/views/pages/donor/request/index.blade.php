@@ -3,218 +3,221 @@
 <title>Incoming Requests</title>
 
 <style>
-
-    .profile-box{
-        text-align:center;
-        padding:20px;
+    .profile-box {
+        text-align: center;
+        padding: 20px;
     }
 
-    .profile-box img{
-        width:110px;
-        height:110px;
-        border-radius:50%;
-        object-fit:cover;
-        border:3px solid #eee;
-        margin-bottom:10px;
+    .profile-box img {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #eee;
+        margin-bottom: 10px;
     }
 
-    .info-box p{
-        margin:6px 0;
-        font-size:14px;
+    .info-box p {
+        margin: 6px 0;
+        font-size: 14px;
     }
 
-    .section-title{
-        font-weight:700;
-        font-size:16px;
-        margin:15px 0 10px;
-        border-left:4px solid #4B49AC;
-        padding-left:10px;
+    .section-title {
+        font-weight: 700;
+        font-size: 16px;
+        margin: 15px 0 10px;
+        border-left: 4px solid #4B49AC;
+        padding-left: 10px;
     }
-
 </style>
 
 <body>
 
-<div class="container-scroller">
+    <div class="container-scroller">
 
-    @include('layouts.admin.header')
+        @include('layouts.admin.header')
 
-    <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper">
 
-        @include('layouts.admin.sidebar')
+            @include('layouts.admin.sidebar')
 
-        <div class="main-panel">
+            <div class="main-panel">
 
-            <div class="content-wrapper">
+                <div class="content-wrapper">
 
-                <div class="page-header">
-                    <h3 class="page-title">Incoming Requests</h3>
-                </div>
+                    <div class="page-header">
+                        <h3 class="page-title">Incoming Requests</h3>
+                    </div>
 
-                <div class="container mt-3">
+                    <div class="container mt-3">
 
-                    @include('layouts.admin.alert')
+                        @include('layouts.admin.alert')
 
-                    <div class="card shadow-sm">
+                        <div class="card shadow-sm">
 
-                        <div class="card-body">
+                            <div class="card-body">
 
-                            <div class="table-responsive">
+                                <div class="table-responsive">
 
-                                <table class="table table-bordered table-hover">
+                                    <table class="table table-bordered table-hover">
 
-                                    <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Product</th>
-                                        <th>Image</th>
-                                        <th>Beneficiary</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                        <th>Date</th>
-                                    </tr>
-                                    </thead>
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Product</th>
+                                                <th>Image</th>
+                                                <th>Beneficiary</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
 
-                                    <tbody>
+                                        <tbody>
 
-                                    @forelse($requests as $key => $request)
+                                            @forelse($requests as $key => $request)
+                                                @php
+                                                    $image = json_decode($request->product->images, true);
+                                                    $image = $image[0] ?? $request->product->images;
 
-                                        @php
-                                            $image = json_decode($request->product->images, true);
-                                            $image = $image[0] ?? $request->product->images;
+                                                    $beneficiary = $request->beneficiary;
+                                                    $profile = $beneficiary->beneficiaryProfile ?? null;
 
-                                            $beneficiary = $request->beneficiary;
-                                            $profile = $beneficiary->beneficiaryProfile ?? null;
-                                        @endphp
+                                                    $beneficiaryImage =
+                                                        !empty($beneficiary->image) &&
+                                                        file_exists(
+                                                            public_path(
+                                                                'admin/asset/profilephoto/' . $beneficiary->image,
+                                                            ),
+                                                        )
+                                                            ? asset('admin/asset/profilephoto/' . $beneficiary->image)
+                                                            : asset('admin/asset/dummy/dummy.jpg');
+                                                @endphp
 
-                                        <tr>
+                                                <tr>
 
-                                            <td>{{ $key + 1 }}</td>
+                                                    <td>{{ $requests->firstItem() + $key }}</td>
 
-                                            <td>{{ $request->product->name }}</td>
+                                                    <td>{{ $request->product->name }}</td>
 
-                                            <td>
-                                                <img src="{{ asset('admin/products/'.$image) }}"
-                                                     width="60" height="60"
-                                                     style="object-fit:cover;">
-                                            </td>
+                                                    <td>
+                                                        <img src="{{ asset('admin/products/' . $image) }}" width="60"
+                                                            height="60" style="object-fit:cover;">
+                                                    </td>
 
-                                            {{-- BENEFICIARY --}}
-                                            <td>
+                                                    {{-- BENEFICIARY --}}
+                                                    <td>
+                                                        <strong>{{ $beneficiary->name }}</strong><br>
+                                                        <small>{{ $beneficiary->email }}</small>
 
-                                                <strong>{{ $beneficiary->name }}</strong><br>
-                                                <small>{{ $beneficiary->email }}</small>
+                                                        <br>
 
-                                                <br>
+                                                        <button class="btn btn-sm btn-info mt-1" data-bs-toggle="modal"
+                                                            data-bs-target="#beneficiaryModal{{ $beneficiary->id }}">
+                                                            View Profile
+                                                        </button>
+                                                    </td>
 
-                                                <button class="btn btn-sm btn-info mt-1"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#beneficiaryModal{{ $beneficiary->id }}">
-                                                    View Profile
-                                                </button>
+                                                    {{-- STATUS --}}
+                                                    <td>
+                                                        @if ($request->status == 'accepted')
+                                                            <span class="badge bg-success">Accepted</span>
+                                                        @elseif($request->status == 'rejected')
+                                                            <span class="badge bg-danger">Rejected</span>
+                                                        @else
+                                                            <span class="badge bg-warning text-dark">Pending</span>
+                                                        @endif
+                                                    </td>
 
-                                            </td>
+                                                  
+                                                    {{-- ACTION --}}
+                                                    <td>
 
-                                            {{-- STATUS --}}
-                                            <td>
-                                                @if($request->status == 'accepted')
-                                                    <span class="badge bg-success">Accepted</span>
-                                                @elseif($request->status == 'rejected')
-                                                    <span class="badge bg-danger">Rejected</span>
-                                                @else
-                                                    <span class="badge bg-warning text-dark">Pending</span>
-                                                @endif
-                                            </td>
+                                                        <form method="POST"
+                                                            action="{{ route('donor.request.update', $request->id) }}"
+                                                            style="display:inline;">
+                                                            @csrf
+                                                            <input type="hidden" name="status" value="accepted">
+                                                            <button class="btn btn-sm btn-success">Accept</button>
+                                                        </form>
 
-                                            {{-- ACTION --}}
-                                            <td>
+                                                        <form method="POST"
+                                                            action="{{ route('donor.request.update', $request->id) }}"
+                                                            style="display:inline;">
+                                                            @csrf
+                                                            <input type="hidden" name="status" value="rejected">
+                                                            <button class="btn btn-sm btn-danger">Reject</button>
+                                                        </form>
 
-                                                <form method="POST"
-                                                      action="{{ route('donor.request.update', $request->id) }}"
-                                                      style="display:inline;">
-                                                    @csrf
-                                                    <input type="hidden" name="status" value="accepted">
-                                                    <button class="btn btn-sm btn-success">Accept</button>
-                                                </form>
+                                                        <button class="btn btn-sm btn-primary mt-1"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#messageModal{{ $request->id }}">
+                                                            Message
+                                                        </button>
 
-                                                <form method="POST"
-                                                      action="{{ route('donor.request.update', $request->id) }}"
-                                                      style="display:inline;">
-                                                    @csrf
-                                                    <input type="hidden" name="status" value="rejected">
-                                                    <button class="btn btn-sm btn-danger">Reject</button>
-                                                </form>
+                                                    </td>
 
-                                            </td>
+                                                    <td>{{ $request->created_at->format('d M Y') }}</td>
 
-                                            <td>{{ $request->created_at->format('d M Y') }}</td>
+                                                </tr>
 
-                                        </tr>
+                                                {{-- ================= BENEFICIARY MODAL ================= --}}
+                                                <div class="modal fade" id="beneficiaryModal{{ $beneficiary->id }}"
+                                                    tabindex="-1">
 
-                                        {{-- ================= BENEFICIARY MODAL ================= --}}
-                                        <div class="modal fade"
-                                             id="beneficiaryModal{{ $beneficiary->id }}"
-                                             tabindex="-1">
+                                                    <div class="modal-dialog modal-md modal-dialog-centered">
 
-                                            <div class="modal-dialog modal-md modal-dialog-centered">
+                                                        <div class="modal-content">
 
-                                                <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Beneficiary Profile</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal"></button>
+                                                            </div>
 
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Beneficiary Profile</h5>
-                                                        <button type="button"
-                                                                class="btn-close"
-                                                                data-bs-dismiss="modal"></button>
-                                                    </div>
+                                                            <div class="modal-body">
 
-                                                    <div class="modal-body">
+                                                                <div class="profile-box">
+                                                                    <img src="{{ $beneficiaryImage }}">
+                                                                    <h5>{{ $beneficiary->name }}</h5>
+                                                                    <small>{{ $beneficiary->email }}</small>
+                                                                </div>
 
-                                                        {{-- PROFILE --}}
-                                                        <div class="profile-box">
+                                                                <hr>
 
-                                                            <img src="{{ $beneficiary->image
-                                                                        ? asset('admin/asset/profilephoto/'.$beneficiary->image)
-                                                                        : asset('admin/default.png') }}">
+                                                                <div class="section-title">Basic Info</div>
+                                                                <div class="info-box">
+                                                                    <p><strong>Institution:</strong>
+                                                                        {{ optional($profile)->institution ?? '-' }}
+                                                                    </p>
+                                                                    <p><strong>Father Status:</strong>
+                                                                        {{ optional($profile)->father_status ?? '-' }}
+                                                                    </p>
+                                                                    <p><strong>Guardian Profession:</strong>
+                                                                        {{ optional($profile)->guardian_profession ?? '-' }}
+                                                                    </p>
+                                                                </div>
 
-                                                            <h5>{{ $beneficiary->name }}</h5>
-                                                            <small class="text-muted">{{ $beneficiary->email }}</small>
+                                                                <div class="section-title">Location</div>
+                                                                <div class="info-box">
+                                                                    <p><strong>Province:</strong>
+                                                                        {{ optional($profile)->province ?? '-' }}</p>
+                                                                    <p><strong>Domicile:</strong>
+                                                                        {{ optional($profile)->domicile ?? '-' }}</p>
+                                                                    <p><strong>Address:</strong>
+                                                                        {{ optional($profile)->home_address ?? '-' }}
+                                                                    </p>
+                                                                </div>
 
-                                                        </div>
+                                                                {{-- ✅ DONOR MESSAGE DISPLAY --}}
+                                                                @if (!empty($request->message))
+                                                                    <div class="section-title">My Message to Beneficiary</div>
+                                                                    <div class="info-box">
+                                                                        <p>{{ $request->message }}</p>
+                                                                    </div>
+                                                                @endif
 
-                                                        <hr>
-
-                                                        {{-- BASIC INFO --}}
-                                                        <div class="section-title">Basic Information</div>
-
-                                                        <div class="info-box">
-
-                                                            <p><strong>Institution:</strong> {{ optional($profile)->institution ?? '-' }}</p>
-
-                                                            <p><strong>Father Status:</strong> {{ optional($profile)->father_status ?? '-' }}</p>
-
-                                                            <p><strong>Guardian Profession:</strong> {{ optional($profile)->guardian_profession ?? '-' }}</p>
-
-                                                        </div>
-
-                                                        {{-- FINANCIAL --}}
-                                                        <div class="section-title">Financial Information</div>
-
-                                                        <div class="info-box">
-
-                                                            <p><strong>Monthly Income:</strong> {{ optional($profile)->monthly_income ?? '-' }}</p>
-
-                                                        </div>
-
-                                                        {{-- LOCATION --}}
-                                                        <div class="section-title">Location</div>
-
-                                                        <div class="info-box">
-
-                                                            <p><strong>Province:</strong> {{ optional($profile)->province ?? '-' }}</p>
-
-                                                            <p><strong>Domicile:</strong> {{ optional($profile)->domicile ?? '-' }}</p>
-
-                                                            <p><strong>Home Address:</strong> {{ optional($profile)->home_address ?? '-' }}</p>
+                                                            </div>
 
                                                         </div>
 
@@ -222,23 +225,73 @@
 
                                                 </div>
 
-                                            </div>
+                                                {{-- ================= MESSAGE MODAL ================= --}}
+                                                <div class="modal fade" id="messageModal{{ $request->id }}"
+                                                    tabindex="-1">
 
-                                        </div>
+                                                    <div class="modal-dialog modal-dialog-centered">
 
-                                    @empty
+                                                        <div class="modal-content">
 
-                                        <tr>
-                                            <td colspan="7" class="text-center">
-                                                No requests found.
-                                            </td>
-                                        </tr>
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Send Message</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal"></button>
+                                                            </div>
 
-                                    @endforelse
+                                                            <form method="POST"
+                                                                action="{{ route('donor.request.update', $request->id) }}">
 
-                                    </tbody>
+                                                                @csrf
 
-                                </table>
+                                                                <div class="modal-body">
+
+                                                                    <input type="hidden" name="status"
+                                                                        value="{{ $request->status }}">
+
+                                                                    <label class="form-label">Message</label>
+
+                                                                    <textarea name="message" class="form-control" rows="4" placeholder="Write your message..." required>{{ $request->message }}</textarea>
+
+                                                                </div>
+
+                                                                <div class="modal-footer">
+
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">
+                                                                        Close
+                                                                    </button>
+
+                                                                    <button type="submit" class="btn btn-success">
+                                                                        Save Message
+                                                                    </button>
+
+                                                                </div>
+
+                                                            </form>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            @empty
+                                                <tr>
+                                                    <td colspan="7" class="text-center">No requests found.</td>
+                                                </tr>
+                                            @endforelse
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                                {{-- PAGINATION --}}
+                                <div class="mt-4 d-flex justify-content-center">
+                                    {{ $requests->links() }}
+                                </div>
 
                             </div>
 
@@ -250,12 +303,6 @@
 
             </div>
 
-        </div>
-
-    </div>
-
-</div>
-
-@include('layouts.admin.script')
+            @include('layouts.admin.script')
 
 </body>

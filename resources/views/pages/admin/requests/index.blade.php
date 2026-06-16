@@ -53,7 +53,7 @@
 
                 <div class="container mt-3">
 
-                 @include('layouts.admin.alert')
+                    @include('layouts.admin.alert')
 
                     <div class="card shadow-sm">
 
@@ -89,11 +89,24 @@
 
                                             $bProfile = $beneficiary->beneficiaryProfile ?? null;
                                             $dProfile = $donor->donorProfile ?? null;
+
+                                            // Beneficiary Image (fallback)
+                                            $beneficiaryImage =
+                                                (!empty($beneficiary->image) && file_exists(public_path('admin/asset/profilephoto/'.$beneficiary->image)))
+                                                ? asset('admin/asset/profilephoto/'.$beneficiary->image)
+                                                : asset('admin/asset/dummy/dummy.jpg');
+
+                                            // Donor Image (fallback)
+                                            $donorImage =
+                                                (!empty($donor->image) && file_exists(public_path('admin/asset/profilephoto/'.$donor->image)))
+                                                ? asset('admin/asset/profilephoto/'.$donor->image)
+                                                : asset('admin/asset/dummy/dummy.jpg');
                                         @endphp
 
                                         <tr>
 
-                                            <td>{{ $key + 1 }}</td>
+                                            {{-- SERIAL NUMBER (pagination safe) --}}
+                                            <td>{{ $requests->firstItem() + $key }}</td>
 
                                             <td>{{ $request->product->name }}</td>
 
@@ -103,7 +116,7 @@
                                                      style="object-fit:cover;">
                                             </td>
 
-                                            {{-- BENEFICIARY --}}
+                                            {{-- BENEFICIARY & DONOR BUTTONS --}}
                                             <td>
 
                                                 <button class="btn btn-sm btn-info mt-1"
@@ -185,9 +198,7 @@
                                                     <div class="modal-body">
 
                                                         <div class="profile-box">
-                                                            <img src="{{ $beneficiary->image
-                                                                        ? asset('admin/asset/profilephoto/'.$beneficiary->image)
-                                                                        : asset('admin/default.png') }}">
+                                                            <img src="{{ $beneficiaryImage }}">
                                                             <h5>{{ $beneficiary->name }}</h5>
                                                             <small>{{ $beneficiary->email }}</small>
                                                         </div>
@@ -236,9 +247,7 @@
                                                     <div class="modal-body">
 
                                                         <div class="profile-box">
-                                                            <img src="{{ $donor->image
-                                                                        ? asset('admin/asset/profilephoto/'.$donor->image)
-                                                                        : asset('admin/default.png') }}">
+                                                            <img src="{{ $donorImage }}">
                                                             <h5>{{ $donor->name }}</h5>
                                                             <small>{{ $donor->email }}</small>
                                                         </div>
@@ -280,6 +289,11 @@
 
                                 </table>
 
+                            </div>
+
+                            {{-- PAGINATION --}}
+                            <div class="mt-4 d-flex justify-content-center">
+                                {{ $requests->links() }}
                             </div>
 
                         </div>

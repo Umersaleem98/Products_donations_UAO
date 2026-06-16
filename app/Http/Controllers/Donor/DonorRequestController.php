@@ -8,33 +8,41 @@ use Illuminate\Http\Request;
 
 class DonorRequestController extends Controller
 {
-    public function donorRequests()
-{
-    $requests = ProductRequest::with(['product', 'beneficiary'])
-        ->where('donor_id', auth()->id())
-        ->where('admin_status', 'approved')
-        ->latest()
-        ->get();
+     public function donorRequests()
+    {
+        $requests = ProductRequest::with([
+                'product',
+                'beneficiary',
+                'beneficiary.beneficiaryProfile'
+            ])
+            ->where('donor_id', auth()->id())
+            ->where('admin_status', 'approved')
+            ->latest()
+            ->paginate(10);
 
-    // UNIQUE BENEFICIARIES ONLY
-    $beneficiaries = $requests->pluck('beneficiary')->unique('id');
+        return view('pages.donor.request.index', compact('requests'));
+    }
 
-    return view('pages.donor.request.index', compact('requests', 'beneficiaries'));
-}
-
-public function updateRequestStatus(Request $request, $id)
+    public function updateRequestStatus(Request $request, $id)
 {
     $request->validate([
-        'status' => 'required|in:accepted,rejected'
+        'status' => 'required|in:accepted,rejected',
+        'message' => 'nullable|string|max:1000'
     ]);
 
     $productRequest = ProductRequest::where('donor_id', auth()->id())
-        ->findOrFail($id);
+        ->where('id', $id)
+        ->firstOrFail();
 
     $productRequest->update([
-        'status' => $request->status
+        'status' => $request->status,
+        'donor_status' => $request->status,
+        'message' => $request->message
     ]);
 
     return back()->with('success', 'Request updated successfully.');
 }
+
+
+
 }

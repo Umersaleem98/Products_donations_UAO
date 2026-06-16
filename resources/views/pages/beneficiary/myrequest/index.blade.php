@@ -3,178 +3,184 @@
 <title>My Requests</title>
 
 <style>
-
-    .profile-card{
-        text-align:center;
-        padding:20px;
+    .profile-card {
+        text-align: center;
+        padding: 20px;
     }
 
-    .profile-card img{
-        width:110px;
-        height:110px;
-        border-radius:50%;
-        object-fit:cover;
-        border:3px solid #eee;
-        margin-bottom:10px;
+    .profile-card img {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #eee;
+        margin-bottom: 10px;
     }
 
-    .profile-info{
-        text-align:left;
-        margin-top:15px;
+    .profile-info {
+        text-align: left;
+        margin-top: 15px;
     }
 
-    .profile-info p{
-        margin:6px 0;
-        font-size:14px;
+    .profile-info p {
+        margin: 6px 0;
+        font-size: 14px;
     }
 
-    .donor-btn{
-        padding:5px 12px;
-        font-size:12px;
-        border-radius:6px;
+    .donor-btn {
+        padding: 5px 12px;
+        font-size: 12px;
+        border-radius: 6px;
     }
-
 </style>
 
 <body>
 
-<div class="container-scroller">
+    <div class="container-scroller">
 
-    @include('layouts.admin.header')
+        @include('layouts.admin.header')
 
-    <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper">
 
-        @include('layouts.admin.sidebar')
+            @include('layouts.admin.sidebar')
 
-        <div class="main-panel">
+            <div class="main-panel">
 
-            <div class="content-wrapper">
+                <div class="content-wrapper">
 
-                <div class="page-header">
-                    <h3 class="page-title">My Requests</h3>
-                </div>
+                    <div class="page-header">
+                        <h3 class="page-title">My Requests</h3>
+                    </div>
 
-                @include('layouts.admin.alert')
+                    @include('layouts.admin.alert')
 
-                <div class="container mt-3">
+                    <div class="container mt-3">
 
-                    <div class="card shadow-sm">
+                        <div class="card shadow-sm">
 
-                        <div class="card-body">
+                            <div class="card-body">
 
-                            <div class="table-responsive">
+                                <div class="table-responsive">
 
-                                <table class="table table-bordered">
+                                    <table class="table table-bordered">
 
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Product</th>
-                                            <th>Image</th>
-                                            <th>Status</th>
-                                            <th>Donor Info</th>
-                                            <th>Date</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-
-                                        @forelse($requests as $key => $request)
-
-                                            @php
-                                                $image = json_decode($request->product->images, true);
-                                                $image = $image[0] ?? $request->product->images;
-                                                $donor = $request->donor;
-                                            @endphp
-
+                                        <thead>
                                             <tr>
+                                                <th>#</th>
+                                                <th>Product</th>
+                                                <th>Image</th>
+                                                <th>Status</th>
+                                                <th>Donor Info</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
 
-                                                <td>{{ $key + 1 }}</td>
+                                        <tbody>
 
-                                                <td>{{ $request->product->name }}</td>
+                                            @forelse($requests as $key => $request)
 
-                                                <td>
-                                                    <img src="{{ asset('admin/products/'.$image) }}"
-                                                         width="60" height="60"
-                                                         style="object-fit:cover;">
-                                                </td>
+                                                @php
+                                                    $image = json_decode($request->product->images, true);
+                                                    $image = $image[0] ?? $request->product->images;
+                                                    $donor = $request->donor;
+                                                @endphp
 
-                                                {{-- STATUS --}}
-                                                <td>
-                                                    @if($request->status == 'pending')
-                                                        <span class="badge bg-warning text-dark">Pending</span>
-                                                    @elseif($request->status == 'accepted')
-                                                        <span class="badge bg-success">Accepted</span>
-                                                    @else
-                                                        <span class="badge bg-danger">Rejected</span>
-                                                    @endif
-                                                </td>
+                                                <tr>
 
-                                                {{-- DONOR --}}
-                                                <td>
+                                                    <td>{{ $key + 1 }}</td>
 
-                                                    @if($request->status == 'accepted')
+                                                    <td>{{ $request->product->name }}</td>
 
-                                                        <button class="btn btn-primary donor-btn"
+                                                    <td>
+                                                        <img src="{{ asset('admin/products/' . $image) }}" width="60"
+                                                            height="60" style="object-fit:cover;">
+                                                    </td>
+
+                                                    {{-- STATUS --}}
+                                                    <td>
+                                                        @if ($request->status == 'pending')
+                                                            <span class="badge bg-warning text-dark">Pending</span>
+                                                        @elseif($request->status == 'accepted')
+                                                            <span class="badge bg-success">Accepted</span>
+                                                        @else
+                                                            <span class="badge bg-danger">Rejected</span>
+                                                        @endif
+                                                    </td>
+
+                                                    {{-- DONOR INFO --}}
+                                                    <td>
+
+                                                        @if ($request->status == 'accepted')
+                                                            <button class="btn btn-primary donor-btn"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#donorModal{{ $request->id }}">
-                                                            View Donor
-                                                        </button>
+                                                                View Donor
+                                                            </button>
 
-                                                    @else
-                                                        <span class="text-muted">Hidden</span>
-                                                    @endif
+                                                            <button class="btn btn-info donor-btn mt-1"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#messageModal{{ $request->id }}">
+                                                                View Message
+                                                            </button>
+                                                        @else
+                                                            <span class="text-muted">Hidden</span>
+                                                        @endif
 
-                                                </td>
+                                                    </td>
 
-                                                <td>{{ $request->created_at->format('d M Y') }}</td>
+                                                    <td>{{ $request->created_at->format('d M Y') }}</td>
 
-                                            </tr>
+                                                </tr>
 
-                                            {{-- ================= DONOR MODAL ================= --}}
-                                            @if($request->status == 'accepted')
+                                                {{-- ================= DONOR MODAL ================= --}}
+                                                @if ($request->status == 'accepted')
+                                                    <div class="modal fade" id="donorModal{{ $request->id }}"
+                                                        tabindex="-1" aria-hidden="true">
 
-                                            <div class="modal fade"
-                                                 id="donorModal{{ $request->id }}"
-                                                 tabindex="-1"
-                                                 aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
 
-                                                <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
 
-                                                    <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Donor Profile</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"></button>
+                                                                </div>
 
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Donor Profile</h5>
-                                                            <button type="button"
-                                                                    class="btn-close"
-                                                                    data-bs-dismiss="modal"></button>
-                                                        </div>
+                                                                <div class="modal-body">
 
-                                                        <div class="modal-body">
+                                                                    <div class="profile-card">
 
-                                                            <div class="profile-card">
+                                                                        <img
+                                                                            src="{{ $donor->image ? asset('admin/asset/profilephoto/' . $donor->image) : asset('admin/asset/dummy/dummy.jpg') }}">
 
-                                                                {{-- IMAGE --}}
-                                                                <img src="{{ $donor->image
-                                                                            ? asset('admin/asset/profilephoto/'.$donor->image)
-                                                                            : asset('admin/default.png') }}">
+                                                                        <h5>{{ $donor->name }}</h5>
+                                                                        <small
+                                                                            class="text-muted">{{ $donor->email }}</small>
 
-                                                                <h5>{{ $donor->name }}</h5>
-                                                                <small class="text-muted">{{ $donor->email }}</small>
+                                                                        <hr>
 
-                                                                <hr>
+                                                                        <div class="profile-info">
 
-                                                                <div class="profile-info">
+                                                                            <p><strong>Organization:</strong>
+                                                                                {{ $donor->donorProfile->organization ?? '-' }}
+                                                                            </p>
+                                                                            <p><strong>Designation:</strong>
+                                                                                {{ $donor->donorProfile->designation ?? '-' }}
+                                                                            </p>
+                                                                            <p><strong>Country:</strong>
+                                                                                {{ $donor->donorProfile->country ?? '-' }}
+                                                                            </p>
+                                                                            <p><strong>Phone:</strong>
+                                                                                {{ $donor->donorProfile->phone ?? '-' }}
+                                                                            </p>
+                                                                            <p><strong>Address:</strong>
+                                                                                {{ $donor->donorProfile->address ?? '-' }}
+                                                                            </p>
 
-                                                                    <p><strong>Organization:</strong> {{ $donor->donorProfile->organization ?? '-' }}</p>
+                                                                        </div>
 
-                                                                    <p><strong>Designation:</strong> {{ $donor->donorProfile->designation ?? '-' }}</p>
-
-                                                                    <p><strong>Country:</strong> {{ $donor->donorProfile->country ?? '-' }}</p>
-
-                                                                    <p><strong>Phone:</strong> {{ $donor->donorProfile->phone ?? '-' }}</p>
-
-                                                                    <p><strong>Address:</strong> {{ $donor->donorProfile->address ?? '-' }}</p>
+                                                                    </div>
 
                                                                 </div>
 
@@ -184,25 +190,57 @@
 
                                                     </div>
 
-                                                </div>
+                                                    {{-- ================= MESSAGE MODAL ================= --}}
+                                                    <div class="modal fade" id="messageModal{{ $request->id }}"
+                                                        tabindex="-1" aria-hidden="true">
 
-                                            </div>
+                                                        <div class="modal-dialog modal-dialog-centered">
 
-                                            @endif
+                                                            <div class="modal-content">
 
-                                        @empty
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Message from Donor</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"></button>
+                                                                </div>
 
-                                            <tr>
-                                                <td colspan="6" class="text-center">
-                                                    No requests found.
-                                                </td>
-                                            </tr>
+                                                                <div class="modal-body">
 
-                                        @endforelse
+                                                                    @if (!empty($request->message))
+                                                                        <div class="alert alert-info">
+                                                                            {{ $request->message }}
+                                                                        </div>
+                                                                    @else
+                                                                        <div class="alert alert-warning">
+                                                                            No message yet from donor.
+                                                                            <br>
+                                                                            You will see it here once donor contacts
+                                                                            you.
+                                                                        </div>
+                                                                    @endif
 
-                                    </tbody>
+                                                                </div>
 
-                                </table>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                @endif
+
+                                            @empty
+
+                                                <tr>
+                                                    <td colspan="6" class="text-center">No requests found.</td>
+                                                </tr>
+
+                                            @endforelse
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
 
                             </div>
 
@@ -214,12 +252,6 @@
 
             </div>
 
-        </div>
-
-    </div>
-
-</div>
-
-@include('layouts.admin.script')
+            @include('layouts.admin.script')
 
 </body>

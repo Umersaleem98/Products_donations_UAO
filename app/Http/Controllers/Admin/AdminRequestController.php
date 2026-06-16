@@ -11,9 +11,13 @@ class AdminRequestController extends Controller
     // 📌 SHOW ALL REQUESTS
     public function index()
     {
-        $requests = ProductRequest::with(['product', 'beneficiary', 'donor'])
+        $requests = ProductRequest::with([
+            'product',
+            'beneficiary.beneficiaryProfile',
+            'donor.donorProfile',
+        ])
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('pages.admin.requests.index', compact('requests'));
     }
@@ -22,7 +26,7 @@ class AdminRequestController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:approved,rejected'
+            'status' => 'required|in:approved,rejected',
         ]);
 
         $req = ProductRequest::findOrFail($id);

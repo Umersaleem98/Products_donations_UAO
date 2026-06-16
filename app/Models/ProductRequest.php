@@ -13,7 +13,9 @@ class ProductRequest extends Model
         'product_id',
         'donor_id',
         'status',
-        'message'
+        'status',
+        'message',
+        'donor_status'
     ];
 
     public function product()
