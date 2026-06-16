@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Database\Seeders\CategorySeeder;
+use Database\Seeders\ProductSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\VisitorTrackerSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
         UserSeeder::class,
         CategorySeeder::class,
         VisitorTrackerSeeder::class,
+         ProductSeeder::class,
     ]);
     }
 }

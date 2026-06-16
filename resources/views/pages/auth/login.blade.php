@@ -161,7 +161,7 @@ body {
                  id="qalam_id_field"
                  style="{{ old('role')=='beneficiary'?'':'display:none;' }}">
 
-                <input type="text"
+                <input type="number"
                        name="qalam_id"
                        class="form-control"
                        placeholder="Enter Qalam ID"

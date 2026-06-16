@@ -1,164 +1,246 @@
 @include('layouts.admin.head')
-<title>All Products </title>
+
+<title>All Products</title>
+
+<style>
+    /* PRODUCT CARD */
+    .product-card {
+        border: none;
+        border-radius: 14px;
+        overflow: hidden;
+        transition: .25s ease-in-out;
+        background: #fff;
+    }
+
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+    }
+
+    .product-image {
+        width: 100%;
+        height: 210px;
+        object-fit: cover;
+    }
+
+    .category-badge {
+        background: #eef2f7;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        display: inline-block;
+        color: #555;
+    }
+
+    /* PAGE HEADER FIX */
+    .page-title-icon {
+        border-radius: 10px;
+    }
+
+    /* FILTER CARD (CLEAN + SMALL HEIGHT) */
+    .filter-card {
+        border: none;
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .filter-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #6c757d;
+        margin-bottom: 6px;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 10px !important;
+        height: 42px;
+        font-size: 14px;
+    }
+
+    /* BUTTONS */
+    .btn {
+        border-radius: 10px;
+        font-weight: 600;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* SEARCH ICON FIX */
+    .input-group-text {
+        border-radius: 10px 0 0 10px !important;
+        background: #fff;
+    }
+
+    .input-group .form-control {
+        border-left: 0;
+    }
+
+    /* PRODUCT GRID SPACING FIX */
+    .product-grid {
+        margin-top: 10px;
+    }
+</style>
+
 <body>
-    <div class="container-scroller">
 
-        @include('layouts.admin.header')
+<div class="container-scroller">
 
-        <div class="container-fluid page-body-wrapper">
+    @include('layouts.admin.header')
 
-            @include('layouts.admin.sidebar')
+    <div class="container-fluid page-body-wrapper">
 
-            <div class="main-panel">
-                <div class="content-wrapper">
+        @include('layouts.admin.sidebar')
 
-                    {{-- PAGE HEADER --}}
-                    <div class="page-header">
-                        <h3 class="page-title">
-                            <span class="page-title-icon bg-gradient-primary text-white me-2">
-                                <i class="mdi mdi-home"></i>
-                            </span>
-                            Products
-                        </h3>
-                    </div>
+        <div class="main-panel">
 
-                    <div class="container mt-3">
+            <div class="content-wrapper">
 
-                        {{-- TABS --}}
-                        <ul class="nav nav-tabs" role="tablist">
+                {{-- PAGE HEADER --}}
+                <div class="page-header mb-3">
+                    <h3 class="page-title">
+                        <span class="page-title-icon bg-gradient-primary text-white me-2">
+                            <i class="mdi mdi-package-variant"></i>
+                        </span>
+                        Products
+                    </h3>
+                </div>
 
-                            <li class="nav-item">
-                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#all-products"
-                                    type="button">
-                                    All Products
-                                </button>
-                            </li>
+                @include('layouts.admin.alert')
 
-                           @include('layouts.admin.alert')
+                {{-- FILTER SECTION (COMPACT & CLEAN) --}}
+                <div class="card filter-card mb-3">
+                    <div class="card-body py-3">
 
-                        </ul>
+                        <form method="GET" action="{{ route('beneficiary.products.index') }}">
 
-                        {{-- TAB CONTENT --}}
-                        <div class="tab-content mt-4">
+                            <div class="row g-3 align-items-end">
 
-                            {{-- ALL PRODUCTS --}}
-                            <div class="tab-pane fade show active" id="all-products">
+                                {{-- CATEGORY --}}
+                                <div class="col-md-4">
+                                    <label class="filter-label">Category</label>
 
-                                <div class="row">
+                                    <select name="category_id" class="form-select">
 
-                                    @foreach ($products as $product)
-                                        @php
-                                            $image = json_decode($product->images, true);
-                                            $image = $image[0] ?? $product->images;
-                                        @endphp
+                                        <option value="">All Categories</option>
 
-                                        <div class="col-md-4 mb-4">
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
 
-                                            <div class="card h-100 shadow-sm">
+                                    </select>
+                                </div>
 
-                                                <img src="{{ asset('admin/products/' . $image) }}" class="card-img-top"
-                                                    style="height:200px; object-fit:cover;">
+                                {{-- SEARCH --}}
+                                <div class="col-md-5">
+                                    <label class="filter-label">Search Product</label>
 
-                                                <div class="card-body">
+                                    <div class="input-group">
 
-                                                    <h5 class="card-title">
-                                                        {{ $product->name }}
-                                                    </h5>
+                                        <span class="input-group-text">🔎</span>
 
-                                                    <p class="mb-1">
-                                                        <strong>Category:</strong>
-                                                        {{ $product->category->name ?? 'N/A' }}
-                                                    </p>
+                                        <input type="text"
+                                               name="search"
+                                               class="form-control"
+                                               placeholder="Search products..."
+                                               value="{{ request('search') }}">
 
-                                                    <p class="text-muted small">
-                                                        {{ \Illuminate\Support\Str::limit($product->description, 80) }}
-                                                    </p>
+                                    </div>
+                                </div>
 
-                                                </div>
+                                {{-- BUTTONS --}}
+                                <div class="col-md-3 d-grid gap-2">
 
-                                                {{-- FOOTER BUTTON --}}
-                                                <div class="card-footer text-center bg-white">
+                                    <button type="submit" class="btn btn-primary">
+                                        Search
+                                    </button>
 
-                                                   <a href="{{ route('beneficiary.products.detail.show', $product->id) }}"
-                                                            class="btn btn-gradient-primary btn-sm">
-                                                            View Details
-                                                        </a>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                    @endforeach
+                                    <a href="{{ route('beneficiary.products.index') }}"
+                                       class="btn btn-light">
+                                        Reset
+                                    </a>
 
                                 </div>
 
                             </div>
 
-                            {{-- CATEGORY WISE PRODUCTS --}}
-                            @foreach ($categories as $category)
-                                <div class="tab-pane fade" id="cat-{{ $category->id }}">
+                        </form>
 
-                                    <div class="row">
+                    </div>
+                </div>
 
-                                        @foreach ($products->where('category_id', $category->id) as $product)
-                                            @php
-                                                $image = json_decode($product->images, true);
-                                                $image = $image[0] ?? $product->images;
-                                            @endphp
+                {{-- PRODUCTS --}}
+                <div class="row product-grid">
 
-                                            <div class="col-md-4 mb-4">
+                    @forelse($products as $product)
 
-                                                <div class="card h-100 shadow-sm">
+                        @php
+                            $images = json_decode($product->images, true);
+                            $image = $images[0] ?? $product->images;
+                        @endphp
 
-                                                    <img src="{{ asset('admin/products/' . $image) }}"
-                                                        class="card-img-top" style="height:200px; object-fit:cover;">
+                        <div class="col-lg-4 col-md-6 mb-4">
 
-                                                    <div class="card-body">
+                            <div class="card product-card h-100">
 
-                                                        <h5 class="card-title">
-                                                            {{ $product->name }}
-                                                        </h5>
+                                <img src="{{ asset('admin/products/' . $image) }}"
+                                     class="product-image">
 
-                                                        <p class="mb-1">
-                                                            <strong>Category:</strong>
-                                                            {{ $category->name }}
-                                                        </p>
-                                                        <p class="mb-1">
-                                                            <strong>Status:</strong>
-                                                            {{ $category->status }}
-                                                        </p>
-                                                    </div>
+                                <div class="card-body">
 
-                                                    {{-- FOOTER BUTTON --}}
-                                                    <div class="card-footer text-center bg-white">
+                                    <h5 class="mb-2">
+                                        {{ $product->name }}
+                                    </h5>
 
-                                                        <a href="{{ route('beneficiary.products.detail.show', $product->id) }}"
-                                                            class="btn btn-gradient-primary btn-sm">
-                                                            View Details
-                                                        </a>
+                                    <span class="category-badge">
+                                        {{ $product->category->name ?? 'N/A' }}
+                                    </span>
 
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-                                        @endforeach
-
-                                    </div>
+                                    <p class="mt-2 text-muted small">
+                                        {{ \Illuminate\Support\Str::limit($product->description, 90) }}
+                                    </p>
 
                                 </div>
-                            @endforeach
+
+                                <div class="card-footer bg-white border-0 text-center">
+
+                                    <a href="{{ route('beneficiary.products.detail.show', $product->id) }}"
+                                       class="btn btn-primary btn-sm w-100">
+                                        View Details
+                                    </a>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
-                    </div>
+                    @empty
+
+                        <div class="col-12">
+                            <div class="alert alert-warning text-center">
+                                No products found
+                            </div>
+                        </div>
+
+                    @endforelse
 
                 </div>
+
             </div>
 
         </div>
 
     </div>
 
-    @include('layouts.admin.script')
+</div>
+
+@include('layouts.admin.script')
+
 </body>
