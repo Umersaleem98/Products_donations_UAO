@@ -2,196 +2,208 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
 use App\Models\DonorTermAcceptance;
 use App\Models\Product;
 use App\Models\ProductRequest;
 use App\Models\User;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index()
-    {
-        $user = Auth::user();
-        if ($user->role === 'admin') {
 
-            $totalUsers = User::count();
-            $totalDonors = User::where('role', 'donor')->count();
-            $totalBeneficiaries = User::where('role', 'beneficiary')->count();
 
-            $totalProducts = Product::count();
-            $totalCategories = Category::count();
+public function index()
+{
+    $user = Auth::user();
 
-            $totalRequests = ProductRequest::count();
+    // ================= ADMIN DASHBOARD =================
+    if ($user->role === 'admin') {
 
-            $pendingAdmin = ProductRequest::where('admin_status', 'pending')->count();
-            $approvedByAdmin = ProductRequest::where('admin_status', 'approved')->count();
-            $rejectedByAdmin = ProductRequest::where('admin_status', 'rejected')->count();
+        $totalUsers = User::count();
+        $totalDonors = User::where('role', 'donor')->count();
+        $totalBeneficiaries = User::where('role', 'beneficiary')->count();
 
-            $pendingDonor = ProductRequest::where('admin_status', 'approved')
-                ->where('donor_status', 'pending')
-                ->count();
+        $totalProducts = Product::count();
+        $totalCategories = Category::count();
 
-            $acceptedByDonor = ProductRequest::where('donor_status', 'accepted')->count();
+        $totalRequests = ProductRequest::count();
 
-            $rejectedByDonor = ProductRequest::where('donor_status', 'rejected')->count();
+        $pendingAdmin = ProductRequest::where('admin_status', 'pending')->count();
+        $approvedByAdmin = ProductRequest::where('admin_status', 'approved')->count();
+        $rejectedByAdmin = ProductRequest::where('admin_status', 'rejected')->count();
 
-            /*
-            |--------------------------------------------------------------------------
-            | Charts Data
-            |--------------------------------------------------------------------------
-            */
+        $pendingDonor = ProductRequest::where('admin_status', 'approved')
+            ->where('donor_status', 'pending')
+            ->count();
 
-            $usersChart = [
-                $totalDonors,
-                $totalBeneficiaries,
-            ];
+        $acceptedByDonor = ProductRequest::where('donor_status', 'accepted')->count();
+        $rejectedByDonor = ProductRequest::where('donor_status', 'rejected')->count();
 
-            $requestChart = [
-                $pendingAdmin,
-                $approvedByAdmin,
-                $rejectedByAdmin,
-            ];
+        $usersChart = [$totalDonors, $totalBeneficiaries];
 
-            $donorDecisionChart = [
-                $acceptedByDonor,
-                $rejectedByDonor,
-                $pendingDonor,
-            ];
+        $requestChart = [$pendingAdmin, $approvedByAdmin, $rejectedByAdmin];
 
-            /*
-            |--------------------------------------------------------------------------
-            | Monthly Requests Chart
-            |--------------------------------------------------------------------------
-            */
+        $donorDecisionChart = [$acceptedByDonor, $rejectedByDonor, $pendingDonor];
 
-            $monthlyRequests = ProductRequest::select(
+        $monthlyRequests = ProductRequest::select(
                 DB::raw('MONTH(created_at) as month'),
                 DB::raw('COUNT(*) as total')
             )
-                ->whereYear('created_at', date('Y'))
-                ->groupBy('month')
-                ->pluck('total', 'month');
+            ->whereYear('created_at', date('Y'))
+            ->groupBy('month')
+            ->pluck('total', 'month');
 
-            $requestMonths = [];
-            $requestCounts = [];
+        $requestMonths = [];
+        $requestCounts = [];
 
-            for ($i = 1; $i <= 12; $i++) {
-                $requestMonths[] = Carbon::create()->month($i)->format('M');
-                $requestCounts[] = $monthlyRequests[$i] ?? 0;
-            }
-
-            /*
-            |--------------------------------------------------------------------------
-            | Recent Tables
-            |--------------------------------------------------------------------------
-            */
-
-            $recentUsers = User::latest()
-                ->take(10)
-                ->get();
-
-            $recentProducts = Product::with('user')
-                ->latest()
-                ->take(10)
-                ->get();
-
-            $recentRequests = ProductRequest::with([
-                'beneficiary',
-                'donor',
-                'product',
-            ])
-                ->latest()
-                ->take(10)
-                ->get();
-
-            return view('dashboard', compact(
-                'user',
-
-                'totalUsers',
-                'totalDonors',
-                'totalBeneficiaries',
-                'totalProducts',
-                'totalCategories',
-                'totalRequests',
-
-                'pendingAdmin',
-                'approvedByAdmin',
-                'rejectedByAdmin',
-
-                'pendingDonor',
-                'acceptedByDonor',
-                'rejectedByDonor',
-
-                'usersChart',
-                'requestChart',
-                'donorDecisionChart',
-
-                'requestMonths',
-                'requestCounts',
-
-                'recentUsers',
-                'recentProducts',
-                'recentRequests'
-            ));
+        for ($i = 1; $i <= 12; $i++) {
+            $requestMonths[] = Carbon::create()->month($i)->format('M');
+            $requestCounts[] = $monthlyRequests[$i] ?? 0;
         }
 
-        // ===== DONOR DASHBOARD =====
-        if ($user->role === 'donor') {
+        $recentUsers = User::latest()->take(10)->get();
 
-            $myProducts = Product::where('user_id', $user->id)->count();
+        $recentProducts = Product::with('user')->latest()->take(10)->get();
 
-            $incomingRequests = ProductRequest::where('donor_id', $user->id)
-                ->where('admin_status', 'approved')
-                ->count();
+        $recentRequests = ProductRequest::with(['beneficiary', 'donor', 'product'])
+            ->latest()
+            ->take(10)
+            ->get();
 
-            $pendingRequests = ProductRequest::where('donor_id', $user->id)
-                ->where('admin_status', 'approved')
-                ->where('donor_status', 'pending')
-                ->count();
+        return view('dashboard', compact(
+            'user',
+            'totalUsers',
+            'totalDonors',
+            'totalBeneficiaries',
+            'totalProducts',
+            'totalCategories',
+            'totalRequests',
+            'pendingAdmin',
+            'approvedByAdmin',
+            'rejectedByAdmin',
+            'pendingDonor',
+            'acceptedByDonor',
+            'rejectedByDonor',
+            'usersChart',
+            'requestChart',
+            'donorDecisionChart',
+            'requestMonths',
+            'requestCounts',
+            'recentUsers',
+            'recentProducts',
+            'recentRequests'
+        ));
+    }
 
-            $acceptedRequests = ProductRequest::where('donor_id', $user->id)
-                ->where('donor_status', 'accepted')
-                ->count();
+    // ================= DONOR DASHBOARD =================
+   if ($user->role === 'donor') {
 
-            return view('dashboard', compact(
-                'user',
-                'myProducts',
-                'incomingRequests',
-                'pendingRequests',
-                'acceptedRequests'
-            ));
-        }
+    $profile = $user->donorProfile;
 
-        // ===== BENEFICIARY DASHBOARD =====
-        if ($user->role === 'beneficiary') {
+    // ================= PROFILE COMPLETION =================
+    $fields = [
+        $user->name,
+        $user->email,
+        $profile?->image,
+        $profile?->organization,
+        $profile?->designation,
+        $profile?->country,
+        $profile?->address,
+    ];
 
-            $myRequests = ProductRequest::where('beneficiary_id', $user->id)->count();
+    $totalFields = count($fields);
+    $filledFields = 0;
 
-            $pending = ProductRequest::where('beneficiary_id', $user->id)
-                ->where('admin_status', 'pending')
-                ->count();
-
-            $approved = ProductRequest::where('beneficiary_id', $user->id)
-                ->where('admin_status', 'approved')
-                ->count();
-
-            $accepted = ProductRequest::where('beneficiary_id', $user->id)
-                ->where('donor_status', 'accepted')
-                ->count();
-
-            return view('dashboard', compact(
-                'user',
-                'myRequests',
-                'pending',
-                'approved',
-                'accepted'
-            ));
+    foreach ($fields as $field) {
+        if (!empty($field)) {
+            $filledFields++;
         }
     }
+
+    $profileCompletion = round(($filledFields / $totalFields) * 100);
+
+    // ================= STATS =================
+    $myProducts = Product::where('user_id', $user->id)->count();
+
+    $incomingRequests = ProductRequest::where('donor_id', $user->id)
+        ->where('admin_status', 'approved')
+        ->count();
+
+    $pendingRequests = ProductRequest::where('donor_id', $user->id)
+        ->where('admin_status', 'approved')
+        ->where('donor_status', 'pending')
+        ->count();
+
+    $acceptedRequests = ProductRequest::where('donor_id', $user->id)
+        ->where('donor_status', 'accepted')
+        ->count();
+
+    return view('dashboard', compact(
+        'user',
+        'myProducts',
+        'incomingRequests',
+        'pendingRequests',
+        'acceptedRequests',
+        'profileCompletion'
+    ));
+}
+
+    // ================= BENEFICIARY DASHBOARD =================
+
+    if ($user->role === 'beneficiary') {
+
+        $profile = $user->beneficiaryProfile;
+
+        // ✅ PROFILE COMPLETION CALCULATION
+        $fields = [
+            $user->name,
+            $user->email,
+            $profile?->image,
+            $profile?->institution,
+            $profile?->father_status,
+            $profile?->province,
+            $profile?->home_address,
+        ];
+
+        $totalFields = count($fields);
+        $filledFields = 0;
+
+        foreach ($fields as $field) {
+            if (!empty($field)) {
+                $filledFields++;
+            }
+        }
+
+        $profileCompletion = round(($filledFields / $totalFields) * 100);
+
+        // ================= STATS =================
+        $myRequests = ProductRequest::where('beneficiary_id', $user->id)->count();
+
+        $pending = ProductRequest::where('beneficiary_id', $user->id)
+            ->where('admin_status', 'pending')
+            ->count();
+
+        $approved = ProductRequest::where('beneficiary_id', $user->id)
+            ->where('admin_status', 'approved')
+            ->count();
+
+        $accepted = ProductRequest::where('beneficiary_id', $user->id)
+            ->where('donor_status', 'accepted')
+            ->count();
+
+        return view('dashboard', compact(
+            'user',
+            'myRequests',
+            'pending',
+            'approved',
+            'accepted',
+            'profileCompletion'
+        ));
+    }
+}
 
     public function acceptTerms()
     {
