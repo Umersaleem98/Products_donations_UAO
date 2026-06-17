@@ -8,13 +8,13 @@ use Illuminate\Http\Request;
 
 class DonorRequestController extends Controller
 {
-     public function donorRequests()
+    public function donorRequests()
     {
         $requests = ProductRequest::with([
-                'product',
-                'beneficiary',
-                'beneficiary.beneficiaryProfile'
-            ])
+            'product',
+            'beneficiary',
+            'beneficiary.beneficiaryProfile',
+        ])
             ->where('donor_id', auth()->id())
             ->where('admin_status', 'approved')
             ->latest()
@@ -23,26 +23,37 @@ class DonorRequestController extends Controller
         return view('pages.donor.request.index', compact('requests'));
     }
 
-    public function updateRequestStatus(Request $request, $id)
+   public function updateRequestStatus(Request $request, $id)
 {
     $request->validate([
-        'status' => 'required|in:accepted,rejected',
-        'message' => 'nullable|string|max:1000'
+        'donor_status' => 'required_without:message|in:accepted,rejected,pending',
+        'message' => 'nullable|string|max:1000',
     ]);
 
     $productRequest = ProductRequest::where('donor_id', auth()->id())
         ->where('id', $id)
         ->firstOrFail();
 
-    $productRequest->update([
-        'status' => $request->status,
-        'donor_status' => $request->status,
-        'message' => $request->message
-    ]);
+    /**
+     * ==========================
+     * UPDATE STATUS (IF PROVIDED)
+     * ==========================
+     */
+    if ($request->filled('donor_status')) {
+        $productRequest->donor_status = $request->donor_status;
+    }
+
+    /**
+     * ==========================
+     * UPDATE MESSAGE (IF PROVIDED)
+     * ==========================
+     */
+    if ($request->filled('message')) {
+        $productRequest->message = $request->message;
+    }
+
+    $productRequest->save();
 
     return back()->with('success', 'Request updated successfully.');
 }
-
-
-
 }

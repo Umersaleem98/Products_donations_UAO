@@ -397,31 +397,57 @@
     </div>
 
     @include('layouts.admin.script')
+
     @if (Auth::user()->role === 'admin')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script>
+            // ========== USER CHART ==========
             new Chart(document.getElementById('userChart'), {
                 type: 'doughnut',
                 data: {
                     labels: ['Donors', 'Beneficiaries'],
                     datasets: [{
-                        data: @json($usersChart)
+                        data: @json($usersChart),
+                        backgroundColor: ['#4B49AC', '#00D25B']
                     }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
                 }
             });
 
+            // ========== REQUEST STATUS ==========
             new Chart(document.getElementById('requestChart'), {
                 type: 'bar',
                 data: {
                     labels: ['Pending', 'Approved', 'Rejected'],
                     datasets: [{
-                        label: 'Requests',
-                        data: @json($requestChart)
+                        label: 'Admin Requests',
+                        data: @json($requestChart),
+                        backgroundColor: ['#FFC100', '#00D25B', '#FF4747']
                     }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
             });
 
+            // ========== MONTHLY ==========
             new Chart(document.getElementById('monthlyChart'), {
                 type: 'line',
                 data: {
@@ -429,21 +455,25 @@
                     datasets: [{
                         label: 'Requests',
                         data: @json($requestCounts),
-                        borderWidth: 3,
-                        tension: 0.4
+                        borderColor: '#4B49AC',
+                        tension: 0.4,
+                        fill: true
                     }]
                 }
             });
 
+            // ========== DONOR DECISION ==========
             new Chart(document.getElementById('donorChart'), {
                 type: 'pie',
                 data: {
                     labels: ['Accepted', 'Rejected', 'Pending'],
                     datasets: [{
-                        data: @json($donorDecisionChart)
+                        data: @json($donorDecisionChart),
+                        backgroundColor: ['#00D25B', '#FF4747', '#FFC100']
                     }]
                 }
             });
         </script>
     @endif
+
 </body>

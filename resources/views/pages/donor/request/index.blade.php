@@ -29,6 +29,11 @@
         border-left: 4px solid #4B49AC;
         padding-left: 10px;
     }
+
+    .btn-disabled {
+        pointer-events: none;
+        opacity: 0.6;
+    }
 </style>
 
 <body>
@@ -98,14 +103,13 @@
 
                                                     <td>{{ $requests->firstItem() + $key }}</td>
 
-                                                    <td>{{ $request->product->name }}</td>
+                                                    <td>{{ $request->product->name ?? '-' }}</td>
 
                                                     <td>
                                                         <img src="{{ asset('admin/products/' . $image) }}" width="60"
                                                             height="60" style="object-fit:cover;">
                                                     </td>
 
-                                                    {{-- BENEFICIARY --}}
                                                     <td>
                                                         <strong>{{ $beneficiary->name }}</strong><br>
                                                         <small>{{ $beneficiary->email }}</small>
@@ -118,37 +122,45 @@
                                                         </button>
                                                     </td>
 
-                                                    {{-- STATUS --}}
                                                     <td>
-                                                        @if ($request->status == 'accepted')
+                                                        @if ($request->donor_status == 'accepted')
                                                             <span class="badge bg-success">Accepted</span>
-                                                        @elseif($request->status == 'rejected')
+                                                        @elseif($request->donor_status == 'rejected')
                                                             <span class="badge bg-danger">Rejected</span>
                                                         @else
                                                             <span class="badge bg-warning text-dark">Pending</span>
                                                         @endif
                                                     </td>
 
-                                                  
-                                                    {{-- ACTION --}}
                                                     <td>
 
+                                                        {{-- ACCEPT --}}
                                                         <form method="POST"
                                                             action="{{ route('donor.request.update', $request->id) }}"
                                                             style="display:inline;">
                                                             @csrf
-                                                            <input type="hidden" name="status" value="accepted">
-                                                            <button class="btn btn-sm btn-success">Accept</button>
+                                                            <input type="hidden" name="donor_status" value="accepted">
+
+                                                            <button class="btn btn-sm btn-success"
+                                                                {{ $request->donor_status == 'accepted' ? 'disabled class=btn-disabled' : '' }}>
+                                                                Accept
+                                                            </button>
                                                         </form>
 
+                                                        {{-- REJECT --}}
                                                         <form method="POST"
                                                             action="{{ route('donor.request.update', $request->id) }}"
                                                             style="display:inline;">
                                                             @csrf
-                                                            <input type="hidden" name="status" value="rejected">
-                                                            <button class="btn btn-sm btn-danger">Reject</button>
+                                                            <input type="hidden" name="donor_status" value="rejected">
+
+                                                            <button class="btn btn-sm btn-danger"
+                                                                {{ $request->donor_status == 'rejected' ? 'disabled class=btn-disabled' : '' }}>
+                                                                Reject
+                                                            </button>
                                                         </form>
 
+                                                        {{-- MESSAGE --}}
                                                         <button class="btn btn-sm btn-primary mt-1"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#messageModal{{ $request->id }}">
@@ -164,9 +176,7 @@
                                                 {{-- ================= BENEFICIARY MODAL ================= --}}
                                                 <div class="modal fade" id="beneficiaryModal{{ $beneficiary->id }}"
                                                     tabindex="-1">
-
                                                     <div class="modal-dialog modal-md modal-dialog-centered">
-
                                                         <div class="modal-content">
 
                                                             <div class="modal-header">
@@ -209,28 +219,23 @@
                                                                     </p>
                                                                 </div>
 
-                                                                {{-- ✅ DONOR MESSAGE DISPLAY --}}
                                                                 @if (!empty($request->message))
-                                                                    <div class="section-title">My Message to Beneficiary</div>
+                                                                    <hr>
+                                                                    <div class="section-title">Message</div>
                                                                     <div class="info-box">
                                                                         <p>{{ $request->message }}</p>
                                                                     </div>
                                                                 @endif
 
                                                             </div>
-
                                                         </div>
-
                                                     </div>
-
                                                 </div>
 
                                                 {{-- ================= MESSAGE MODAL ================= --}}
                                                 <div class="modal fade" id="messageModal{{ $request->id }}"
                                                     tabindex="-1">
-
                                                     <div class="modal-dialog modal-dialog-centered">
-
                                                         <div class="modal-content">
 
                                                             <div class="modal-header">
@@ -241,39 +246,31 @@
 
                                                             <form method="POST"
                                                                 action="{{ route('donor.request.update', $request->id) }}">
-
                                                                 @csrf
 
                                                                 <div class="modal-body">
 
-                                                                    <input type="hidden" name="status"
-                                                                        value="{{ $request->status }}">
-
                                                                     <label class="form-label">Message</label>
 
-                                                                    <textarea name="message" class="form-control" rows="4" placeholder="Write your message..." required>{{ $request->message }}</textarea>
+                                                                    <textarea name="message" class="form-control" rows="4" placeholder="Write message...">{{ $request->message }}</textarea>
 
                                                                 </div>
 
                                                                 <div class="modal-footer">
-
                                                                     <button type="button" class="btn btn-secondary"
                                                                         data-bs-dismiss="modal">
                                                                         Close
                                                                     </button>
 
                                                                     <button type="submit" class="btn btn-success">
-                                                                        Save Message
+                                                                        Save
                                                                     </button>
-
                                                                 </div>
 
                                                             </form>
 
                                                         </div>
-
                                                     </div>
-
                                                 </div>
 
                                             @empty
@@ -288,7 +285,6 @@
 
                                 </div>
 
-                                {{-- PAGINATION --}}
                                 <div class="mt-4 d-flex justify-content-center">
                                     {{ $requests->links() }}
                                 </div>

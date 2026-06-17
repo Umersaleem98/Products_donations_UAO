@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Product;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductRequest extends Model
@@ -12,10 +10,9 @@ class ProductRequest extends Model
         'beneficiary_id',
         'product_id',
         'donor_id',
-        'status',
-        'status',
+        'admin_status',
+        'donor_status',
         'message',
-        'donor_status'
     ];
 
     public function product()

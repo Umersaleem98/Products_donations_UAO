@@ -69,7 +69,7 @@
                                                 <th>#</th>
                                                 <th>Product</th>
                                                 <th>Image</th>
-                                                <th>Status</th>
+                                                <th>Donor Status</th>
                                                 <th>Donor Info</th>
                                                 <th>Date</th>
                                             </tr>
@@ -98,9 +98,9 @@
 
                                                     {{-- STATUS --}}
                                                     <td>
-                                                        @if ($request->status == 'pending')
+                                                        @if ($request->donor_status == 'pending')
                                                             <span class="badge bg-warning text-dark">Pending</span>
-                                                        @elseif($request->status == 'accepted')
+                                                        @elseif($request->donor_status == 'accepted')
                                                             <span class="badge bg-success">Accepted</span>
                                                         @else
                                                             <span class="badge bg-danger">Rejected</span>
@@ -110,7 +110,7 @@
                                                     {{-- DONOR INFO --}}
                                                     <td>
 
-                                                        @if ($request->status == 'accepted')
+                                                        @if ($request->donor_status == 'accepted')
                                                             <button class="btn btn-primary donor-btn"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#donorModal{{ $request->id }}">

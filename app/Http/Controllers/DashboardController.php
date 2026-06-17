@@ -20,86 +20,100 @@ public function index()
     $user = Auth::user();
 
     // ================= ADMIN DASHBOARD =================
-    if ($user->role === 'admin') {
 
-        $totalUsers = User::count();
-        $totalDonors = User::where('role', 'donor')->count();
-        $totalBeneficiaries = User::where('role', 'beneficiary')->count();
+if ($user->role === 'admin') {
 
-        $totalProducts = Product::count();
-        $totalCategories = Category::count();
+    $totalUsers = User::count();
+    $totalDonors = User::where('role', 'donor')->count();
+    $totalBeneficiaries = User::where('role', 'beneficiary')->count();
 
-        $totalRequests = ProductRequest::count();
+    $totalProducts = Product::count();
+    $totalCategories = Category::count();
 
-        $pendingAdmin = ProductRequest::where('admin_status', 'pending')->count();
-        $approvedByAdmin = ProductRequest::where('admin_status', 'approved')->count();
-        $rejectedByAdmin = ProductRequest::where('admin_status', 'rejected')->count();
+    $totalRequests = ProductRequest::count();
 
-        $pendingDonor = ProductRequest::where('admin_status', 'approved')
-            ->where('donor_status', 'pending')
-            ->count();
+    // ===== ADMIN STATUS =====
+    $pendingAdmin = ProductRequest::where('admin_status', 'pending')->count();
+    $approvedByAdmin = ProductRequest::where('admin_status', 'approved')->count();
+    $rejectedByAdmin = ProductRequest::where('admin_status', 'rejected')->count();
 
-        $acceptedByDonor = ProductRequest::where('donor_status', 'accepted')->count();
-        $rejectedByDonor = ProductRequest::where('donor_status', 'rejected')->count();
+    // ===== DONOR STATUS =====
+    $pendingDonor = ProductRequest::where('donor_status', 'pending')->count();
+    $acceptedByDonor = ProductRequest::where('donor_status', 'accepted')->count();
+    $rejectedByDonor = ProductRequest::where('donor_status', 'rejected')->count();
 
-        $usersChart = [$totalDonors, $totalBeneficiaries];
+    // ================= CHART DATA (FIXED ORDER) =================
 
-        $requestChart = [$pendingAdmin, $approvedByAdmin, $rejectedByAdmin];
+    $usersChart = [
+        $totalDonors,
+        $totalBeneficiaries
+    ];
 
-        $donorDecisionChart = [$acceptedByDonor, $rejectedByDonor, $pendingDonor];
+    $requestChart = [
+        $pendingAdmin,
+        $approvedByAdmin,
+        $rejectedByAdmin
+    ];
 
-        $monthlyRequests = ProductRequest::select(
-                DB::raw('MONTH(created_at) as month'),
-                DB::raw('COUNT(*) as total')
-            )
-            ->whereYear('created_at', date('Y'))
-            ->groupBy('month')
-            ->pluck('total', 'month');
+    $donorDecisionChart = [
+        $acceptedByDonor,
+        $rejectedByDonor,
+        $pendingDonor
+    ];
 
-        $requestMonths = [];
-        $requestCounts = [];
+    // ================= MONTHLY REQUESTS =================
+    $monthlyRequests = ProductRequest::select(
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('COUNT(*) as total')
+        )
+        ->whereYear('created_at', date('Y'))
+        ->groupBy('month')
+        ->pluck('total', 'month');
 
-        for ($i = 1; $i <= 12; $i++) {
-            $requestMonths[] = Carbon::create()->month($i)->format('M');
-            $requestCounts[] = $monthlyRequests[$i] ?? 0;
-        }
+    $requestMonths = [];
+    $requestCounts = [];
 
-        $recentUsers = User::latest()->take(10)->get();
-
-        $recentProducts = Product::with('user')->latest()->take(10)->get();
-
-        $recentRequests = ProductRequest::with(['beneficiary', 'donor', 'product'])
-            ->latest()
-            ->take(10)
-            ->get();
-
-        return view('dashboard', compact(
-            'user',
-            'totalUsers',
-            'totalDonors',
-            'totalBeneficiaries',
-            'totalProducts',
-            'totalCategories',
-            'totalRequests',
-            'pendingAdmin',
-            'approvedByAdmin',
-            'rejectedByAdmin',
-            'pendingDonor',
-            'acceptedByDonor',
-            'rejectedByDonor',
-            'usersChart',
-            'requestChart',
-            'donorDecisionChart',
-            'requestMonths',
-            'requestCounts',
-            'recentUsers',
-            'recentProducts',
-            'recentRequests'
-        ));
+    for ($i = 1; $i <= 12; $i++) {
+        $requestMonths[] = Carbon::create()->month($i)->format('M');
+        $requestCounts[] = $monthlyRequests[$i] ?? 0;
     }
 
-    // ================= DONOR DASHBOARD =================
-   if ($user->role === 'donor') {
+    $recentUsers = User::latest()->take(10)->get();
+    $recentProducts = Product::with('user')->latest()->take(10)->get();
+
+    $recentRequests = ProductRequest::with(['beneficiary', 'donor', 'product'])
+        ->latest()
+        ->take(10)
+        ->get();
+
+    return view('dashboard', compact(
+        'user',
+        'totalUsers',
+        'totalDonors',
+        'totalBeneficiaries',
+        'totalProducts',
+        'totalCategories',
+        'totalRequests',
+        'pendingAdmin',
+        'approvedByAdmin',
+        'rejectedByAdmin',
+        'pendingDonor',
+        'acceptedByDonor',
+        'rejectedByDonor',
+        'usersChart',
+        'requestChart',
+        'donorDecisionChart',
+        'requestMonths',
+        'requestCounts',
+        'recentUsers',
+        'recentProducts',
+        'recentRequests'
+    ));
+}
+
+
+
+if ($user->role === 'donor') {
 
     $profile = $user->donorProfile;
 
@@ -150,7 +164,6 @@ public function index()
         'profileCompletion'
     ));
 }
-
     // ================= BENEFICIARY DASHBOARD =================
 
     if ($user->role === 'beneficiary') {

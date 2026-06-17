@@ -90,22 +90,24 @@
                                             $bProfile = $beneficiary->beneficiaryProfile ?? null;
                                             $dProfile = $donor->donorProfile ?? null;
 
-                                            // Beneficiary Image (fallback)
                                             $beneficiaryImage =
                                                 (!empty($beneficiary->image) && file_exists(public_path('admin/asset/profilephoto/'.$beneficiary->image)))
                                                 ? asset('admin/asset/profilephoto/'.$beneficiary->image)
                                                 : asset('admin/asset/dummy/dummy.jpg');
 
-                                            // Donor Image (fallback)
                                             $donorImage =
                                                 (!empty($donor->image) && file_exists(public_path('admin/asset/profilephoto/'.$donor->image)))
                                                 ? asset('admin/asset/profilephoto/'.$donor->image)
                                                 : asset('admin/asset/dummy/dummy.jpg');
+
+                                            // STATUS FLAGS
+                                            $isApproved = $request->admin_status === 'approved';
+                                            $isRejected = $request->admin_status === 'rejected';
+                                            $isPending  = $request->admin_status === 'pending';
                                         @endphp
 
                                         <tr>
 
-                                            {{-- SERIAL NUMBER (pagination safe) --}}
                                             <td>{{ $requests->firstItem() + $key }}</td>
 
                                             <td>{{ $request->product->name }}</td>
@@ -116,7 +118,6 @@
                                                      style="object-fit:cover;">
                                             </td>
 
-                                            {{-- BENEFICIARY & DONOR BUTTONS --}}
                                             <td>
 
                                                 <button class="btn btn-sm btn-info mt-1"
@@ -133,45 +134,53 @@
 
                                             </td>
 
-                                            {{-- ADMIN STATUS --}}
                                             <td>
                                                 @if($request->admin_status == 'pending')
                                                     <span class="badge bg-warning text-light">Pending</span>
                                                 @elseif($request->admin_status == 'approved')
                                                     <span class="badge bg-success">Approved</span>
                                                 @else
-                                                    <span class="badge bg-danger">Disapproved</span>
+                                                    <span class="badge bg-danger">Rejected</span>
                                                 @endif
                                             </td>
 
-                                            {{-- DONOR STATUS --}}
                                             <td>
                                                 @if($request->donor_status == 'pending')
                                                     <span class="badge bg-info">Waiting</span>
                                                 @elseif($request->donor_status == 'accepted')
                                                     <span class="badge bg-success">Accepted</span>
                                                 @else
-                                                    <span class="badge bg-danger">Disapproved</span>
+                                                    <span class="badge bg-danger">Rejected</span>
                                                 @endif
                                             </td>
 
                                             {{-- ACTION --}}
                                             <td>
 
+                                                {{-- APPROVE --}}
                                                 <form method="POST"
                                                       action="{{ route('admin.request.update', $request->id) }}"
                                                       style="display:inline;">
                                                     @csrf
-                                                    <input type="hidden" name="status" value="approved">
-                                                    <button class="btn btn-sm btn-success">Approve</button>
+                                                    <input type="hidden" name="admin_status" value="approved">
+
+                                                    <button class="btn btn-sm btn-success"
+                                                            @if($isApproved) disabled class="btn btn-sm btn-secondary" @endif>
+                                                        Approve
+                                                    </button>
                                                 </form>
 
+                                                {{-- DISAPPROVE --}}
                                                 <form method="POST"
                                                       action="{{ route('admin.request.update', $request->id) }}"
                                                       style="display:inline;">
                                                     @csrf
-                                                    <input type="hidden" name="status" value="rejected">
-                                                    <button class="btn btn-sm btn-danger">Disapproved</button>
+                                                    <input type="hidden" name="admin_status" value="rejected">
+
+                                                    <button class="btn btn-sm btn-danger"
+                                                            @if($isRejected) disabled class="btn btn-sm btn-secondary" @endif>
+                                                        Rejected
+                                                    </button>
                                                 </form>
 
                                             </td>
@@ -180,7 +189,7 @@
 
                                         </tr>
 
-                                        {{-- ================= BENEFICIARY MODAL ================= --}}
+                                        {{-- BENEFICIARY MODAL --}}
                                         <div class="modal fade"
                                              id="beneficiaryModal{{ $beneficiary->id }}"
                                              tabindex="-1">
@@ -229,7 +238,7 @@
 
                                         </div>
 
-                                        {{-- ================= DONOR MODAL ================= --}}
+                                        {{-- DONOR MODAL --}}
                                         <div class="modal fade"
                                              id="donorModal{{ $donor->id }}"
                                              tabindex="-1">
@@ -278,11 +287,9 @@
                                         </div>
 
                                     @empty
-
                                         <tr>
                                             <td colspan="8" class="text-center">No requests found.</td>
                                         </tr>
-
                                     @endforelse
 
                                     </tbody>
@@ -291,7 +298,6 @@
 
                             </div>
 
-                            {{-- PAGINATION --}}
                             <div class="mt-4 d-flex justify-content-center">
                                 {{ $requests->links() }}
                             </div>

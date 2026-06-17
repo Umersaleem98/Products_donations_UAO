@@ -22,14 +22,11 @@ return new class extends Migration
             // donor (owner of product)
             $table->foreignId('donor_id')->constrained('users')->onDelete('cascade');
 
-            // request status
-            $table->enum('status', [
-                'pending',          // waiting for admin
-                'admin_approved',   // admin approved → visible to donor
-                'admin_rejected',   // admin rejected → stop
-                'accepted',         // donor accepted
-                'rejected',          // donor rejected
-            ])->default('pending');
+             $table->enum('admin_status', ['pending', 'approved', 'rejected'])
+              ->default('pending');
+
+              $table->enum('donor_status', ['pending', 'approved', 'rejected'])
+              ->default('pending');
 
             // optional message
             $table->text('message')->nullable();
