@@ -114,7 +114,7 @@
                                                 <input type="text" name="name"
                                                     class="form-control form-control-sm"
                                                     placeholder="Enter your full name"
-                                                    value="{{ old('name', $user->name) }}">
+                                                    value="{{ old('name', $user->name) }}" readonly>
                                             </div>
 
                                             <div class="col-md-4 mb-4">
@@ -122,7 +122,15 @@
                                                 <input type="email" name="email"
                                                     class="form-control form-control-sm"
                                                     placeholder="Enter your email address"
-                                                    value="{{ old('email', $user->email) }}">
+                                                    value="{{ old('email', $user->email) }}" readonly>
+                                            </div>
+
+                                            <div class="col-md-4 mb-4">
+                                                <label>Phone</label>
+                                                <input type="text" name="phone"
+                                                    class="form-control form-control-sm"
+                                                    placeholder="Enter your phone number"
+                                                    value="{{ old('phone', $user->phone) }}" readonly>
                                             </div>
 
                                         </div>
@@ -151,6 +159,24 @@
 
                                             </div>
 
+                                            <div class="col-md-4 mb-4">
+                                                <label>Enrollment Year</label>
+                                                <input type="number" name="enrollment_year"
+                                                    class="form-control form-control-sm" min="2000" max="2100"
+                                                    placeholder="Enter Enrollment Year"
+                                                    value="{{ old('enrollment_year', optional($user->beneficiaryProfile)->enrollment_year) }}">
+                                            </div>
+
+                                            <div class="col-md-4 mb-4">
+                                                <label>Graduation Year</label>
+                                                <input type="number" name="graduation_year"
+                                                    class="form-control form-control-sm" min="2000" max="2100"
+                                                    placeholder="Enter Graduation Year"
+                                                    value="{{ old('graduation_year', optional($user->beneficiaryProfile)->graduation_year) }}">
+                                            </div>
+
+
+
                                         </div>
 
                                         <!-- BENEFICIARY INFORMATION -->
@@ -172,29 +198,38 @@
 
                                                     <option value="SEECS"
                                                         {{ $institution == 'SEECS' ? 'selected' : '' }}>SEECS</option>
-                                                    <option value="SMME" {{ $institution == 'SMME' ? 'selected' : '' }}>
+                                                    <option value="SMME"
+                                                        {{ $institution == 'SMME' ? 'selected' : '' }}>
                                                         SMME</option>
-                                                    <option value="SCME" {{ $institution == 'SCME' ? 'selected' : '' }}>
+                                                    <option value="SCME"
+                                                        {{ $institution == 'SCME' ? 'selected' : '' }}>
                                                         SCME</option>
-                                                    <option value="NBS" {{ $institution == 'NBS' ? 'selected' : '' }}>
+                                                    <option value="NBS"
+                                                        {{ $institution == 'NBS' ? 'selected' : '' }}>
                                                         NBS</option>
-                                                    <option value="SADA" {{ $institution == 'SADA' ? 'selected' : '' }}>
+                                                    <option value="SADA"
+                                                        {{ $institution == 'SADA' ? 'selected' : '' }}>
                                                         SADA</option>
-                                                    <option value="SNS" {{ $institution == 'SNS' ? 'selected' : '' }}>
+                                                    <option value="SNS"
+                                                        {{ $institution == 'SNS' ? 'selected' : '' }}>
                                                         SNS</option>
                                                     <option value="ASAB"
                                                         {{ $institution == 'ASAB' ? 'selected' : '' }}>ASAB</option>
-                                                    <option value="S3H" {{ $institution == 'S3H' ? 'selected' : '' }}>
+                                                    <option value="S3H"
+                                                        {{ $institution == 'S3H' ? 'selected' : '' }}>
                                                         S3H</option>
                                                     <option value="CEME"
                                                         {{ $institution == 'CEME' ? 'selected' : '' }}>CEME</option>
-                                                    <option value="MCS" {{ $institution == 'MCS' ? 'selected' : '' }}>
+                                                    <option value="MCS"
+                                                        {{ $institution == 'MCS' ? 'selected' : '' }}>
                                                         MCS</option>
-                                                    <option value="CAE" {{ $institution == 'CAE' ? 'selected' : '' }}>
+                                                    <option value="CAE"
+                                                        {{ $institution == 'CAE' ? 'selected' : '' }}>
                                                         CAE</option>
                                                     <option value="PNEC"
                                                         {{ $institution == 'PNEC' ? 'selected' : '' }}>PNEC</option>
-                                                    <option value="NBC" {{ $institution == 'NBC' ? 'selected' : '' }}>
+                                                    <option value="NBC"
+                                                        {{ $institution == 'NBC' ? 'selected' : '' }}>
                                                         NBC</option>
                                                 </select>
                                             </div>

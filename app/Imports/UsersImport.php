@@ -21,15 +21,17 @@ class UsersImport implements ToCollection
             $data = [
                 'name'  => $row[0],
                 'email' => $row[1],
-                'password' => $row[2] ?? '12345678',
-                'role' => $row[3] ?? 'user',
-                'qalam_id' => $row[4] ?? null,
+                'phone' => $row[2] ?? null,
+                'password' => $row[4] ?? '12345678',
+                'role' => $row[5] ?? 'user',
+                'qalam_id' => $row[6] ?? null,
             ];
 
             // VALIDATION
             $validator = Validator::make($data, [
                 'name'  => 'required|string',
                 'email' => 'required|email',
+                'phone' => 'nullable|string|max:20',
             ]);
 
             if ($validator->fails()) {
@@ -46,6 +48,7 @@ class UsersImport implements ToCollection
             User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
+                'phone' => $data['phone'],
                 'password' => Hash::make($data['password']),
                 'role' => $data['role'],
                 'qalam_id' => $data['qalam_id'],

@@ -21,8 +21,6 @@ class BeneficiaryProfileController extends Controller
         return view('pages.beneficiary.profile.index', compact('user'));
     }
 
-
-    // UPDATE PROFILE
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -30,18 +28,24 @@ class BeneficiaryProfileController extends Controller
         // VALIDATION
         $request->validate([
 
+            // USER
             'name' => 'required|string|max:255',
 
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
 
             // BENEFICIARY PROFILE
             'institution' => 'nullable|string|max:255',
+
+            'enrollment_year' => 'nullable|integer|min:2000|max:2100',
+
+            'graduation_year' => 'nullable|integer|min:2000|max:2100|gte:enrollment_year',
 
             'father_status' => 'nullable|string|max:255',
 
             'guardian_profession' => 'nullable|string|max:255',
 
-            'monthly_income' => 'nullable|numeric',
+            'monthly_income' => 'nullable|numeric|min:0',
 
             'province' => 'nullable|string|max:255',
 
@@ -59,13 +63,12 @@ class BeneficiaryProfileController extends Controller
 
         ]);
 
-
         // IMAGE UPLOAD
         if ($request->hasFile('image')) {
 
             $uploadPath = public_path('admin/asset/profilephoto');
 
-            // CREATE FOLDER
+            // CREATE DIRECTORY IF NOT EXISTS
             if (!File::exists($uploadPath)) {
 
                 File::makeDirectory($uploadPath, 0777, true);
@@ -73,7 +76,7 @@ class BeneficiaryProfileController extends Controller
             }
 
             // DELETE OLD IMAGE
-            if ($user->image) {
+            if (!empty($user->image)) {
 
                 $oldImage = $uploadPath . '/' . $user->image;
 
@@ -84,34 +87,34 @@ class BeneficiaryProfileController extends Controller
                 }
             }
 
-            // NEW IMAGE NAME
+            // GENERATE UNIQUE FILE NAME
             $filename = time() . '_' . Str::random(10) . '.' .
-                        $request->image->getClientOriginalExtension();
+                        $request->file('image')->getClientOriginalExtension();
 
-            // MOVE IMAGE
-            $request->image->move($uploadPath, $filename);
+            // MOVE FILE
+            $request->file('image')->move($uploadPath, $filename);
 
             // SAVE IMAGE NAME
             $user->image = $filename;
         }
 
-
-        // UPDATE USER
+        // UPDATE USER DATA
         $user->name = $request->name;
 
         $user->email = $request->email;
 
+        $user->phone = $request->phone;
 
         // PASSWORD UPDATE
         if ($request->filled('password')) {
 
             if (!Hash::check($request->current_password, $user->password)) {
 
-                return back()->withErrors([
-
-                    'current_password' => 'Current password is incorrect',
-
-                ]);
+                return back()
+                    ->withErrors([
+                        'current_password' => 'Current password is incorrect.'
+                    ])
+                    ->withInput();
             }
 
             $user->password = Hash::make($request->password);
@@ -119,17 +122,19 @@ class BeneficiaryProfileController extends Controller
 
         $user->save();
 
-
-        // UPDATE BENEFICIARY PROFILE
+        // UPDATE OR CREATE BENEFICIARY PROFILE
         $user->beneficiaryProfile()->updateOrCreate(
 
             [
-                'user_id' => $user->id
+                'user_id' => $user->id,
             ],
 
             [
-
                 'institution' => $request->institution,
+
+                'enrollment_year' => $request->enrollment_year,
+
+                'graduation_year' => $request->graduation_year,
 
                 'father_status' => $request->father_status,
 
@@ -142,11 +147,12 @@ class BeneficiaryProfileController extends Controller
                 'domicile' => $request->domicile,
 
                 'home_address' => $request->home_address,
-
             ]
-
         );
 
-        return back()->with('success', 'Profile updated successfully.');
+        return redirect()
+            ->back()
+            ->with('success', 'Profile updated successfully.');
     }
 }
+

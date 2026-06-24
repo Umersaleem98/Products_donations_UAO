@@ -73,8 +73,23 @@
                                                    required>
 
                                         </div>
+                                        <div class="col-md-6 mb-3">
+
+                                            <label class="form-label">
+                                                Phone
+                                            </label>
+
+                                            <input type="number"
+                                                   name="phone"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Enter phone number..."
+                                                   required>
+
+                                        </div>
 
                                     </div>
+
+
 
                                     <!-- ROW 2 -->
                                     <div class="row">

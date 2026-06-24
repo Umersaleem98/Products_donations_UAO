@@ -31,6 +31,7 @@ class DonorProfileController extends Controller
             'name' => 'required|string|max:255',
 
             'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+            'phone' => 'nullable|string|max:20',
 
             // DONOR PROFILE
             'organization' => 'nullable|string|max:255',
@@ -85,7 +86,7 @@ class DonorProfileController extends Controller
         // UPDATE USER
         $user->name = $request->name;
         $user->email = $request->email;
-
+        $user->phone = $request->phone;
         // PASSWORD UPDATE
         if ($request->filled('password')) {
 

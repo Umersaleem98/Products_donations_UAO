@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('beneficiary_profiles', function (Blueprint $table) {
             $table->id();
-              // 🔗 LINK TO USERS TABLE
+
+            // 🔗 LINK TO USERS TABLE
             $table->foreignId('user_id')
                 ->constrained()
                 ->onDelete('cascade');
 
-            // 📌 Profile Fields
-            $table->string('institution')->nullable();
+                // 📌 Profile Fields
+                $table->string('institution')->nullable();
+
+                // 🎓 Academic Information
+                $table->year('enrollment_year')->nullable();
+                $table->year('graduation_year')->nullable();
 
             $table->string('father_status')->nullable();
 
@@ -32,6 +37,7 @@ return new class extends Migration
             $table->string('domicile')->nullable();
 
             $table->text('home_address')->nullable();
+
             $table->timestamps();
         });
     }

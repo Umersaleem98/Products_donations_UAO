@@ -30,7 +30,7 @@
     }
 
     /* =========================
-       CENTER MENU
+       MENU
     ========================== */
     .navbar-nav-center {
         gap: 8px;
@@ -88,21 +88,14 @@
     }
 
     /* =========================
-       DESKTOP LAYOUT
+       DESKTOP
     ========================== */
     @media (min-width: 992px) {
-        .navbar-collapse {
-            position: relative;
-        }
-
-        .navbar-nav-center {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
         .navbar-right {
             margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
     }
 
@@ -149,7 +142,7 @@
 ========================= -->
 <nav class="navbar navbar-expand-lg fixed-top" id="navbar">
 
-    <div class="container-fluid px-lg-4 px-3">
+    <div class="container px-lg-4 px-3">
 
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('home') }}">
@@ -166,43 +159,43 @@
                 aria-controls="navbarNav"
                 aria-expanded="false"
                 aria-label="Toggle navigation">
-
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <!-- Menu -->
         <div class="collapse navbar-collapse" id="navbarNav">
 
-            <!-- Center Navigation -->
-            <ul class="navbar-nav navbar-nav-center">
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#home">Home</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#about">About</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#services">Services</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#how-it-works">How It Works</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#testimonials">Stories</a>
-                </li>
-
-            </ul>
-
-            <!-- Right Side Button -->
+            <!-- Right Side Menu + Login -->
             <div class="navbar-right ms-lg-auto">
-                <a class="btn btn-donate-nav" href="{{ route('login') }}">
+
+                <ul class="navbar-nav navbar-nav-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Services</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#testimonials">Stories</a>
+                    </li>
+
+                </ul>
+
+                <a class="btn btn-donate-nav ms-lg-3" href="{{ route('login') }}">
                     Login
                 </a>
+
             </div>
 
         </div>

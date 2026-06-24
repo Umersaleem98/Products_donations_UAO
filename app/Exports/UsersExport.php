@@ -10,6 +10,6 @@ class UsersExport implements FromCollection
 {
     public function collection()
     {
-        return User::select('name','email','role','qalam_id')->get();
+        return User::select('name','email', 'phone', 'role','qalam_id')->get();
     }
 }

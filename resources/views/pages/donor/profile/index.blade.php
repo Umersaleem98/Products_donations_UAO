@@ -98,7 +98,7 @@
 
                             <div class="card-body">
 
-                               
+
 
                                 @include('layouts.admin.alert')
 
@@ -124,7 +124,7 @@
                                                    name="name"
                                                    class="form-control form-control-sm"
                                                    placeholder="Enter name"
-                                                   value="{{ old('name', $user->name) }}">
+                                                   value="{{ old('name', $user->name) }}" readonly>
 
                                         </div>
 
@@ -136,9 +136,18 @@
                                                    name="email"
                                                    class="form-control form-control-sm"
                                                    placeholder="Enter email"
-                                                   value="{{ old('email', $user->email) }}">
+                                                   value="{{ old('email', $user->email) }}" readonly>
 
                                         </div>
+                                        <div class="col-md-4 mb-4">
+
+                                            <label>Phone</label>
+
+                                            <input type="number"
+                                                   name="phone"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Enter phone"
+                                                   value="{{ old('phone', $user->phone) }}">
 
                                     </div>
 

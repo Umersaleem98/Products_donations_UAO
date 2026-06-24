@@ -12,6 +12,8 @@ class BeneficiaryProfile extends Model
         'user_id',
 
         'institution',
+        'enrollment_year',
+        'graduation_year',
 
         'father_status',
 

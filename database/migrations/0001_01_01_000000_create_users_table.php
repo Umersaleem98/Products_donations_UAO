@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('email')->unique()->nullable();
+            $table->string('phone')->nullable();
             $table->string('password');
             $table->string('image')->nullable();
             $table->enum('role', ['admin', 'donor', 'beneficiary']);

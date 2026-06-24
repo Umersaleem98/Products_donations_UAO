@@ -27,6 +27,7 @@ class AdminUserController extends Controller
 
                     $q->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%")
                         ->orWhere('qalam_id', 'like', "%{$search}%")
                         ->orWhere('role', 'like', "%{$search}%");
 
@@ -55,6 +56,7 @@ class AdminUserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'phone' => 'nullable|string|max:20',
             'password' => 'required|min:6',
             'role' => 'required',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -72,6 +74,7 @@ class AdminUserController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'role' => $request->role,
             'qalam_id' => $request->qalam_id,
@@ -96,6 +99,7 @@ class AdminUserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$id,
+            'phone' => 'nullable|string|max:20',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -116,6 +120,7 @@ class AdminUserController extends Controller
         // BASIC FIELDS
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->phone = $request->phone;
         $user->role = $request->role;
         $user->qalam_id = $request->qalam_id;
 

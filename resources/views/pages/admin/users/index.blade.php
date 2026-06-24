@@ -141,6 +141,7 @@
                                                             <th>Qalam ID</th>
                                                             <th>Name</th>
                                                             <th>Email</th>
+                                                            <th>Phone</th>
                                                             <th>Image</th>
                                                             <th>Role</th>
 
@@ -166,6 +167,7 @@
 
                                                                 <td>{{ $user->name }}</td>
                                                                 <td>{{ $user->email }}</td>
+                                                                <td>{{ $user->phone }}</td>
 
                                                                 <td>
                                                                     @if ($user->image)
@@ -181,7 +183,7 @@
                                                                     @php
                                                                         $role = strtolower($user->role);
                                                                         $badge = match ($role) {
-                                                                            'admin' => 'bg-primary',
+                                                                            'admin' => 'bg-success',
                                                                             'donor' => 'bg-danger',
                                                                             'beneficiary' => 'bg-info',
                                                                             default => 'bg-secondary',
