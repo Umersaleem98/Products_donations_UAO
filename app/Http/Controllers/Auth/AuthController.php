@@ -11,121 +11,134 @@ use App\Models\User;
 class AuthController extends Controller
 {
 
-     public function showLoginForm()
+    public function showLoginForm()
     {
-        $captchas = [
-            'lock' => [
-                'question' => 'Select all LOCK images',
-                'images' => [
-                    ['img' => 'lock1.jpg', 'is_correct' => 1],
-                    ['img' => 'car1.jpg',  'is_correct' => 0],
-                    ['img' => 'lock2.jpg', 'is_correct' => 1],
-                    ['img' => 'house1.jpg','is_correct' => 0],
-                ],
-            ],
-            'car' => [
-                'question' => 'Select all CAR images',
-                'images' => [
-                    ['img' => 'car1.jpg', 'is_correct' => 1],
-                    ['img' => 'bike1.jpg', 'is_correct' => 0],
-                    ['img' => 'car2.jpg', 'is_correct' => 1],
-                    ['img' => 'tree1.jpg','is_correct' => 0],
-                ],
-            ],
-        ];
-
-        $captcha = $captchas[array_rand($captchas)];
-
-        session([
-            'captcha_question' => $captcha['question'],
-            'captcha_images'   => $captcha['images']
-        ]);
-
         return view('pages.auth.login');
     }
 
-    /**
-     * Handle login request
-     */
+
     public function login(Request $request)
-    {
-        // -----------------------------
-        // 1. Basic validation
-        // -----------------------------
-        $request->validate([
-            'role'     => 'required|in:admin,donor,beneficiary',
-            'email'    => 'required|email',
-            'password' => 'required|min:6',
-        ]);
+{
+    /*
+    |--------------------------------------------------------------------------
+    | Validate Login Information
+    |--------------------------------------------------------------------------
+    */
 
-        if ($request->role === 'beneficiary') {
-            $request->validate([
-                'qalam_id' => 'required'
-            ]);
-        }
+    $validationRules = [
+        'role' => [
+            'required',
+            'in:admin,donor,beneficiary',
+        ],
 
-        // -----------------------------
-        // 2. CAPTCHA validation
-        // -----------------------------
-        $images = session('captcha_images', []);
-        $selected = $request->captcha_selected ?? [];
+        'email' => [
+            'required',
+            'email',
+        ],
 
-        if (empty($images)) {
-            return back()->withErrors([
-                'captcha' => 'Captcha session expired. Please try again.'
-            ]);
-        }
+        'password' => [
+            'required',
+            'string',
+            'min:6',
+        ],
 
-        $correctIndexes = [];
+        'remember' => [
+            'nullable',
+            'boolean',
+        ],
+    ];
 
-        foreach ($images as $key => $img) {
-            if ($img['is_correct'] == 1) {
-                $correctIndexes[] = $key;
-            }
-        }
 
-        sort($correctIndexes);
-        sort($selected);
+    /*
+    |--------------------------------------------------------------------------
+    | Qalam ID Is Required Only for Beneficiaries
+    |--------------------------------------------------------------------------
+    */
 
-        if ($correctIndexes != $selected) {
-            return back()->withErrors([
-                'captcha' => 'Captcha verification failed.'
-            ])->withInput();
-        }
-
-        // -----------------------------
-        // 3. User lookup
-        // -----------------------------
-        $query = User::where('email', $request->email)
-                     ->where('role', $request->role);
-
-        if ($request->role === 'beneficiary') {
-            $query->where('qalam_id', $request->qalam_id);
-        }
-
-        $user = $query->first();
-
-        // -----------------------------
-        // 4. Password check
-        // -----------------------------
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->withErrors([
-                'login' => 'Invalid credentials'
-            ])->withInput();
-        }
-
-        // -----------------------------
-        // 5. Login user securely
-        // -----------------------------
-        Auth::login($user, $request->has('remember'));
-
-        $request->session()->regenerate();
-
-        // -----------------------------
-        // 6. Redirect
-        // -----------------------------
-        return redirect()->route('dashboard');
+    if ($request->role === 'beneficiary') {
+        $validationRules['qalam_id'] = [
+            'required',
+        ];
     }
+
+
+    $validated = $request->validate($validationRules);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Find User by Email and Selected Role
+    |--------------------------------------------------------------------------
+    */
+
+    $userQuery = User::query()
+        ->where('email', $validated['email'])
+        ->where('role', $validated['role']);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Check Qalam ID for Beneficiary
+    |--------------------------------------------------------------------------
+    */
+
+    if ($validated['role'] === 'beneficiary') {
+        $userQuery->where(
+            'qalam_id',
+            $validated['qalam_id']
+        );
+    }
+
+
+    $user = $userQuery->first();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validate Password
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        !$user ||
+        !Hash::check(
+            $validated['password'],
+            $user->password
+        )
+    ) {
+        return back()
+            ->withErrors([
+                'login' => 'The provided login information is incorrect.',
+            ])
+            ->withInput(
+                $request->except('password')
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Log In User
+    |--------------------------------------------------------------------------
+    */
+
+    Auth::login(
+        $user,
+        $request->boolean('remember')
+    );
+
+    $request->session()->regenerate();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Redirect to Dashboard
+    |--------------------------------------------------------------------------
+    */
+
+    return redirect()
+        ->intended(route('dashboard'));
+}
 
     public function logout(Request $request)
     {

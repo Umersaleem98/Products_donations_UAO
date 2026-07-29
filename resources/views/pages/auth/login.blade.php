@@ -4,27 +4,53 @@
 
 <style>
     :root {
-        --primary: #0065a8;
-        --primary-dark: #003f6b;
-        --primary-light: #eaf5fc;
-        --accent: #f5a623;
-        --text-dark: #17212b;
-        --text-muted: #667481;
-        --border: #dce5ec;
-        --white: #ffffff;
-        --danger-light: #fff2f2;
+        --auth-primary: #0065a8;
+        --auth-primary-dark: #003f6b;
+        --auth-primary-light: #eaf5fc;
+        --auth-accent: #f5a623;
+        --auth-text: #17212b;
+        --auth-muted: #667481;
+        --auth-border: #dce5ec;
+        --auth-white: #ffffff;
+        --auth-background: #f4f8fb;
+        --auth-danger: #dc3545;
+        --auth-danger-light: #fff2f2;
+        --auth-font: "Inter", "Segoe UI", Arial, sans-serif;
     }
 
     * {
         box-sizing: border-box;
     }
 
+    html,
+    body {
+        min-height: 100%;
+        margin: 0;
+    }
+
+    body,
+    input,
+    select,
+    button,
+    textarea,
+    label,
+    a,
+    p,
+    span,
+    small,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--auth-font) !important;
+    }
+
     body {
         min-height: 100vh;
-        margin: 0;
-        color: var(--text-dark);
-        background-color: #f4f8fb;
-        font-family: inherit;
+        color: var(--auth-text);
+        background-color: var(--auth-background);
     }
 
     .auth-page {
@@ -34,7 +60,7 @@
         overflow: hidden;
     }
 
-    /* Left information panel */
+    /* Left panel */
     .auth-information {
         position: relative;
         display: flex;
@@ -42,15 +68,15 @@
         align-items: center;
         padding: 70px;
         overflow: hidden;
-        color: var(--white);
+        color: var(--auth-white);
         background:
             linear-gradient(
                 135deg,
                 rgba(0, 63, 107, 0.97),
                 rgba(0, 101, 168, 0.90)
             ),
-            url('{{ asset("admins/assets/images/backgrounds/nust-campus.jpg") }}')
-            center/cover no-repeat;
+            url('{{ asset('admins/assets/images/backgrounds/nust-campus.jpg') }}')
+            center center / cover no-repeat;
     }
 
     .auth-information::before,
@@ -74,7 +100,7 @@
         left: -130px;
         width: 400px;
         height: 400px;
-        background: rgba(245, 166, 35, 0.10);
+        background-color: rgba(245, 166, 35, 0.10);
     }
 
     .information-content {
@@ -109,7 +135,7 @@
         margin-bottom: 20px;
         padding: 8px 14px;
         border: 1px solid rgba(255, 255, 255, 0.22);
-        border-radius: 50px;
+        border-radius: 50rem;
         background-color: rgba(255, 255, 255, 0.10);
         font-size: 0.85rem;
         font-weight: 600;
@@ -120,22 +146,22 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background-color: var(--accent);
+        background-color: var(--auth-accent);
         content: "";
     }
 
     .information-content h1 {
         max-width: 560px;
-        margin-bottom: 20px;
-        color: var(--white);
+        margin: 0 0 20px;
+        color: var(--auth-white);
         font-size: clamp(2.3rem, 4vw, 4rem);
         font-weight: 750;
         line-height: 1.12;
     }
 
-    .information-content > p {
+    .information-description {
         max-width: 560px;
-        margin-bottom: 34px;
+        margin: 0 0 34px;
         color: rgba(255, 255, 255, 0.82);
         font-size: 1.05rem;
         line-height: 1.8;
@@ -160,17 +186,17 @@
         width: 40px;
         height: 40px;
         border-radius: 11px;
-        color: var(--primary-dark);
-        background-color: var(--accent);
+        color: var(--auth-primary-dark);
+        background-color: var(--auth-accent);
         font-size: 1rem;
-        font-weight: 700;
     }
 
     .feature-content strong {
         display: block;
         margin-bottom: 2px;
-        color: var(--white);
+        color: var(--auth-white);
         font-size: 0.95rem;
+        font-weight: 700;
     }
 
     .feature-content span {
@@ -178,7 +204,7 @@
         font-size: 0.84rem;
     }
 
-    /* Right login panel */
+    /* Right form panel */
     .auth-form-panel {
         position: relative;
         display: flex;
@@ -196,7 +222,7 @@
         width: 220px;
         height: 220px;
         border-radius: 0 0 0 100%;
-        background-color: var(--primary-light);
+        background-color: var(--auth-primary-light);
         content: "";
     }
 
@@ -224,27 +250,40 @@
     }
 
     .login-heading h2 {
-        margin-bottom: 9px;
-        color: var(--text-dark);
+        margin: 0 0 9px;
+        color: var(--auth-text);
         font-size: 2rem;
         font-weight: 750;
     }
 
     .login-heading p {
-        margin-bottom: 0;
-        color: var(--text-muted);
+        margin: 0;
+        color: var(--auth-muted);
         line-height: 1.6;
     }
 
-    /* Error messages */
+    /* Alerts */
     .login-alert {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
         margin-bottom: 22px;
         padding: 14px 16px;
         border: 1px solid #f2c5c5;
         border-radius: 12px;
         color: #a12b2b;
-        background-color: var(--danger-light);
+        background-color: var(--auth-danger-light);
         font-size: 0.9rem;
+    }
+
+    .login-alert-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .login-alert strong {
+        display: block;
+        margin-bottom: 5px;
     }
 
     .login-alert ul {
@@ -252,21 +291,21 @@
         padding-left: 18px;
     }
 
-    /* Form elements */
+    /* Form */
     .form-field {
         margin-bottom: 18px;
     }
 
-    .form-label {
+    .login-label {
         display: block;
         margin-bottom: 8px;
-        color: var(--text-dark);
+        color: var(--auth-text);
         font-size: 0.89rem;
         font-weight: 650;
     }
 
     .required-mark {
-        color: #dc3545;
+        color: var(--auth-danger);
     }
 
     .input-wrapper {
@@ -284,14 +323,15 @@
     }
 
     .login-control {
+        display: block;
         width: 100%;
         height: 52px;
         padding: 10px 16px 10px 45px;
-        border: 1px solid var(--border);
+        border: 1px solid var(--auth-border);
         border-radius: 12px;
         outline: none;
-        color: var(--text-dark);
-        background-color: var(--white);
+        color: var(--auth-text);
+        background-color: var(--auth-white);
         font-size: 0.95rem;
         transition:
             border-color 0.2s ease,
@@ -311,23 +351,23 @@
     }
 
     .login-control:focus {
-        border-color: var(--primary);
+        border-color: var(--auth-primary);
         box-shadow: 0 0 0 4px rgba(0, 101, 168, 0.10);
     }
 
     .login-control.is-invalid {
-        border-color: #dc3545;
+        border-color: var(--auth-danger);
     }
 
     .field-error {
         display: block;
         margin-top: 6px;
-        color: #dc3545;
+        color: var(--auth-danger);
         font-size: 0.82rem;
     }
 
     .password-control {
-        padding-right: 50px;
+        padding-right: 52px;
     }
 
     .password-toggle {
@@ -346,99 +386,16 @@
         background: transparent;
         cursor: pointer;
         transform: translateY(-50%);
-        transition: 0.2s ease;
+        transition:
+            color 0.2s ease,
+            background-color 0.2s ease;
     }
 
     .password-toggle:hover {
-        color: var(--primary);
-        background-color: var(--primary-light);
+        color: var(--auth-primary);
+        background-color: var(--auth-primary-light);
     }
 
-    /* Image CAPTCHA */
-    .captcha-box {
-        margin-bottom: 18px;
-        padding: 17px;
-        border: 1px solid var(--border);
-        border-radius: 15px;
-        background-color: var(--white);
-    }
-
-    .captcha-heading {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        margin-bottom: 13px;
-    }
-
-    .captcha-heading i {
-        margin-top: 3px;
-        color: var(--primary);
-    }
-
-    .captcha-heading label {
-        margin: 0;
-        color: var(--text-dark);
-        font-size: 0.88rem;
-        font-weight: 650;
-        line-height: 1.5;
-    }
-
-    .captcha-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-
-    .captcha-item {
-        position: relative;
-        display: block;
-        min-height: 90px;
-        margin: 0;
-        overflow: hidden;
-        border: 2px solid transparent;
-        border-radius: 11px;
-        background-color: #edf2f5;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .captcha-item:hover {
-        border-color: var(--primary);
-        transform: translateY(-2px);
-    }
-
-    .captcha-item img {
-        display: block;
-        width: 100%;
-        height: 90px;
-        object-fit: cover;
-    }
-
-    .captcha-item input {
-        position: absolute;
-        top: 9px;
-        left: 9px;
-        z-index: 3;
-        width: 19px;
-        height: 19px;
-        accent-color: var(--primary);
-        cursor: pointer;
-    }
-
-    .captcha-checkmark {
-        position: absolute;
-        inset: 0;
-        border: 3px solid transparent;
-        border-radius: 9px;
-        pointer-events: none;
-    }
-
-    .captcha-item input:checked ~ .captcha-checkmark {
-        border-color: var(--primary);
-        background-color: rgba(0, 101, 168, 0.10);
-    }
-
-    /* Remember row */
     .form-options {
         display: flex;
         align-items: center;
@@ -450,7 +407,8 @@
         display: inline-flex;
         gap: 8px;
         align-items: center;
-        color: var(--text-muted);
+        margin: 0;
+        color: var(--auth-muted);
         font-size: 0.9rem;
         cursor: pointer;
     }
@@ -459,11 +417,10 @@
         width: 17px;
         height: 17px;
         margin: 0;
-        accent-color: var(--primary);
+        accent-color: var(--auth-primary);
         cursor: pointer;
     }
 
-    /* Submit button */
     .btn-login {
         display: flex;
         gap: 10px;
@@ -474,15 +431,15 @@
         padding: 10px 20px;
         border: 0;
         border-radius: 12px;
-        color: var(--white);
+        color: var(--auth-white);
         background: linear-gradient(
             135deg,
-            var(--primary),
-            var(--primary-dark)
+            var(--auth-primary),
+            var(--auth-primary-dark)
         );
         font-size: 0.95rem;
         font-weight: 700;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.4px;
         cursor: pointer;
         transition:
             transform 0.2s ease,
@@ -490,7 +447,7 @@
     }
 
     .btn-login:hover {
-        color: var(--white);
+        color: var(--auth-white);
         box-shadow: 0 10px 24px rgba(0, 76, 128, 0.25);
         transform: translateY(-2px);
     }
@@ -500,9 +457,15 @@
         transform: translateY(0);
     }
 
+    .btn-login:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+        transform: none;
+    }
+
     .login-support {
-        margin-top: 22px;
-        color: var(--text-muted);
+        margin: 22px 0 0;
+        color: var(--auth-muted);
         font-size: 0.85rem;
         line-height: 1.6;
         text-align: center;
@@ -510,7 +473,7 @@
 
     .login-support i {
         margin-right: 5px;
-        color: var(--primary);
+        color: var(--auth-primary);
     }
 
     /* Tablet */
@@ -567,470 +530,565 @@
         }
     }
 
-    /* Small mobile */
     @media (max-width: 420px) {
         .auth-form-panel {
             align-items: flex-start;
             padding: 25px 15px;
         }
 
-        .captcha-box {
-            padding: 13px;
+        .login-heading h2 {
+            font-size: 1.55rem;
         }
 
-        .captcha-grid {
-            gap: 7px;
-        }
-
-        .captcha-item,
-        .captcha-item img {
-            height: 78px;
-            min-height: 78px;
+        .login-control,
+        .btn-login {
+            height: 50px;
         }
     }
 </style>
 
 <body>
 
-<main class="auth-page">
+    <main class="auth-page">
 
-    <!-- Left Platform Information -->
-    <section class="auth-information">
-        <div class="information-content">
+        {{-- ================================================= --}}
+        {{-- LEFT INFORMATION PANEL --}}
+        {{-- ================================================= --}}
+        <section class="auth-information">
 
-            <div class="brand-logo-wrapper">
-                <img
-                    src="{{ asset('admins/assets/images/logos/logo.png') }}"
-                    alt="NUST Sharing Network"
-                >
-            </div>
+            <div class="information-content">
 
-            <div class="information-badge">
-                NUST Community Initiative
-            </div>
-
-            <h1>
-                Share More.<br>
-                Support Others.
-            </h1>
-
-            <p>
-                NUST Sharing Network connects donors with beneficiaries
-                through a secure and transparent platform, helping useful
-                resources reach the people who need them most.
-            </p>
-
-            <div class="platform-features">
-
-                <div class="platform-feature">
-                    <div class="feature-icon">
-                        <i class="fa fa-shield"></i>
-                    </div>
-
-                    <div class="feature-content">
-                        <strong>Secure and Verified</strong>
-                        <span>
-                            Protected access for every registered user
-                        </span>
-                    </div>
-                </div>
-
-                <div class="platform-feature">
-                    <div class="feature-icon">
-                        <i class="fa fa-handshake"></i>
-                    </div>
-
-                    <div class="feature-content">
-                        <strong>Community Support</strong>
-                        <span>
-                            Connecting donors with deserving beneficiaries
-                        </span>
-                    </div>
-                </div>
-
-                <div class="platform-feature">
-                    <div class="feature-icon">
-                        <i class="fa fa-gift"></i>
-                    </div>
-
-                    <div class="feature-content">
-                        <strong>Meaningful Sharing</strong>
-                        <span>
-                            Give useful items a new purpose
-                        </span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Login Form -->
-    <section class="auth-form-panel">
-        <div class="login-container">
-
-            <!-- Mobile Logo -->
-            <div class="mobile-logo">
-                <img
-                    src="{{ asset('admins/assets/images/logos/logo.png') }}"
-                    alt="NUST Sharing Network"
-                >
-            </div>
-
-            <div class="login-heading">
-                <h2>Welcome Back</h2>
-
-                <p>
-                    Select your role and enter your account details
-                    to access the Sharing Network.
-                </p>
-            </div>
-
-            <!-- Validation Errors -->
-            @if ($errors->any())
-                <div class="login-alert" role="alert">
-                    <strong>
-                        Please correct the following:
-                    </strong>
-
-                    <ul class="mt-2">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-
-                <!-- Role -->
-                <div class="form-field">
-                    <label for="role" class="form-label">
-                        Sign in as
-                        <span class="required-mark">*</span>
-                    </label>
-
-                    <div class="input-wrapper">
-                        <i class="fa fa-users input-icon"></i>
-
-                        <select
-                            name="role"
-                            id="role"
-                            class="login-control
-                                   @error('role') is-invalid @enderror"
-                            required
-                        >
-                            <option value="">
-                                Select your role
-                            </option>
-
-                            <option
-                                value="beneficiary"
-                                {{ old('role') === 'beneficiary'
-                                    ? 'selected'
-                                    : '' }}
-                            >
-                                Beneficiary
-                            </option>
-
-                            <option
-                                value="donor"
-                                {{ old('role') === 'donor'
-                                    ? 'selected'
-                                    : '' }}
-                            >
-                                Donor
-                            </option>
-
-                            <option
-                                value="admin"
-                                {{ old('role') === 'admin'
-                                    ? 'selected'
-                                    : '' }}
-                            >
-                                Administrator
-                            </option>
-                        </select>
-                    </div>
-
-                    @error('role')
-                        <span class="field-error">
-                            {{ $message }}
-                        </span>
-                    @enderror
-                </div>
-
-                <!-- Qalam ID -->
-                <div
-                    class="form-field"
-                    id="qalam_id_field"
-                    style="{{ old('role') === 'beneficiary'
-                        ? ''
-                        : 'display: none;' }}"
-                >
-                    <label for="qalam_id" class="form-label">
-                        Qalam ID
-                        <span class="required-mark">*</span>
-                    </label>
-
-                    <div class="input-wrapper">
-                        <i class="fa fa-id-card input-icon"></i>
-
-                        <input
-                            type="text"
-                            inputmode="numeric"
-                            name="qalam_id"
-                            id="qalam_id"
-                            class="login-control
-                                   @error('qalam_id') is-invalid @enderror"
-                            placeholder="Enter your Qalam ID"
-                            value="{{ old('qalam_id') }}"
-                            autocomplete="off"
-                        >
-                    </div>
-
-                    @error('qalam_id')
-                        <span class="field-error">
-                            {{ $message }}
-                        </span>
-                    @enderror
-                </div>
-
-                <!-- Email -->
-                <div class="form-field">
-                    <label for="email" class="form-label">
-                        Email address
-                        <span class="required-mark">*</span>
-                    </label>
-
-                    <div class="input-wrapper">
-                        <i class="fa fa-envelope input-icon"></i>
-
-                        <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            class="login-control
-                                   @error('email') is-invalid @enderror"
-                            placeholder="Enter your email address"
-                            value="{{ old('email') }}"
-                            autocomplete="email"
-                            required
-                        >
-                    </div>
-
-                    @error('email')
-                        <span class="field-error">
-                            {{ $message }}
-                        </span>
-                    @enderror
-                </div>
-
-                <!-- Password -->
-                <div class="form-field">
-                    <label for="password" class="form-label">
-                        Password
-                        <span class="required-mark">*</span>
-                    </label>
-
-                    <div class="input-wrapper">
-                        <i class="fa fa-lock input-icon"></i>
-
-                        <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            class="login-control password-control
-                                   @error('password') is-invalid @enderror"
-                            placeholder="Enter your password"
-                            autocomplete="current-password"
-                            required
-                        >
-
-                        <button
-                            type="button"
-                            class="password-toggle"
-                            id="passwordToggle"
-                            aria-label="Show password"
-                        >
-                            <i
-                                class="fa fa-eye"
-                                id="passwordIcon"
-                            ></i>
-                        </button>
-                    </div>
-
-                    @error('password')
-                        <span class="field-error">
-                            {{ $message }}
-                        </span>
-                    @enderror
-                </div>
-
-                <!-- Image CAPTCHA -->
-              <!-- Image CAPTCHA -->
-@if(session('captcha_question') && session('captcha_images'))
-    <div class="captcha-box">
-
-        <div class="captcha-heading">
-            <i class="fa fa-shield-alt"></i>
-
-            <label>
-                {{ session('captcha_question') }}
-            </label>
-        </div>
-
-        <div class="captcha-grid">
-            @foreach(session('captcha_images') as $index => $img)
-                <label class="captcha-item">
-
-                    <input
-                        type="checkbox"
-                        name="captcha_selected[]"
-                        value="{{ $index }}"
-                        {{ in_array(
-                            $index,
-                            old('captcha_selected', [])
-                        ) ? 'checked' : '' }}
-                    >
-
+                {{-- Logo --}}
+                <div class="brand-logo-wrapper">
                     <img
-                        src="{{ asset('captcha/' . $img['img']) }}"
-                        alt="Verification image {{ $index + 1 }}"
-                        loading="lazy"
+                        src="{{ asset('admins/assets/images/logos/logo.png') }}"
+                        alt="NUST Sharing Network"
                     >
-
-                    <span class="captcha-checkmark"></span>
-
-                </label>
-            @endforeach
-        </div>
-
-        @error('captcha_selected')
-            <span class="field-error">
-                {{ $message }}
-            </span>
-        @enderror
-
-        @error('captcha_selected.*')
-            <span class="field-error">
-                {{ $message }}
-            </span>
-        @enderror
-
-    </div>
-@endif
-
-                <!-- Remember Me -->
-                <div class="form-options">
-                    <label class="remember-wrapper">
-                        <input
-                            type="checkbox"
-                            name="remember"
-                            value="1"
-                            {{ old('remember') ? 'checked' : '' }}
-                        >
-
-                        <span>Keep me signed in</span>
-                    </label>
                 </div>
 
-                <!-- Submit -->
-                <button type="submit" class="btn-login">
-                    <span>Sign In Securely</span>
-                    <i class="fa fa-arrow-right"></i>
-                </button>
 
-                <p class="login-support">
-                    <i class="fa fa-lock"></i>
-                    Your account information is protected and securely
-                    processed.
+                <div class="information-badge">
+                    NUST Community Initiative
+                </div>
+
+
+                <h1>
+                    Share More.<br>
+                    Support Others.
+                </h1>
+
+
+                <p class="information-description">
+                    NUST Sharing Network connects donors with beneficiaries
+                    through a secure and transparent platform, helping useful
+                    resources reach the people who need them most.
                 </p>
 
-            </form>
-        </div>
-    </section>
 
-</main>
+                <div class="platform-features">
 
-@include('layouts.admin.script')
+                    <div class="platform-feature">
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const roleSelect = document.getElementById('role');
-        const qalamField = document.getElementById(
-            'qalam_id_field'
-        );
-        const qalamInput = document.getElementById('qalam_id');
+                        <div class="feature-icon">
+                            <i class="fa fa-shield"></i>
+                        </div>
 
-        const passwordInput = document.getElementById(
-            'password'
-        );
-        const passwordToggle = document.getElementById(
-            'passwordToggle'
-        );
-        const passwordIcon = document.getElementById(
-            'passwordIcon'
-        );
+                        <div class="feature-content">
+                            <strong>Secure and Verified</strong>
 
-        /*
-         * Display Qalam ID only for beneficiaries.
-         */
-        function updateQalamField() {
-            const isBeneficiary =
-                roleSelect.value === 'beneficiary';
+                            <span>
+                                Protected access for every registered user
+                            </span>
+                        </div>
 
-            qalamField.style.display = isBeneficiary
-                ? 'block'
-                : 'none';
+                    </div>
 
-            qalamInput.required = isBeneficiary;
 
-            if (!isBeneficiary) {
-                qalamInput.value = '';
+                    <div class="platform-feature">
+
+                        <div class="feature-icon">
+                            <i class="fa fa-handshake"></i>
+                        </div>
+
+                        <div class="feature-content">
+                            <strong>Community Support</strong>
+
+                            <span>
+                                Connecting donors with deserving beneficiaries
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="platform-feature">
+
+                        <div class="feature-icon">
+                            <i class="fa fa-gift"></i>
+                        </div>
+
+                        <div class="feature-content">
+                            <strong>Meaningful Sharing</strong>
+
+                            <span>
+                                Give useful items a new purpose
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        {{-- ================================================= --}}
+        {{-- LOGIN PANEL --}}
+        {{-- ================================================= --}}
+        <section class="auth-form-panel">
+
+            <div class="login-container">
+
+                {{-- Mobile Logo --}}
+                <div class="mobile-logo">
+                    <img
+                        src="{{ asset('admins/assets/images/logos/logo.png') }}"
+                        alt="NUST Sharing Network"
+                    >
+                </div>
+
+
+                {{-- Heading --}}
+                <div class="login-heading">
+
+                    <h2>Welcome Back</h2>
+
+                    <p>
+                        Select your role and enter your account details
+                        to access the Sharing Network.
+                    </p>
+
+                </div>
+
+
+                {{-- Validation Errors --}}
+                @if ($errors->any())
+
+                    <div class="login-alert" role="alert">
+
+                        <i class="fa fa-exclamation-circle login-alert-icon"></i>
+
+                        <div>
+                            <strong>
+                                Please correct the following:
+                            </strong>
+
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                    </div>
+
+                @endif
+
+
+                {{-- Login Form --}}
+                <form
+                    method="POST"
+                    action="{{ route('login') }}"
+                    id="loginForm"
+                >
+                    @csrf
+
+
+                    {{-- Role --}}
+                    <div class="form-field">
+
+                        <label
+                            for="role"
+                            class="login-label"
+                        >
+                            Sign in as
+                            <span class="required-mark">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa fa-users input-icon"></i>
+
+                            <select
+                                name="role"
+                                id="role"
+                                class="login-control @error('role') is-invalid @enderror"
+                                required
+                            >
+                                <option value="">
+                                    Select your role
+                                </option>
+
+                                <option
+                                    value="beneficiary"
+                                    @selected(old('role') === 'beneficiary')
+                                >
+                                    Beneficiary
+                                </option>
+
+                                <option
+                                    value="donor"
+                                    @selected(old('role') === 'donor')
+                                >
+                                    Donor
+                                </option>
+
+                                <option
+                                    value="admin"
+                                    @selected(old('role') === 'admin')
+                                >
+                                    Administrator
+                                </option>
+                            </select>
+
+                        </div>
+
+                        @error('role')
+                            <span class="field-error">
+                                {{ $message }}
+                            </span>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Qalam ID --}}
+                    <div
+                        class="form-field"
+                        id="qalamIdField"
+                        @if (old('role') !== 'beneficiary')
+                            hidden
+                        @endif
+                    >
+                        <label
+                            for="qalam_id"
+                            class="login-label"
+                        >
+                            Qalam ID
+                            <span class="required-mark">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa fa-id-card input-icon"></i>
+
+                            <input
+                                type="text"
+                                name="qalam_id"
+                                id="qalam_id"
+                                value="{{ old('qalam_id') }}"
+                                class="login-control @error('qalam_id') is-invalid @enderror"
+                                placeholder="Enter your Qalam ID"
+                                autocomplete="off"
+                                @if (old('role') === 'beneficiary')
+                                    required
+                                @endif
+                            >
+
+                        </div>
+
+                        @error('qalam_id')
+                            <span class="field-error">
+                                {{ $message }}
+                            </span>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Email --}}
+                    <div class="form-field">
+
+                        <label
+                            for="email"
+                            class="login-label"
+                        >
+                            Email Address
+                            <span class="required-mark">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa fa-envelope input-icon"></i>
+
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                value="{{ old('email') }}"
+                                class="login-control @error('email') is-invalid @enderror"
+                                placeholder="Enter your email address"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                        @error('email')
+                            <span class="field-error">
+                                {{ $message }}
+                            </span>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Password --}}
+                    <div class="form-field">
+
+                        <label
+                            for="password"
+                            class="login-label"
+                        >
+                            Password
+                            <span class="required-mark">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa fa-lock input-icon"></i>
+
+                            <input
+                                type="password"
+                                name="password"
+                                id="password"
+                                class="login-control password-control @error('password') is-invalid @enderror"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="passwordToggle"
+                                aria-label="Show password"
+                            >
+                                <i
+                                    class="fa fa-eye"
+                                    id="passwordIcon"
+                                ></i>
+                            </button>
+
+                        </div>
+
+                        @error('password')
+                            <span class="field-error">
+                                {{ $message }}
+                            </span>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Remember Me --}}
+                    <div class="form-options">
+
+                        <label class="remember-wrapper">
+
+                            <input
+                                type="checkbox"
+                                name="remember"
+                                value="1"
+                                @checked(old('remember'))
+                            >
+
+                            <span>
+                                Keep me signed in
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    {{-- Submit Button --}}
+                    <button
+                        type="submit"
+                        class="btn-login"
+                        id="loginButton"
+                    >
+                        <span id="loginButtonText">
+                            Sign In Securely
+                        </span>
+
+                        <i
+                            class="fa fa-arrow-right"
+                            id="loginButtonIcon"
+                        ></i>
+                    </button>
+
+
+                    <p class="login-support">
+                        <i class="fa fa-lock"></i>
+
+                        Your account information is protected and securely
+                        processed.
+                    </p>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    @include('layouts.admin.script')
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roleSelect =
+                document.getElementById('role');
+
+            const qalamIdField =
+                document.getElementById('qalamIdField');
+
+            const qalamIdInput =
+                document.getElementById('qalam_id');
+
+            const passwordInput =
+                document.getElementById('password');
+
+            const passwordToggle =
+                document.getElementById('passwordToggle');
+
+            const passwordIcon =
+                document.getElementById('passwordIcon');
+
+            const loginForm =
+                document.getElementById('loginForm');
+
+            const loginButton =
+                document.getElementById('loginButton');
+
+            const loginButtonText =
+                document.getElementById('loginButtonText');
+
+            const loginButtonIcon =
+                document.getElementById('loginButtonIcon');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Show Qalam ID Only for Beneficiary
+            |--------------------------------------------------------------------------
+            */
+
+            function updateQalamField() {
+                if (
+                    !roleSelect ||
+                    !qalamIdField ||
+                    !qalamIdInput
+                ) {
+                    return;
+                }
+
+                const isBeneficiary =
+                    roleSelect.value === 'beneficiary';
+
+                qalamIdField.hidden = !isBeneficiary;
+                qalamIdInput.required = isBeneficiary;
+
+                if (!isBeneficiary) {
+                    qalamIdInput.value = '';
+                }
             }
-        }
 
-        roleSelect.addEventListener(
-            'change',
-            updateQalamField
-        );
 
-        /*
-         * Show or hide password.
-         */
-        passwordToggle.addEventListener(
-            'click',
-            function () {
-                const isPassword =
-                    passwordInput.type === 'password';
-
-                passwordInput.type = isPassword
-                    ? 'text'
-                    : 'password';
-
-                passwordIcon.classList.toggle(
-                    'fa-eye',
-                    !isPassword
+            if (roleSelect) {
+                roleSelect.addEventListener(
+                    'change',
+                    updateQalamField
                 );
 
-                passwordIcon.classList.toggle(
-                    'fa-eye-slash',
-                    isPassword
-                );
+                updateQalamField();
+            }
 
-                passwordToggle.setAttribute(
-                    'aria-label',
-                    isPassword
-                        ? 'Hide password'
-                        : 'Show password'
+
+            /*
+            |--------------------------------------------------------------------------
+            | Password Visibility
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                passwordInput &&
+                passwordToggle &&
+                passwordIcon
+            ) {
+                passwordToggle.addEventListener(
+                    'click',
+                    function () {
+                        const passwordIsHidden =
+                            passwordInput.type === 'password';
+
+                        passwordInput.type =
+                            passwordIsHidden
+                                ? 'text'
+                                : 'password';
+
+                        passwordIcon.classList.toggle(
+                            'fa-eye',
+                            !passwordIsHidden
+                        );
+
+                        passwordIcon.classList.toggle(
+                            'fa-eye-slash',
+                            passwordIsHidden
+                        );
+
+                        passwordToggle.setAttribute(
+                            'aria-label',
+                            passwordIsHidden
+                                ? 'Hide password'
+                                : 'Show password'
+                        );
+                    }
                 );
             }
-        );
 
-        updateQalamField();
-    });
-</script>
+
+            /*
+            |--------------------------------------------------------------------------
+            | Prevent Multiple Login Submissions
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                loginForm &&
+                loginButton &&
+                loginButtonText &&
+                loginButtonIcon
+            ) {
+                loginForm.addEventListener(
+                    'submit',
+                    function () {
+                        loginButton.disabled = true;
+
+                        loginButtonText.textContent =
+                            'Signing In...';
+
+                        loginButtonIcon.className =
+                            'fa fa-spinner fa-spin';
+                    }
+                );
+            }
+        });
+    </script>
 
 </body>
