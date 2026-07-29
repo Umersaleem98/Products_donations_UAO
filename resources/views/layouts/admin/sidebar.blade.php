@@ -1,53 +1,137 @@
- <!-- partial:partials/_sidebar.html -->
- <nav class="sidebar sidebar-offcanvas" style="background-color: #f8f9fa; border" id="sidebar">
-     <ul class="nav">
-         <li class="nav-item nav-profile">
-             <a href="{{ route('dashboard') }}" class="nav-link">
+<!-- ============ NEW SIDEBAR ============ -->
+<aside class="nsn-sidebar" id="sidebar">
 
-                 <div class="nav-profile-image">
-                     @if (Auth::user()->image)
-                         <img src="{{ asset('admin/asset/profilephoto/' . Auth::user()->image) }}" alt="profile" />
-                     @else
-                         <img src="{{ asset('admin/asset/dummy/dummy.jpg') }}" alt="profile" />
-                     @endif
+    <!-- Brand / User Profile -->
+    <div class="nsn-brand">
+        <a href="{{ route('dashboard') }}" class="d-flex align-items-center text-decoration-none w-100">
 
-                     <span class="login-status online"></span>
-                 </div>
+            <div class="nsn-brand-mark">
+                @if (Auth::user()->image)
+                    <img
+                        src="{{ asset('admin/asset/profilephoto/' . Auth::user()->image) }}"
+                        alt="{{ Auth::user()->name }}"
+                        class="w-100 h-100 rounded-circle object-fit-cover"
+                    >
+                @else
+                    <img
+                        src="{{ asset('admin/asset/dummy/dummy.jpg') }}"
+                        alt="{{ Auth::user()->name }}"
+                        class="w-100 h-100 rounded-circle object-fit-cover"
+                    >
+                @endif
+            </div>
 
-                 <div class="nav-profile-text d-flex flex-column">
-                     <span class="font-weight-bold mb-2">
-                         {{ Auth::user()->name }}
-                     </span>
+            <div class="nsn-brand-text nsn-label">
+                <div class="fw-semibold font-display" style="font-size: .95rem;">
+                    {{ Auth::user()->name }}
+                </div>
 
-                     <span class="text-secondary text-small">
-                         {{ Auth::user()->role }}
-                     </span>
-                 </div>
+                <small class="text-capitalize">
+                    {{ Auth::user()->role }} Portal
+                </small>
+            </div>
+        </a>
+    </div>
 
-                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+    <!-- Navigation -->
+    <nav class="nsn-nav">
 
-             </a>
-         </li>
-         <li class="nav-item">
-             <a class="nav-link" href="{{ route('dashboard') }}">
-                 <span class="menu-title">Dashboard</span>
-                 <i class="mdi mdi-home menu-icon text-primary"></i>
-             </a>
-         </li>
+        <!-- Overview -->
+        <div class="nsn-nav-section">
+            <div class="nsn-sec-title">Overview</div>
 
+            <a
+                href="{{ route('dashboard') }}"
+                class="nsn-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+            >
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span class="nsn-label">Dashboard</span>
+            </a>
+        </div>
 
-         @if (Auth::user()->role === 'admin')
-            @include('layouts.admin.components.adminSidebar')
-         @endif
+        <!-- Admin Sidebar -->
+        @if (Auth::user()->role === 'admin')
+            <div class="nsn-nav-section">
+                <div class="nsn-sec-title">Administration</div>
 
-         @if (Auth::user()->role === 'donor')
-             @include('layouts.admin.components.donorSidebar')
-         @endif
+                @include('layouts.admin.components.adminSidebar')
+            </div>
+        @endif
 
-         @if (Auth::user()->role === 'beneficiary')
-             @include('layouts.admin.components.beneficiarySidebar')
-         @endif
+        <!-- Donor Sidebar -->
+        @if (Auth::user()->role === 'donor')
+            <div class="nsn-nav-section">
+                <div class="nsn-sec-title">Donor Management</div>
 
+                @include('layouts.admin.components.donorSidebar')
+            </div>
+        @endif
 
-     </ul>
- </nav>
+        <!-- Beneficiary Sidebar -->
+        @if (Auth::user()->role === 'beneficiary')
+            <div class="nsn-nav-section">
+                <div class="nsn-sec-title">Beneficiary Portal</div>
+
+                @include('layouts.admin.components.beneficiarySidebar')
+            </div>
+        @endif
+
+        <!-- Account -->
+        <div class="nsn-nav-section">
+            <div class="nsn-sec-title">Account</div>
+
+            {{-- Replace profile route name if your project uses another name --}}
+            @if (Route::has('profile.edit'))
+                <a
+                    href="{{ route('profile.edit') }}"
+                    class="nsn-nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}"
+                >
+                    <i class="bi bi-person-circle"></i>
+                    <span class="nsn-label">My Profile</span>
+                </a>
+            @endif
+
+            {{-- Replace settings route name if needed --}}
+            @if (Route::has('settings'))
+                <a
+                    href="{{ route('settings') }}"
+                    class="nsn-nav-link {{ request()->routeIs('settings*') ? 'active' : '' }}"
+                >
+                    <i class="bi bi-gear"></i>
+                    <span class="nsn-label">Settings</span>
+                </a>
+            @endif
+
+            <a
+                href="{{ route('logout') }}"
+                class="nsn-nav-link"
+                onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();"
+            >
+                <i class="bi bi-box-arrow-right"></i>
+                <span class="nsn-label">Logout</span>
+            </a>
+
+            <form
+                id="sidebar-logout-form"
+                action="{{ route('logout') }}"
+                method="POST"
+                class="d-none"
+            >
+                @csrf
+            </form>
+        </div>
+
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="nsn-sidebar-foot">
+        <div class="nsn-mini-status">
+            <span class="nsn-dot-live"></span>
+
+            <span class="nsn-label">
+                Secure connection
+            </span>
+        </div>
+    </div>
+
+</aside>

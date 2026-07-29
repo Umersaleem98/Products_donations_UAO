@@ -10,34 +10,39 @@ use Illuminate\Http\Request;
 
 class BeneficiaryProductController extends Controller
 {
-    public function index(Request $request)
-    {
-        $beneficiaryId = auth()->id();
+   public function index(Request $request)
+{
+    $query = Product::with('category')
+        ->where('status', 'active');
 
-        $requestedProductIds = ProductRequest::where('beneficiary_id', $beneficiaryId)
-            ->pluck('product_id');
-
-        $products = Product::with('category')
-            ->whereNotIn('id', $requestedProductIds);
-
-        if ($request->filled('category_id')) {
-            $products->where('category_id', $request->category_id);
-        }
-
-        if ($request->filled('search')) {
-            $products->where('name', 'like', '%'.$request->search.'%');
-        }
-
-        $products = $products->latest()->get();
-
-        // FIXED
-        $categories = Category::all();
-
-        return view(
-            'pages.beneficiary.products.index',
-            compact('products', 'categories')
-        );
+    // Category filter
+    if ($request->filled('category_id')) {
+        $query->where('category_id', $request->category_id);
     }
+
+    // Product search
+    if ($request->filled('search')) {
+        $search = trim($request->search);
+
+        $query->where(function ($productQuery) use ($search) {
+            $productQuery
+                ->where('name', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
+        });
+    }
+
+    $products = $query
+        ->latest()
+        ->paginate(12)
+        ->withQueryString();
+
+    $categories = Category::orderBy('name')->get();
+
+    return view(
+        'pages.beneficiary.products.index',
+        compact('products', 'categories')
+    );
+}
 
     public function show($id)
     {

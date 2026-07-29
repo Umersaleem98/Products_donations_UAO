@@ -1,313 +1,827 @@
 @include('layouts.admin.head')
 
-<title>Update Profile</title>
-
-<style>
-
-    .card{
-        border-radius:20px;
-        border:none;
-        box-shadow:0 0 25px rgba(0,0,0,0.07);
-    }
-
-    .card-body{
-        padding:35px;
-    }
-
-    .form-control{
-        border-radius:10px;
-        border:1px solid #dcdcdc;
-    }
-
-    .form-control-sm{
-        height:48px;
-        font-size:14px;
-    }
-
-    textarea.form-control{
-        height:auto;
-    }
-
-    label{
-        font-weight:600;
-        margin-bottom:8px;
-        color:#333;
-    }
-
-    .profile-image{
-        width:120px;
-        height:120px;
-        object-fit:cover;
-        border-radius:12px;
-        border:2px solid #eee;
-    }
-
-    .section-title{
-        font-size:18px;
-        font-weight:700;
-        margin-bottom:25px;
-        color:#222;
-        border-left:4px solid #4B49AC;
-        padding-left:12px;
-    }
-
-    .btn-update{
-        padding:10px 35px;
-        border-radius:10px;
-        font-weight:600;
-        font-size:15px;
-    }
-
-</style>
+<title>Update Donor Profile</title>
 
 <body>
 
-<div class="container-scroller">
+    {{-- New Sidebar --}}
+    @include('layouts.admin.sidebar')
 
-    @include('layouts.admin.header')
 
-    <div class="container-fluid page-body-wrapper">
+    {{-- Main Content --}}
+    <div class="nsn-main">
 
-        @include('layouts.admin.sidebar')
+        {{-- New Topbar --}}
+        @include('layouts.admin.header')
 
-        <div class="main-panel">
 
-            <div class="content-wrapper">
+        <main class="nsn-content">
 
-                <!-- PAGE HEADER -->
-                <div class="page-header">
+            {{-- Page Header --}}
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
 
-                    <h3 class="page-title">
-
-                        <span class="page-title-icon bg-gradient-primary text-white me-2">
-                            <i class="mdi mdi-account"></i>
-                        </span>
-
+                <div>
+                    <h3 class="fw-bold text-dark mb-1">
                         Donor Profile
-
                     </h3>
+
+                    <p class="text-secondary small mb-0">
+                        Manage your personal, organization and account information.
+                    </p>
+                </div>
+
+                <a
+                    href="{{ route('dashboard') }}"
+                    class="btn btn-light border d-flex align-items-center gap-2"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Back to Dashboard</span>
+                </a>
+
+            </div>
+
+
+            {{-- Breadcrumb --}}
+            <nav aria-label="breadcrumb" class="mb-4">
+
+                <ol class="breadcrumb small mb-0">
+
+                    <li class="breadcrumb-item">
+                        <a
+                            href="{{ route('dashboard') }}"
+                            class="text-decoration-none"
+                        >
+                            <i class="bi bi-house-door me-1"></i>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li
+                        class="breadcrumb-item active"
+                        aria-current="page"
+                    >
+                        Donor Profile
+                    </li>
+
+                </ol>
+
+            </nav>
+
+
+            {{-- Alert Messages --}}
+            @include('layouts.admin.alert')
+
+
+            {{-- Profile Completion --}}
+            @isset($profileCompletion)
+
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+
+                            <div>
+                                <h5 class="fw-semibold text-dark mb-1">
+                                    Profile Completion
+                                </h5>
+
+                                <p class="text-secondary small mb-0">
+                                    Complete at least 85% of your profile to access all donor features.
+                                </p>
+                            </div>
+
+                            <span class="fw-bold fs-5 {{ $profileCompletion >= 85 ? 'text-success' : 'text-warning' }}">
+                                {{ $profileCompletion }}%
+                            </span>
+
+                        </div>
+
+                        <div
+                            class="progress"
+                            role="progressbar"
+                            aria-label="Profile completion"
+                            aria-valuenow="{{ $profileCompletion }}"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="height: 9px;"
+                        >
+                            <div
+                                class="progress-bar {{ $profileCompletion >= 85 ? 'bg-success' : 'bg-warning' }}"
+                                style="width: {{ $profileCompletion }}%;"
+                            ></div>
+                        </div>
+
+                        @if ($profileCompletion < 85)
+                            <small class="d-block text-danger mt-2">
+                                <i class="bi bi-exclamation-circle me-1"></i>
+                                Add the missing profile information to unlock products and requests.
+                            </small>
+                        @else
+                            <small class="d-block text-success mt-2">
+                                <i class="bi bi-check-circle me-1"></i>
+                                Your donor account features are fully unlocked.
+                            </small>
+                        @endif
+
+                    </div>
 
                 </div>
 
-                <!-- FORM SECTION -->
-                <div class="row justify-content-center">
-
-                    <div class="col-lg-12 grid-margin stretch-card">
-
-                        <div class="card">
-
-                            <div class="card-body">
+            @endisset
 
 
+            <form
+                method="POST"
+                action="{{ route('donor.profile.update') }}"
+                enctype="multipart/form-data"
+            >
+                @csrf
 
-                                @include('layouts.admin.alert')
 
-                                <form method="POST"
-                                      action="{{ route('donor.profile.update') }}"
-                                      enctype="multipart/form-data">
+                <div class="row g-4">
 
-                                    @csrf
+                    {{-- Main Profile Information --}}
+                    <div class="col-12 col-xl-8">
 
-                                    <!-- USER INFORMATION -->
+                        {{-- Personal Information --}}
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
 
-                                    <div class="section-title">
-                                        User Information
+                            <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <span
+                                        class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary flex-shrink-0"
+                                        style="width: 46px; height: 46px;"
+                                    >
+                                        <i class="bi bi-person fs-5"></i>
+                                    </span>
+
+                                    <div>
+                                        <h5 class="fw-semibold text-dark mb-1">
+                                            Personal Information
+                                        </h5>
+
+                                        <p class="text-secondary small mb-0">
+                                            Review your name, email and phone number.
+                                        </p>
                                     </div>
 
-                                    <div class="row">
+                                </div>
 
-                                        <div class="col-md-4 mb-4">
+                            </div>
 
-                                            <label>Name</label>
 
-                                            <input type="text"
-                                                   name="name"
-                                                   class="form-control form-control-sm"
-                                                   placeholder="Enter name"
-                                                   value="{{ old('name', $user->name) }}" readonly>
+                            <div class="card-body p-4">
+
+                                <div class="row g-4">
+
+                                    {{-- Name --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="donorName"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Full Name
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+
+                                            <input
+                                                type="text"
+                                                id="donorName"
+                                                name="name"
+                                                value="{{ old('name', $user->name) }}"
+                                                class="form-control bg-light @error('name') is-invalid @enderror"
+                                                readonly
+                                            >
+
+                                            @error('name')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
 
                                         </div>
 
-                                        <div class="col-md-4 mb-4">
-
-                                            <label>Email</label>
-
-                                            <input type="email"
-                                                   name="email"
-                                                   class="form-control form-control-sm"
-                                                   placeholder="Enter email"
-                                                   value="{{ old('email', $user->email) }}" readonly>
-
+                                        <div class="form-text">
+                                            Contact an administrator to change your name.
                                         </div>
-                                        <div class="col-md-4 mb-4">
-
-                                            <label>Phone</label>
-
-                                            <input type="number"
-                                                   name="phone"
-                                                   class="form-control form-control-sm"
-                                                   placeholder="Enter phone"
-                                                   value="{{ old('phone', $user->phone) }}">
 
                                     </div>
 
-                                    <!-- PROFILE IMAGE -->
 
-                                    <div class="section-title mt-4">
-                                        Profile Image
-                                    </div>
+                                    {{-- Email --}}
+                                    <div class="col-12 col-md-6">
 
-                                    <div class="row align-items-center">
+                                        <label
+                                            for="donorEmail"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Email Address
+                                        </label>
 
-                                        <div class="col-md-4 mb-4">
+                                        <div class="input-group">
 
-                                            <label>Upload Image</label>
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-envelope"></i>
+                                            </span>
 
-                                            <input type="file"
-                                                   name="image"
-                                                   class="form-control form-control-sm">
+                                            <input
+                                                type="email"
+                                                id="donorEmail"
+                                                name="email"
+                                                value="{{ old('email', $user->email) }}"
+                                                class="form-control bg-light @error('email') is-invalid @enderror"
+                                                readonly
+                                            >
+
+                                            @error('email')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
 
                                         </div>
 
-                                        <div class="col-md-4 mb-4">
+                                        <div class="form-text">
+                                            Your email address is used to access your account.
+                                        </div>
 
-                                            <label>Preview</label>
+                                    </div>
 
-                                            <div class="mt-2">
 
-                                                @if($user->image)
+                                    {{-- Phone --}}
+                                    <div class="col-12">
 
-                                                    <img src="{{ asset('admin/asset/profilephoto/' . $user->image) }}"
-                                                         class="profile-image">
+                                        <label
+                                            for="donorPhone"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Phone Number
+                                        </label>
 
-                                                @else
+                                        <div class="input-group">
 
-                                                    <span class="text-muted">
-                                                        No Image Uploaded
-                                                    </span>
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-telephone"></i>
+                                            </span>
 
-                                                @endif
+                                            <input
+                                                type="tel"
+                                                id="donorPhone"
+                                                name="phone"
+                                                value="{{ old('phone', $user->phone) }}"
+                                                class="form-control @error('phone') is-invalid @enderror"
+                                                placeholder="For example: 03001234567"
+                                                autocomplete="tel"
+                                            >
 
+                                            @error('phone')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- Organization Information --}}
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+
+                            <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <span
+                                        class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success-subtle text-success flex-shrink-0"
+                                        style="width: 46px; height: 46px;"
+                                    >
+                                        <i class="bi bi-building fs-5"></i>
+                                    </span>
+
+                                    <div>
+                                        <h5 class="fw-semibold text-dark mb-1">
+                                            Organization Information
+                                        </h5>
+
+                                        <p class="text-secondary small mb-0">
+                                            Provide details about your organization and designation.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-body p-4">
+
+                                <div class="row g-4">
+
+                                    {{-- Organization --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="organization"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Organization
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-building"></i>
+                                            </span>
+
+                                            <input
+                                                type="text"
+                                                id="organization"
+                                                name="organization"
+                                                value="{{ old('organization', optional($user->donorProfile)->organization) }}"
+                                                class="form-control @error('organization') is-invalid @enderror"
+                                                placeholder="Enter organization name"
+                                            >
+
+                                            @error('organization')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{-- Designation --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="designation"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Designation
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-briefcase"></i>
+                                            </span>
+
+                                            <input
+                                                type="text"
+                                                id="designation"
+                                                name="designation"
+                                                value="{{ old('designation', optional($user->donorProfile)->designation) }}"
+                                                class="form-control @error('designation') is-invalid @enderror"
+                                                placeholder="Enter your designation"
+                                            >
+
+                                            @error('designation')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{-- Country --}}
+                                    <div class="col-12">
+
+                                        <label
+                                            for="country"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Country
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-globe-asia-australia"></i>
+                                            </span>
+
+                                            <input
+                                                type="text"
+                                                id="country"
+                                                name="country"
+                                                value="{{ old('country', optional($user->donorProfile)->country) }}"
+                                                class="form-control @error('country') is-invalid @enderror"
+                                                placeholder="Enter your country"
+                                            >
+
+                                            @error('country')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{-- Address --}}
+                                    <div class="col-12">
+
+                                        <label
+                                            for="address"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Address
+                                        </label>
+
+                                        <textarea
+                                            name="address"
+                                            id="address"
+                                            rows="5"
+                                            class="form-control @error('address') is-invalid @enderror"
+                                            placeholder="Enter your complete address"
+                                        >{{ old('address', optional($user->donorProfile)->address) }}</textarea>
+
+                                        @error('address')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
                                             </div>
+                                        @enderror
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- Change Password --}}
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                            <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <span
+                                        class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning-subtle text-warning-emphasis flex-shrink-0"
+                                        style="width: 46px; height: 46px;"
+                                    >
+                                        <i class="bi bi-shield-lock fs-5"></i>
+                                    </span>
+
+                                    <div>
+                                        <h5 class="fw-semibold text-dark mb-1">
+                                            Change Password
+                                        </h5>
+
+                                        <p class="text-secondary small mb-0">
+                                            Leave these fields empty if you do not want to change your password.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-body p-4">
+
+                                <div class="row g-4">
+
+                                    {{-- Current Password --}}
+                                    <div class="col-12">
+
+                                        <label
+                                            for="currentPassword"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Current Password
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-lock"></i>
+                                            </span>
+
+                                            <input
+                                                type="password"
+                                                id="currentPassword"
+                                                name="current_password"
+                                                class="form-control @error('current_password') is-invalid @enderror"
+                                                placeholder="Enter your current password"
+                                                autocomplete="current-password"
+                                            >
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary password-toggle"
+                                                data-target="currentPassword"
+                                                aria-label="Show or hide current password"
+                                            >
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+
+                                            @error('current_password')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
 
                                         </div>
 
                                     </div>
 
-                                    <!-- DONOR PROFILE -->
 
-                                    <div class="section-title mt-4">
-                                        Donor Profile
-                                    </div>
+                                    {{-- New Password --}}
+                                    <div class="col-12 col-md-6">
 
-                                    <div class="row">
+                                        <label
+                                            for="newPassword"
+                                            class="form-label fw-semibold"
+                                        >
+                                            New Password
+                                        </label>
 
-                                        <div class="col-md-4 mb-4">
+                                        <div class="input-group">
 
-                                            <label>Organization</label>
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-key"></i>
+                                            </span>
 
-                                            <input type="text"
-                                                   name="organization"
-                                                   class="form-control form-control-sm"
-                                                   placeholder="Enter organization"
-                                                   value="{{ old('organization', optional($user->donorProfile)->organization) }}">
+                                            <input
+                                                type="password"
+                                                id="newPassword"
+                                                name="password"
+                                                class="form-control @error('password') is-invalid @enderror"
+                                                placeholder="Enter a new password"
+                                                autocomplete="new-password"
+                                            >
 
-                                        </div>
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary password-toggle"
+                                                data-target="newPassword"
+                                                aria-label="Show or hide new password"
+                                            >
+                                                <i class="bi bi-eye"></i>
+                                            </button>
 
-                                        <div class="col-md-4 mb-4">
-
-                                            <label>Designation</label>
-
-                                            <input type="text"
-                                                   name="designation"
-                                                   class="form-control form-control-sm"
-                                                   placeholder="Enter designation"
-                                                   value="{{ old('designation', optional($user->donorProfile)->designation) }}">
-
-                                        </div>
-
-                                        <div class="col-md-4 mb-4">
-
-                                            <label>Country</label>
-
-                                            <input type="text"
-                                                   name="country"
-                                                   class="form-control form-control-sm"
-                                                   placeholder="Enter country"
-                                                   value="{{ old('country', optional($user->donorProfile)->country) }}">
-
-                                        </div>
-
-                                        <div class="col-md-12 mb-4">
-
-                                            <label>Address</label>
-
-                                            <textarea name="address"
-                                                      class="form-control"
-                                                      rows="4"
-                                                      placeholder="Enter address">{{ old('address', optional($user->donorProfile)->address) }}</textarea>
+                                            @error('password')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
 
                                         </div>
 
                                     </div>
 
-                                    <!-- PASSWORD SECTION -->
 
-                                    <div class="section-title mt-4">
-                                        Change Password
-                                    </div>
+                                    {{-- Confirm Password --}}
+                                    <div class="col-12 col-md-6">
 
-                                    <div class="row">
+                                        <label
+                                            for="passwordConfirmation"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Confirm New Password
+                                        </label>
 
-                                        <div class="col-md-4 mb-4">
+                                        <div class="input-group">
 
-                                            <label>Current Password</label>
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-key-fill"></i>
+                                            </span>
 
-                                            <input type="password"
-                                                   name="current_password"
-                                                   class="form-control form-control-sm"
-                                                   placeholder="Current password">
+                                            <input
+                                                type="password"
+                                                id="passwordConfirmation"
+                                                name="password_confirmation"
+                                                class="form-control"
+                                                placeholder="Confirm your new password"
+                                                autocomplete="new-password"
+                                            >
 
-                                        </div>
-
-                                        <div class="col-md-4 mb-4">
-
-                                            <label>New Password</label>
-
-                                            <input type="password"
-                                                   name="password"
-                                                   class="form-control form-control-sm"
-                                                   placeholder="New password">
-
-                                        </div>
-
-                                        <div class="col-md-4 mb-4">
-
-                                            <label>Confirm Password</label>
-
-                                            <input type="password"
-                                                   name="password_confirmation"
-                                                   class="form-control form-control-sm"
-                                                   placeholder="Confirm password">
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary password-toggle"
+                                                data-target="passwordConfirmation"
+                                                aria-label="Show or hide password confirmation"
+                                            >
+                                                <i class="bi bi-eye"></i>
+                                            </button>
 
                                         </div>
 
                                     </div>
 
-                                    <!-- BUTTON -->
+                                </div>
 
-                                    <div class="mt-4">
+                            </div>
 
-                                        <button type="submit"
-                                                class="btn btn-primary btn-update">
+                        </div>
 
+                    </div>
+
+
+                    {{-- Profile Image --}}
+                    <div class="col-12 col-xl-4">
+
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                            <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                <h5 class="fw-semibold text-dark mb-1">
+                                    Profile Image
+                                </h5>
+
+                                <p class="text-secondary small mb-0">
+                                    View or replace your account photo.
+                                </p>
+
+                            </div>
+
+
+                            <div class="card-body p-4">
+
+                                {{-- Image Preview --}}
+                                <div class="text-center mb-4">
+
+                                    @if ($user->image)
+
+                                        <img
+                                            id="profilePreview"
+                                            src="{{ asset('admin/asset/profilephoto/' . $user->image) }}"
+                                            alt="{{ $user->name }}"
+                                            width="130"
+                                            height="130"
+                                            class="rounded-circle border border-3 object-fit-cover"
+                                        >
+
+                                        <span
+                                            id="defaultAvatar"
+                                            class="d-none align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-bold fs-2"
+                                            style="width: 130px; height: 130px;"
+                                        >
+                                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                                        </span>
+
+                                    @else
+
+                                        <img
+                                            id="profilePreview"
+                                            src=""
+                                            alt="Profile preview"
+                                            width="130"
+                                            height="130"
+                                            class="rounded-circle border border-3 object-fit-cover d-none"
+                                        >
+
+                                        <span
+                                            id="defaultAvatar"
+                                            class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-bold fs-2"
+                                            style="width: 130px; height: 130px;"
+                                        >
+                                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                                        </span>
+
+                                    @endif
+
+                                    <h5 class="fw-semibold text-dark mt-3 mb-1">
+                                        {{ $user->name }}
+                                    </h5>
+
+                                    <span class="badge rounded-pill bg-primary-subtle text-primary px-3 py-2">
+                                        Donor
+                                    </span>
+
+                                </div>
+
+
+                                {{-- Image Input --}}
+                                <label
+                                    for="profileImage"
+                                    class="form-label fw-semibold"
+                                >
+                                    Upload New Image
+                                </label>
+
+                                <input
+                                    type="file"
+                                    id="profileImage"
+                                    name="image"
+                                    class="form-control @error('image') is-invalid @enderror"
+                                    accept="image/jpeg,image/png,image/jpg,image/webp"
+                                >
+
+                                @error('image')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                                <div class="form-text">
+                                    Accepted formats: JPG, PNG and WebP.
+                                </div>
+
+
+                                {{-- Account Summary --}}
+                                <div class="border rounded-3 overflow-hidden mt-4">
+
+                                    <div class="d-flex justify-content-between gap-3 p-3 border-bottom">
+                                        <span class="text-secondary small">
+                                            Account role
+                                        </span>
+
+                                        <span class="fw-semibold small text-capitalize">
+                                            {{ $user->role }}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between gap-3 p-3 border-bottom">
+                                        <span class="text-secondary small">
+                                            Member since
+                                        </span>
+
+                                        <span class="fw-semibold small">
+                                            {{ optional($user->created_at)->format('d M Y') }}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between gap-3 p-3">
+                                        <span class="text-secondary small">
+                                            Organization
+                                        </span>
+
+                                        <span class="fw-semibold small text-end">
+                                            {{ optional($user->donorProfile)->organization ?? 'Not provided' }}
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Form Actions --}}
+                    <div class="col-12">
+
+                        <div class="card border-0 shadow-sm rounded-4">
+
+                            <div class="card-body px-4 py-3">
+
+                                <div class="d-flex flex-column-reverse flex-sm-row align-items-sm-center justify-content-between gap-3">
+
+                                    <p class="text-secondary small mb-0">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Review your information before saving the changes.
+                                    </p>
+
+                                    <div class="d-flex flex-column-reverse flex-sm-row gap-2">
+
+                                        <a
+                                            href="{{ route('dashboard') }}"
+                                            class="btn btn-light border"
+                                        >
+                                            <i class="bi bi-x-circle me-1"></i>
+                                            Cancel
+                                        </a>
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-primary"
+                                        >
+                                            <i class="bi bi-check2-circle me-1"></i>
                                             Update Profile
-
                                         </button>
 
                                     </div>
 
-                                </form>
+                                </div>
 
                             </div>
 
@@ -317,13 +831,97 @@
 
                 </div>
 
-            </div>
+            </form>
 
-        </div>
+        </main>
 
     </div>
 
-</div>
 
-@include('layouts.admin.script')
+    @include('layouts.admin.script')
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const profileImage =
+                document.getElementById('profileImage');
+
+            const profilePreview =
+                document.getElementById('profilePreview');
+
+            const defaultAvatar =
+                document.getElementById('defaultAvatar');
+
+
+            if (
+                profileImage &&
+                profilePreview &&
+                defaultAvatar
+            ) {
+                profileImage.addEventListener('change', function () {
+                    const selectedFile = this.files[0];
+
+                    if (!selectedFile) {
+                        return;
+                    }
+
+                    if (!selectedFile.type.startsWith('image/')) {
+                        this.value = '';
+
+                        alert('Please select a valid image file.');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+
+                    reader.addEventListener('load', function (event) {
+                        profilePreview.src = event.target.result;
+                        profilePreview.classList.remove('d-none');
+
+                        defaultAvatar.classList.add('d-none');
+                        defaultAvatar.classList.remove('d-inline-flex');
+                    });
+
+                    reader.readAsDataURL(selectedFile);
+                });
+            }
+
+
+            document
+                .querySelectorAll('.password-toggle')
+                .forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        const targetId =
+                            this.getAttribute('data-target');
+
+                        const passwordField =
+                            document.getElementById(targetId);
+
+                        const icon =
+                            this.querySelector('i');
+
+                        if (!passwordField || !icon) {
+                            return;
+                        }
+
+                        const isHidden =
+                            passwordField.type === 'password';
+
+                        passwordField.type =
+                            isHidden ? 'text' : 'password';
+
+                        icon.classList.toggle(
+                            'bi-eye',
+                            !isHidden
+                        );
+
+                        icon.classList.toggle(
+                            'bi-eye-slash',
+                            isHidden
+                        );
+                    });
+                });
+        });
+    </script>
+
+</body>

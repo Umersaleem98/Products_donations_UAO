@@ -1,55 +1,53 @@
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.category.index') }}">
-        <span class="menu-title">All Categories</span>
-        <i class="text-primary fa-solid fa-layer-group menu-icon"></i>
-    </a>
-</li>
+<!-- All Categories -->
+<a
+    href="{{ route('admin.category.index') }}"
+    class="nsn-nav-link {{ request()->routeIs('admin.category.*') ? 'active' : '' }}"
+>
+    <i class="fa-solid fa-layer-group"></i>
+    <span class="nsn-label">All Categories</span>
+</a>
 
-{{-- <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.category.create') }}">
-        <span class="menu-title">Add Categories</span>
-        <i class="text-primary fa-solid fa-plus menu-icon"></i>
-    </a>
-</li> --}}
+<!-- All Products -->
+<a
+    href="{{ route('admin.products.index') }}"
+    class="nsn-nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}"
+>
+    <i class="fa-solid fa-box-open"></i>
+    <span class="nsn-label">All Products</span>
+</a>
 
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.products.index') }}">
-        <span class="menu-title">All Products</span>
-        <i class="text-primary fa-solid fa-box-open menu-icon"></i>
-    </a>
-</li>
+<!-- All Users -->
+<a
+    href="{{ route('admin.user.index') }}"
+    class="nsn-nav-link {{ request()->routeIs('admin.user.index', 'admin.user.edit') ? 'active' : '' }}"
+>
+    <i class="fa-solid fa-users"></i>
+    <span class="nsn-label">All Users</span>
+</a>
 
-{{-- <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.products.create') }}">
-        <span class="menu-title">Add Products</span>
-        <i class="text-primary fa-solid fa-square-plus menu-icon"></i>
-    </a>
-</li> --}}
+<!-- Add User -->
+<a
+    href="{{ route('admin.user.create') }}"
+    class="nsn-nav-link {{ request()->routeIs('admin.user.create') ? 'active' : '' }}"
+>
+    <i class="fa-solid fa-user-plus"></i>
+    <span class="nsn-label">Add User</span>
+</a>
 
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.user.index') }}">
-        <span class="menu-title">All Users</span>
-        <i class="text-primary fa-solid fa-users menu-icon"></i>
-    </a>
-</li>
+<!-- All Requests -->
+<a
+    href="{{ route('admin.requests') }}"
+    class="nsn-nav-link {{ request()->routeIs('admin.requests') ? 'active' : '' }}"
+>
+    <i class="fa-solid fa-hand-holding-heart"></i>
+    <span class="nsn-label">All Requests</span>
+</a>
 
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.user.create') }}">
-        <span class="menu-title">Add Users</span>
-        <i class="text-primary fa-solid fa-user-plus menu-icon"></i>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.requests') }}">
-        <span class="menu-title">All Requests</span>
-        <i class="text-primary fa-solid fa-hand-holding-heart menu-icon"></i>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('reports.traffic') }}">
-        <span class="menu-title">Traffic Reports</span>
-        <i class="text-primary fa-solid fa-chart-line menu-icon"></i>
-    </a>
-</li>
+<!-- Traffic Reports -->
+<a
+    href="{{ route('reports.traffic') }}"
+    class="nsn-nav-link {{ request()->routeIs('reports.traffic') ? 'active' : '' }}"
+>
+    <i class="fa-solid fa-chart-line"></i>
+    <span class="nsn-label">Traffic Reports</span>
+</a>

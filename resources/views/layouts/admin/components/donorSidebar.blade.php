@@ -1,74 +1,289 @@
+{{-- ===================================================== --}}
+{{-- DONOR SIDEBAR --}}
+{{-- ===================================================== --}}
+
+@php
+    $donorUser = Auth::user();
+    $donorProfile = $donorUser->donorProfile;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Calculate Donor Profile Completion
+    |--------------------------------------------------------------------------
+    */
+
+    $donorProfileFields = [
+        $donorUser->name,
+        $donorUser->email,
+        $donorUser->phone,
+        $donorUser->image,
+        $donorProfile?->organization,
+        $donorProfile?->designation,
+        $donorProfile?->country,
+        $donorProfile?->address,
+    ];
+
+    $totalProfileFields = count($donorProfileFields);
+
+    $completedProfileFields = collect($donorProfileFields)
+        ->filter(function ($field) {
+            return !is_null($field) && trim((string) $field) !== '';
+        })
+        ->count();
+
+    $profileCompletion = $totalProfileFields > 0
+        ? (int) round(
+            ($completedProfileFields / $totalProfileFields) * 100
+        )
+        : 0;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Lock Product and Request Features Below 85%
+    |--------------------------------------------------------------------------
+    */
+
+    $profileLocked = $profileCompletion < 85;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Active Route Conditions
+    |--------------------------------------------------------------------------
+    */
+
+    $productMenuActive = request()->routeIs(
+        'donor.product.index',
+        'donor.product.create',
+        'donor.product.edit',
+        'donor.product.show'
+    );
+
+    $requestMenuActive = request()->routeIs(
+        'donor.requests',
+        'donor.requests.*'
+    );
+
+    $profileMenuActive = request()->routeIs(
+        'donor.profile.index',
+        'donor.profile.*'
+    );
+@endphp
 
 
-<li class="nav-item">
+{{-- ===================================================== --}}
+{{-- PROFILE COMPLETION STATUS --}}
+{{-- ===================================================== --}}
 
-    <a class="nav-link" data-bs-toggle="collapse" href="#donor-product"
-       style="{{ (isset($profileCompletion) && $profileCompletion < 85) ? 'opacity:0.5; pointer-events:none;' : '' }}">
+<div class="px-3 py-3 mb-2">
 
-        <span class="menu-title">Product</span>
-        <i class="menu-arrow"></i>
-        <i class="text-primary mdi mdi-cube-outline menu-icon"></i>
+    <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
 
-    </a>
+        <span class="nsn-label small">
+            Profile Completion
+        </span>
 
-    @if(isset($profileCompletion) && $profileCompletion < 85)
-        <div style="padding-left:55px; margin-top:-5px;">
-            <small style="color:#dc3545; font-size:11px;">
-                ⚠ Complete profile (85%) to unlock
-            </small>
-        </div>
-    @endif
-
-    <div class="collapse" id="donor-product" data-bs-parent="#sidebar-accordion">
-
-        <ul class="nav flex-column sub-menu">
-
-            <li class="nav-item">
-                <a class="nav-link"
-                   href="{{ route('donor.product.index') }}"
-                   style="{{ (isset($profileCompletion) && $profileCompletion < 85) ? 'pointer-events:none; opacity:0.5;' : '' }}">
-                    My Products
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link"
-                   href="{{ route('donor.product.create') }}"
-                   style="{{ (isset($profileCompletion) && $profileCompletion < 85) ? 'pointer-events:none; opacity:0.5;' : '' }}">
-                    Add Product
-                </a>
-            </li>
-
-        </ul>
+        <span
+            class="badge rounded-pill {{ $profileLocked ? 'bg-warning-subtle text-warning-emphasis' : 'bg-success-subtle text-success' }}"
+        >
+            {{ $profileCompletion }}%
+        </span>
 
     </div>
 
-</li>
+    <div
+        class="progress"
+        role="progressbar"
+        aria-label="Donor profile completion"
+        aria-valuenow="{{ $profileCompletion }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        style="height: 6px;"
+    >
+        <div
+            class="progress-bar {{ $profileLocked ? 'bg-warning' : 'bg-success' }}"
+            style="width: {{ $profileCompletion }}%;"
+        ></div>
+    </div>
 
-<li class="nav-item">
-
-    <a class="nav-link"
-       href="{{ route('donor.requests') }}"
-       style="{{ (isset($profileCompletion) && $profileCompletion < 85) ? 'opacity:0.5; pointer-events:none;' : '' }}">
-
-        <span class="menu-title">Requests</span>
-        <i class="text-primary mdi mdi-clipboard-text menu-icon"></i>
-
-    </a>
-
-    @if(isset($profileCompletion) && $profileCompletion < 85)
-        <div style="padding-left:55px; margin-top:-5px;">
-            <small style="color:#dc3545; font-size:11px;">
-                ⚠ Complete profile to access requests
-            </small>
-        </div>
+    @if ($profileLocked)
+        <small class="d-block text-danger mt-2 nsn-label">
+            <i class="bi bi-lock me-1"></i>
+            Complete 85% to unlock features
+        </small>
+    @else
+        <small class="d-block text-success mt-2 nsn-label">
+            <i class="bi bi-check-circle me-1"></i>
+            All features unlocked
+        </small>
     @endif
 
-</li>
+</div>
 
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('donor.profile.index') }}">
-        <span class="menu-title">Profile</span>
-        <i class="text-primary mdi mdi-account-circle menu-icon"></i>
+
+{{-- ===================================================== --}}
+{{-- PRODUCT MENU --}}
+{{-- ===================================================== --}}
+
+@if ($profileLocked)
+
+    {{-- Locked Product Link --}}
+    <div
+        class="nsn-nav-link nsn-nav-link-disabled opacity-50"
+        role="button"
+        aria-disabled="true"
+        title="Complete your profile to at least 85% to unlock products"
+    >
+        <i class="mdi mdi-cube-outline"></i>
+
+        <div class="nsn-label flex-grow-1">
+
+            <div class="d-flex align-items-center justify-content-between gap-2">
+                <span>Product</span>
+                <i class="bi bi-lock-fill small"></i>
+            </div>
+
+            <small class="d-block text-danger mt-1">
+                Complete profile to 85%
+            </small>
+
+        </div>
+    </div>
+
+@else
+
+    {{-- Unlocked Product Dropdown --}}
+    <a
+        href="#donor-product"
+        class="nsn-nav-link {{ $productMenuActive ? 'active' : '' }}"
+        data-bs-toggle="collapse"
+        role="button"
+        aria-expanded="{{ $productMenuActive ? 'true' : 'false' }}"
+        aria-controls="donor-product"
+    >
+        <i class="mdi mdi-cube-outline"></i>
+
+        <span class="nsn-label">
+            Product
+        </span>
+
+        <i class="bi bi-chevron-down ms-auto nsn-label small"></i>
     </a>
-</li>
+
+
+    <div
+        id="donor-product"
+        class="collapse {{ $productMenuActive ? 'show' : '' }}"
+        data-bs-parent="#sidebar"
+    >
+        <div class="ps-3">
+
+            {{-- My Products --}}
+            <a
+                href="{{ route('donor.product.index') }}"
+                class="nsn-nav-link {{
+                    request()->routeIs(
+                        'donor.product.index',
+                        'donor.product.edit',
+                        'donor.product.show'
+                    ) ? 'active' : ''
+                }}"
+            >
+                <i class="bi bi-box-seam"></i>
+
+                <span class="nsn-label">
+                    My Products
+                </span>
+            </a>
+
+
+            {{-- Add Product --}}
+            <a
+                href="{{ route('donor.product.create') }}"
+                class="nsn-nav-link {{
+                    request()->routeIs('donor.product.create')
+                        ? 'active'
+                        : ''
+                }}"
+            >
+                <i class="bi bi-plus-square"></i>
+
+                <span class="nsn-label">
+                    Add Product
+                </span>
+            </a>
+
+        </div>
+    </div>
+
+@endif
+
+
+{{-- ===================================================== --}}
+{{-- REQUESTS MENU --}}
+{{-- ===================================================== --}}
+
+@if ($profileLocked)
+
+    {{-- Locked Requests Link --}}
+    <div
+        class="nsn-nav-link nsn-nav-link-disabled opacity-50"
+        role="button"
+        aria-disabled="true"
+        title="Complete your profile to at least 85% to access requests"
+    >
+        <i class="mdi mdi-clipboard-text"></i>
+
+        <div class="nsn-label flex-grow-1">
+
+            <div class="d-flex align-items-center justify-content-between gap-2">
+                <span>Requests</span>
+                <i class="bi bi-lock-fill small"></i>
+            </div>
+
+            <small class="d-block text-danger mt-1">
+                Complete profile to 85%
+            </small>
+
+        </div>
+    </div>
+
+@else
+
+    {{-- Unlocked Requests Link --}}
+    <a
+        href="{{ route('donor.requests') }}"
+        class="nsn-nav-link {{ $requestMenuActive ? 'active' : '' }}"
+    >
+        <i class="mdi mdi-clipboard-text"></i>
+
+        <span class="nsn-label">
+            Requests
+        </span>
+    </a>
+
+@endif
+
+
+{{-- ===================================================== --}}
+{{-- DONOR PROFILE --}}
+{{-- Always available so the donor can complete the profile --}}
+{{-- ===================================================== --}}
+
+<a
+    href="{{ route('donor.profile.index') }}"
+    class="nsn-nav-link {{ $profileMenuActive ? 'active' : '' }}"
+>
+    <i class="mdi mdi-account-circle"></i>
+
+    <span class="nsn-label">
+        Profile
+    </span>
+
+    @if ($profileLocked)
+        <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis ms-auto nsn-label">
+            {{ $profileCompletion }}%
+        </span>
+    @else
+        <i class="bi bi-check-circle-fill text-success ms-auto nsn-label"></i>
+    @endif
+</a>

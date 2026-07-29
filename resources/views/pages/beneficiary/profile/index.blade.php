@@ -2,360 +2,1170 @@
 
 <title>Beneficiary Profile</title>
 
-<style>
-    .card {
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.06);
-    }
-
-    .card-body {
-        padding: 35px;
-    }
-
-    .section-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #222;
-        margin-bottom: 25px;
-        padding-left: 14px;
-        border-left: 4px solid #4B49AC;
-    }
-
-    .form-control {
-        border-radius: 10px;
-        border: 1px solid #d7d7d7;
-    }
-
-    .form-control-sm {
-        height: 48px;
-        font-size: 14px;
-    }
-
-    textarea.form-control {
-        height: auto;
-    }
-
-    label {
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: #333;
-    }
-
-    .profile-image {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 12px;
-        border: 2px solid #eee;
-    }
-
-    .btn-update {
-        padding: 11px 35px;
-        border-radius: 10px;
-        font-size: 15px;
-        font-weight: 600;
-    }
-</style>
-
 <body>
 
-    <div class="container-scroller">
+    @php
+        $beneficiaryProfile = $user->beneficiaryProfile;
 
+        $completionFields = [
+            $user->name,
+            $user->email,
+            $user->image,
+            $beneficiaryProfile?->institution,
+            $beneficiaryProfile?->father_status,
+            $beneficiaryProfile?->province,
+            $beneficiaryProfile?->home_address,
+        ];
+
+        $completedFields = collect($completionFields)
+            ->filter(fn ($field) => !is_null($field) && trim((string) $field) !== '')
+            ->count();
+
+        $profileCompletion = count($completionFields) > 0
+            ? (int) round(($completedFields / count($completionFields)) * 100)
+            : 0;
+    @endphp
+
+
+    {{-- New Sidebar --}}
+    @include('layouts.admin.sidebar')
+
+
+    {{-- Main Content --}}
+    <div class="nsn-main">
+
+        {{-- New Topbar --}}
         @include('layouts.admin.header')
 
-        <div class="container-fluid page-body-wrapper">
 
-            @include('layouts.admin.sidebar')
+        <main class="nsn-content">
 
-            <div class="main-panel">
+            {{-- Page Header --}}
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
 
-                <div class="content-wrapper">
+                <div>
+                    <h3 class="fw-bold text-dark mb-1">
+                        Beneficiary Profile
+                    </h3>
 
-                    <!-- PAGE HEADER -->
-                    <div class="page-header">
+                    <p class="text-secondary small mb-0">
+                        Manage your personal, academic and family information.
+                    </p>
+                </div>
 
-                        <h3 class="page-title">
+                <a
+                    href="{{ route('dashboard') }}"
+                    class="btn btn-light border d-flex align-items-center gap-2"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Back to Dashboard</span>
+                </a>
 
-                            <span class="page-title-icon bg-gradient-primary text-white me-2">
-                                <i class="mdi mdi-account-circle"></i>
-                            </span>
+            </div>
 
-                            Beneficiary Profile
 
-                        </h3>
+            {{-- Breadcrumb --}}
+            <nav aria-label="breadcrumb" class="mb-4">
+
+                <ol class="breadcrumb small mb-0">
+
+                    <li class="breadcrumb-item">
+                        <a
+                            href="{{ route('dashboard') }}"
+                            class="text-decoration-none"
+                        >
+                            <i class="bi bi-house-door me-1"></i>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li
+                        class="breadcrumb-item active"
+                        aria-current="page"
+                    >
+                        Beneficiary Profile
+                    </li>
+
+                </ol>
+
+            </nav>
+
+
+            {{-- Alert Messages --}}
+            @include('layouts.admin.alert')
+
+
+            {{-- Global Validation Errors --}}
+            @if ($errors->any())
+
+                <div
+                    class="alert alert-danger alert-dismissible fade show"
+                    role="alert"
+                >
+                    <div class="d-flex gap-3">
+
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+
+                        <div>
+                            <h6 class="alert-heading fw-semibold mb-2">
+                                Please correct the following errors:
+                            </h6>
+
+                            <ul class="mb-0 ps-3">
+                                @foreach ($errors->all() as $error)
+                                    <li class="small">{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
 
                     </div>
 
-                    <!-- ALERT -->
-                    @include('layouts.admin.alert')
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                    ></button>
+                </div>
 
-                    <!-- FORM SECTION -->
-                    <div class="row justify-content-center">
+            @endif
 
-                        <div class="col-lg-12 grid-margin stretch-card">
 
-                            <div class="card">
+            {{-- Profile Completion --}}
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
 
-                                <div class="card-body">
+                <div class="card-body p-4">
 
-                                    <form method="POST" action="{{ route('Beneficiary.profile.update') }}"
-                                        enctype="multipart/form-data">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
 
-                                        @csrf
+                        <div>
+                            <h5 class="fw-semibold text-dark mb-1">
+                                Profile Completion
+                            </h5>
 
-                                        <!-- USER INFORMATION -->
-                                        <div class="section-title">User Information</div>
+                            <p class="text-secondary small mb-0">
+                                Complete at least 85% to access products and requests.
+                            </p>
+                        </div>
 
-                                        <div class="row">
+                        <span class="fw-bold fs-5 {{ $profileCompletion >= 85 ? 'text-success' : 'text-warning' }}">
+                            {{ $profileCompletion }}%
+                        </span>
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Name</label>
-                                                <input type="text" name="name"
-                                                    class="form-control form-control-sm"
-                                                    placeholder="Enter your full name"
-                                                    value="{{ old('name', $user->name) }}" readonly>
-                                            </div>
+                    </div>
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Email</label>
-                                                <input type="email" name="email"
-                                                    class="form-control form-control-sm"
-                                                    placeholder="Enter your email address"
-                                                    value="{{ old('email', $user->email) }}" readonly>
-                                            </div>
+                    <div
+                        class="progress"
+                        role="progressbar"
+                        aria-label="Profile completion"
+                        aria-valuenow="{{ $profileCompletion }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style="height: 9px;"
+                    >
+                        <div
+                            class="progress-bar {{ $profileCompletion >= 85 ? 'bg-success' : 'bg-warning' }}"
+                            style="width: {{ $profileCompletion }}%;"
+                        ></div>
+                    </div>
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Phone</label>
-                                                <input type="text" name="phone"
-                                                    class="form-control form-control-sm"
-                                                    placeholder="Enter your phone number"
-                                                    value="{{ old('phone', $user->phone) }}" readonly>
-                                            </div>
+                    @if ($profileCompletion < 85)
+                        <small class="d-block text-danger mt-2">
+                            <i class="bi bi-lock me-1"></i>
+                            Complete the missing required information to unlock all features.
+                        </small>
+                    @else
+                        <small class="d-block text-success mt-2">
+                            <i class="bi bi-check-circle me-1"></i>
+                            All beneficiary features are unlocked.
+                        </small>
+                    @endif
+
+                </div>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ route('Beneficiary.profile.update') }}"
+                enctype="multipart/form-data"
+            >
+                @csrf
+
+
+                <div class="row g-4">
+
+                    {{-- Main Form Column --}}
+                    <div class="col-12 col-xl-8">
+
+                        {{-- Personal Information --}}
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+
+                            <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <span
+                                        class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary flex-shrink-0"
+                                        style="width: 46px; height: 46px;"
+                                    >
+                                        <i class="bi bi-person fs-5"></i>
+                                    </span>
+
+                                    <div>
+                                        <h5 class="fw-semibold text-dark mb-1">
+                                            Personal Information
+                                        </h5>
+
+                                        <p class="text-secondary small mb-0">
+                                            Review your basic account information.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-body p-4">
+
+                                <div class="row g-4">
+
+                                    {{-- Name --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="beneficiaryName"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Full Name
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+
+                                            <input
+                                                type="text"
+                                                id="beneficiaryName"
+                                                name="name"
+                                                value="{{ old('name', $user->name) }}"
+                                                class="form-control bg-light"
+                                                readonly
+                                            >
 
                                         </div>
 
-                                        <!-- PROFILE IMAGE -->
-                                        <div class="section-title mt-4">Profile Image</div>
-
-                                        <div class="row align-items-center">
-
-                                            <div class="col-md-4 mb-4">
-                                                <label>Upload Image</label>
-                                                <input type="file" name="image"
-                                                    class="form-control form-control-sm">
-                                            </div>
-
-                                            <div class="col-md-4 mb-4">
-
-                                                <label>Preview</label>
-
-                                                @if ($user->image)
-                                                    <img src="{{ asset('admin/asset/profilephoto/' . $user->image) }}"
-                                                        class="profile-image">
-                                                @else
-                                                    <span class="text-muted">No Image Uploaded</span>
-                                                @endif
-
-                                            </div>
-
-                                            <div class="col-md-4 mb-4">
-                                                <label>Enrollment Year</label>
-                                                <input type="number" name="enrollment_year"
-                                                    class="form-control form-control-sm" min="2000" max="2100"
-                                                    placeholder="Enter Enrollment Year"
-                                                    value="{{ old('enrollment_year', optional($user->beneficiaryProfile)->enrollment_year) }}">
-                                            </div>
-
-                                            <div class="col-md-4 mb-4">
-                                                <label>Graduation Year</label>
-                                                <input type="number" name="graduation_year"
-                                                    class="form-control form-control-sm" min="2000" max="2100"
-                                                    placeholder="Enter Graduation Year"
-                                                    value="{{ old('graduation_year', optional($user->beneficiaryProfile)->graduation_year) }}">
-                                            </div>
+                                    </div>
 
 
+                                    {{-- Email --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="beneficiaryEmail"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Email Address
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-envelope"></i>
+                                            </span>
+
+                                            <input
+                                                type="email"
+                                                id="beneficiaryEmail"
+                                                name="email"
+                                                value="{{ old('email', $user->email) }}"
+                                                class="form-control bg-light"
+                                                readonly
+                                            >
 
                                         </div>
 
-                                        <!-- BENEFICIARY INFORMATION -->
-                                        <div class="section-title mt-4">Beneficiary Information</div>
+                                    </div>
 
-                                        <div class="row">
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Institution</label>
-                                                <select name="institution" class="form-control form-control-sm">
-                                                    <option value="">Select Institution</option>
+                                    {{-- Phone --}}
+                                    <div class="col-12">
 
-                                                    @php
-                                                        $institution = old(
+                                        <label
+                                            for="beneficiaryPhone"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Phone Number
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-telephone"></i>
+                                            </span>
+
+                                            <input
+                                                type="tel"
+                                                id="beneficiaryPhone"
+                                                name="phone"
+                                                value="{{ old('phone', $user->phone) }}"
+                                                class="form-control bg-light"
+                                                readonly
+                                            >
+
+                                        </div>
+
+                                        <div class="form-text">
+                                            Contact an administrator if this information needs to be changed.
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- Academic Information --}}
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+
+                            <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <span
+                                        class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success-subtle text-success flex-shrink-0"
+                                        style="width: 46px; height: 46px;"
+                                    >
+                                        <i class="bi bi-mortarboard fs-5"></i>
+                                    </span>
+
+                                    <div>
+                                        <h5 class="fw-semibold text-dark mb-1">
+                                            Academic Information
+                                        </h5>
+
+                                        <p class="text-secondary small mb-0">
+                                            Provide your institution and study duration.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-body p-4">
+
+                                <div class="row g-4">
+
+                                    {{-- Institution --}}
+                                    <div class="col-12">
+
+                                        <label
+                                            for="institution"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Institution
+                                            <span class="text-danger">*</span>
+                                        </label>
+
+                                        <select
+                                            name="institution"
+                                            id="institution"
+                                            class="form-select @error('institution') is-invalid @enderror"
+                                        >
+                                            <option value="">
+                                                Select institution
+                                            </option>
+
+                                            @foreach ([
+                                                'SEECS',
+                                                'SMME',
+                                                'SCME',
+                                                'NBS',
+                                                'SADA',
+                                                'SNS',
+                                                'ASAB',
+                                                'S3H',
+                                                'CEME',
+                                                'MCS',
+                                                'CAE',
+                                                'PNEC',
+                                                'NBC'
+                                            ] as $institutionName)
+
+                                                <option
+                                                    value="{{ $institutionName }}"
+                                                    @selected(
+                                                        old(
                                                             'institution',
-                                                            optional($user->beneficiaryProfile)->institution,
-                                                        );
-                                                    @endphp
+                                                            $beneficiaryProfile?->institution
+                                                        ) === $institutionName
+                                                    )
+                                                >
+                                                    {{ $institutionName }}
+                                                </option>
 
-                                                    <option value="SEECS"
-                                                        {{ $institution == 'SEECS' ? 'selected' : '' }}>SEECS</option>
-                                                    <option value="SMME"
-                                                        {{ $institution == 'SMME' ? 'selected' : '' }}>
-                                                        SMME</option>
-                                                    <option value="SCME"
-                                                        {{ $institution == 'SCME' ? 'selected' : '' }}>
-                                                        SCME</option>
-                                                    <option value="NBS"
-                                                        {{ $institution == 'NBS' ? 'selected' : '' }}>
-                                                        NBS</option>
-                                                    <option value="SADA"
-                                                        {{ $institution == 'SADA' ? 'selected' : '' }}>
-                                                        SADA</option>
-                                                    <option value="SNS"
-                                                        {{ $institution == 'SNS' ? 'selected' : '' }}>
-                                                        SNS</option>
-                                                    <option value="ASAB"
-                                                        {{ $institution == 'ASAB' ? 'selected' : '' }}>ASAB</option>
-                                                    <option value="S3H"
-                                                        {{ $institution == 'S3H' ? 'selected' : '' }}>
-                                                        S3H</option>
-                                                    <option value="CEME"
-                                                        {{ $institution == 'CEME' ? 'selected' : '' }}>CEME</option>
-                                                    <option value="MCS"
-                                                        {{ $institution == 'MCS' ? 'selected' : '' }}>
-                                                        MCS</option>
-                                                    <option value="CAE"
-                                                        {{ $institution == 'CAE' ? 'selected' : '' }}>
-                                                        CAE</option>
-                                                    <option value="PNEC"
-                                                        {{ $institution == 'PNEC' ? 'selected' : '' }}>PNEC</option>
-                                                    <option value="NBC"
-                                                        {{ $institution == 'NBC' ? 'selected' : '' }}>
-                                                        NBC</option>
-                                                </select>
+                                            @endforeach
+                                        </select>
+
+                                        @error('institution')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
                                             </div>
+                                        @enderror
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Father Status</label>
+                                    </div>
 
-                                                @php
-                                                    $fatherStatus = old(
+
+                                    {{-- Enrollment Year --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="enrollmentYear"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Enrollment Year
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-calendar-plus"></i>
+                                            </span>
+
+                                            <input
+                                                type="number"
+                                                id="enrollmentYear"
+                                                name="enrollment_year"
+                                                value="{{ old('enrollment_year', $beneficiaryProfile?->enrollment_year) }}"
+                                                class="form-control @error('enrollment_year') is-invalid @enderror"
+                                                min="2000"
+                                                max="2100"
+                                                placeholder="For example: 2023"
+                                            >
+
+                                            @error('enrollment_year')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{-- Graduation Year --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="graduationYear"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Graduation Year
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-calendar-check"></i>
+                                            </span>
+
+                                            <input
+                                                type="number"
+                                                id="graduationYear"
+                                                name="graduation_year"
+                                                value="{{ old('graduation_year', $beneficiaryProfile?->graduation_year) }}"
+                                                class="form-control @error('graduation_year') is-invalid @enderror"
+                                                min="2000"
+                                                max="2100"
+                                                placeholder="For example: 2027"
+                                            >
+
+                                            @error('graduation_year')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- Family and Financial Information --}}
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+
+                            <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <span
+                                        class="d-inline-flex align-items-center justify-content-center rounded-circle bg-info-subtle text-info-emphasis flex-shrink-0"
+                                        style="width: 46px; height: 46px;"
+                                    >
+                                        <i class="bi bi-people fs-5"></i>
+                                    </span>
+
+                                    <div>
+                                        <h5 class="fw-semibold text-dark mb-1">
+                                            Family and Financial Information
+                                        </h5>
+
+                                        <p class="text-secondary small mb-0">
+                                            Provide information about your guardian and household income.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-body p-4">
+
+                                <div class="row g-4">
+
+                                    {{-- Father Status --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="fatherStatus"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Father Status
+                                            <span class="text-danger">*</span>
+                                        </label>
+
+                                        <select
+                                            name="father_status"
+                                            id="fatherStatus"
+                                            class="form-select @error('father_status') is-invalid @enderror"
+                                        >
+                                            <option value="">
+                                                Select status
+                                            </option>
+
+                                            <option
+                                                value="Alive"
+                                                @selected(
+                                                    old(
                                                         'father_status',
-                                                        optional($user->beneficiaryProfile)->father_status,
-                                                    );
-                                                @endphp
+                                                        $beneficiaryProfile?->father_status
+                                                    ) === 'Alive'
+                                                )
+                                            >
+                                                Alive
+                                            </option>
 
-                                                <select name="father_status" class="form-control form-control-sm">
-                                                    <option value="">Select Status</option>
-                                                    <option value="Alive"
-                                                        {{ $fatherStatus == 'Alive' ? 'selected' : '' }}>Alive</option>
-                                                    <option value="Deceased"
-                                                        {{ $fatherStatus == 'Deceased' ? 'selected' : '' }}>Deceased
-                                                    </option>
-                                                </select>
+                                            <option
+                                                value="Deceased"
+                                                @selected(
+                                                    old(
+                                                        'father_status',
+                                                        $beneficiaryProfile?->father_status
+                                                    ) === 'Deceased'
+                                                )
+                                            >
+                                                Deceased
+                                            </option>
+                                        </select>
+
+                                        @error('father_status')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
                                             </div>
+                                        @enderror
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Guardian Profession</label>
-                                                <input type="text" name="guardian_profession"
-                                                    class="form-control form-control-sm"
-                                                    placeholder="Enter guardian profession"
-                                                    value="{{ old('guardian_profession', optional($user->beneficiaryProfile)->guardian_profession) }}">
+                                    </div>
+
+
+                                    {{-- Guardian Profession --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="guardianProfession"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Guardian Profession
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            id="guardianProfession"
+                                            name="guardian_profession"
+                                            value="{{ old('guardian_profession', $beneficiaryProfile?->guardian_profession) }}"
+                                            class="form-control @error('guardian_profession') is-invalid @enderror"
+                                            placeholder="Enter guardian profession"
+                                        >
+
+                                        @error('guardian_profession')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
                                             </div>
+                                        @enderror
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Monthly Income</label>
-                                                <input type="number" step="0.01" name="monthly_income"
-                                                    class="form-control form-control-sm"
-                                                    placeholder="Enter monthly income"
-                                                    value="{{ old('monthly_income', optional($user->beneficiaryProfile)->monthly_income) }}">
-                                            </div>
+                                    </div>
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Province</label>
 
-                                                @php
-                                                    $province = old(
-                                                        'province',
-                                                        optional($user->beneficiaryProfile)->province,
-                                                    );
-                                                @endphp
+                                    {{-- Monthly Income --}}
+                                    <div class="col-12">
 
-                                                <select name="province" class="form-control form-control-sm">
-                                                    <option value="">Select Province</option>
+                                        <label
+                                            for="monthlyIncome"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Monthly Household Income
+                                        </label>
 
-                                                    <option value="Punjab"
-                                                        {{ $province == 'Punjab' ? 'selected' : '' }}>
-                                                        Punjab</option>
-                                                    <option value="Sindh"
-                                                        {{ $province == 'Sindh' ? 'selected' : '' }}>
-                                                        Sindh</option>
-                                                    <option value="Khyber Pakhtunkhwa"
-                                                        {{ $province == 'Khyber Pakhtunkhwa' ? 'selected' : '' }}>
-                                                        Khyber
-                                                        Pakhtunkhwa</option>
-                                                    <option value="Balochistan"
-                                                        {{ $province == 'Balochistan' ? 'selected' : '' }}>Balochistan
-                                                    </option>
-                                                    <option value="Gilgit Baltistan"
-                                                        {{ $province == 'Gilgit Baltistan' ? 'selected' : '' }}>Gilgit
-                                                        Baltistan</option>
-                                                    <option value="Azad Jammu & Kashmir"
-                                                        {{ $province == 'Azad Jammu & Kashmir' ? 'selected' : '' }}>
-                                                        Azad
-                                                        Jammu & Kashmir</option>
-                                                    <option value="Islamabad Capital Territory"
-                                                        {{ $province == 'Islamabad Capital Territory' ? 'selected' : '' }}>
-                                                        Islamabad Capital Territory</option>
-                                                </select>
-                                            </div>
+                                        <div class="input-group">
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Domicile</label>
-                                                <input type="text" name="domicile"
-                                                    class="form-control form-control-sm" placeholder="Enter domicile"
-                                                    value="{{ old('domicile', optional($user->beneficiaryProfile)->domicile) }}">
-                                            </div>
+                                            <span class="input-group-text bg-light">
+                                                PKR
+                                            </span>
 
-                                            <div class="col-md-12 mb-4">
-                                                <label>Home Address</label>
-                                                <textarea name="home_address" rows="4" class="form-control" placeholder="Enter complete home address">{{ old('home_address', optional($user->beneficiaryProfile)->home_address) }}</textarea>
-                                            </div>
+                                            <input
+                                                type="number"
+                                                id="monthlyIncome"
+                                                name="monthly_income"
+                                                value="{{ old('monthly_income', $beneficiaryProfile?->monthly_income) }}"
+                                                class="form-control @error('monthly_income') is-invalid @enderror"
+                                                min="0"
+                                                step="0.01"
+                                                placeholder="Enter monthly household income"
+                                            >
+
+                                            @error('monthly_income')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
 
                                         </div>
 
-                                        <!-- CHANGE PASSWORD -->
-                                        <div class="section-title mt-4">Change Password</div>
+                                    </div>
 
-                                        <div class="row">
+                                </div>
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Current Password</label>
-                                                <input type="password" name="current_password"
-                                                    class="form-control form-control-sm"
-                                                    placeholder="Enter current password">
+                            </div>
+
+                        </div>
+
+
+                        {{-- Location Information --}}
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+
+                            <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <span
+                                        class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning-subtle text-warning-emphasis flex-shrink-0"
+                                        style="width: 46px; height: 46px;"
+                                    >
+                                        <i class="bi bi-geo-alt fs-5"></i>
+                                    </span>
+
+                                    <div>
+                                        <h5 class="fw-semibold text-dark mb-1">
+                                            Location Information
+                                        </h5>
+
+                                        <p class="text-secondary small mb-0">
+                                            Enter your province, domicile and permanent address.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-body p-4">
+
+                                <div class="row g-4">
+
+                                    {{-- Province --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="province"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Province or Territory
+                                            <span class="text-danger">*</span>
+                                        </label>
+
+                                        <select
+                                            name="province"
+                                            id="province"
+                                            class="form-select @error('province') is-invalid @enderror"
+                                        >
+                                            <option value="">
+                                                Select province
+                                            </option>
+
+                                            @foreach ([
+                                                'Punjab',
+                                                'Sindh',
+                                                'Khyber Pakhtunkhwa',
+                                                'Balochistan',
+                                                'Gilgit Baltistan',
+                                                'Azad Jammu & Kashmir',
+                                                'Islamabad Capital Territory'
+                                            ] as $provinceName)
+
+                                                <option
+                                                    value="{{ $provinceName }}"
+                                                    @selected(
+                                                        old(
+                                                            'province',
+                                                            $beneficiaryProfile?->province
+                                                        ) === $provinceName
+                                                    )
+                                                >
+                                                    {{ $provinceName }}
+                                                </option>
+
+                                            @endforeach
+                                        </select>
+
+                                        @error('province')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
                                             </div>
+                                        @enderror
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>New Password</label>
-                                                <input type="password" name="password"
-                                                    class="form-control form-control-sm"
-                                                    placeholder="Enter new password">
-                                            </div>
+                                    </div>
 
-                                            <div class="col-md-4 mb-4">
-                                                <label>Confirm Password</label>
-                                                <input type="password" name="password_confirmation"
-                                                    class="form-control form-control-sm"
-                                                    placeholder="Confirm new password">
+
+                                    {{-- Domicile --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="domicile"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Domicile
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            id="domicile"
+                                            name="domicile"
+                                            value="{{ old('domicile', $beneficiaryProfile?->domicile) }}"
+                                            class="form-control @error('domicile') is-invalid @enderror"
+                                            placeholder="Enter your domicile district"
+                                        >
+
+                                        @error('domicile')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
                                             </div>
+                                        @enderror
+
+                                    </div>
+
+
+                                    {{-- Home Address --}}
+                                    <div class="col-12">
+
+                                        <label
+                                            for="homeAddress"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Home Address
+                                            <span class="text-danger">*</span>
+                                        </label>
+
+                                        <textarea
+                                            name="home_address"
+                                            id="homeAddress"
+                                            rows="5"
+                                            class="form-control @error('home_address') is-invalid @enderror"
+                                            placeholder="Enter your complete permanent home address"
+                                        >{{ old('home_address', $beneficiaryProfile?->home_address) }}</textarea>
+
+                                        @error('home_address')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- Change Password --}}
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                            <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <span
+                                        class="d-inline-flex align-items-center justify-content-center rounded-circle bg-danger-subtle text-danger flex-shrink-0"
+                                        style="width: 46px; height: 46px;"
+                                    >
+                                        <i class="bi bi-shield-lock fs-5"></i>
+                                    </span>
+
+                                    <div>
+                                        <h5 class="fw-semibold text-dark mb-1">
+                                            Change Password
+                                        </h5>
+
+                                        <p class="text-secondary small mb-0">
+                                            Leave these fields empty to keep your current password.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-body p-4">
+
+                                <div class="row g-4">
+
+                                    {{-- Current Password --}}
+                                    <div class="col-12">
+
+                                        <label
+                                            for="currentPassword"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Current Password
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-lock"></i>
+                                            </span>
+
+                                            <input
+                                                type="password"
+                                                id="currentPassword"
+                                                name="current_password"
+                                                class="form-control @error('current_password') is-invalid @enderror"
+                                                placeholder="Enter your current password"
+                                                autocomplete="current-password"
+                                            >
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary password-toggle"
+                                                data-target="currentPassword"
+                                            >
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+
+                                            @error('current_password')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
 
                                         </div>
 
-                                        <button type="submit" class="btn btn-primary btn-update mt-3">
+                                    </div>
+
+
+                                    {{-- New Password --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="newPassword"
+                                            class="form-label fw-semibold"
+                                        >
+                                            New Password
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-key"></i>
+                                            </span>
+
+                                            <input
+                                                type="password"
+                                                id="newPassword"
+                                                name="password"
+                                                class="form-control @error('password') is-invalid @enderror"
+                                                placeholder="Enter a new password"
+                                                autocomplete="new-password"
+                                            >
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary password-toggle"
+                                                data-target="newPassword"
+                                            >
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+
+                                            @error('password')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{-- Confirm Password --}}
+                                    <div class="col-12 col-md-6">
+
+                                        <label
+                                            for="passwordConfirmation"
+                                            class="form-label fw-semibold"
+                                        >
+                                            Confirm New Password
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-key-fill"></i>
+                                            </span>
+
+                                            <input
+                                                type="password"
+                                                id="passwordConfirmation"
+                                                name="password_confirmation"
+                                                class="form-control"
+                                                placeholder="Confirm new password"
+                                                autocomplete="new-password"
+                                            >
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary password-toggle"
+                                                data-target="passwordConfirmation"
+                                            >
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Profile Image Column --}}
+                    <div class="col-12 col-xl-4">
+
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                            <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                <h5 class="fw-semibold text-dark mb-1">
+                                    Profile Image
+                                </h5>
+
+                                <p class="text-secondary small mb-0">
+                                    View or replace your profile photo.
+                                </p>
+
+                            </div>
+
+
+                            <div class="card-body p-4">
+
+                                <div class="text-center mb-4">
+
+                                    @if ($user->image)
+
+                                        <img
+                                            id="profilePreview"
+                                            src="{{ asset('admin/asset/profilephoto/' . $user->image) }}"
+                                            alt="{{ $user->name }}"
+                                            width="130"
+                                            height="130"
+                                            class="rounded-circle border border-3 object-fit-cover"
+                                        >
+
+                                        <span
+                                            id="defaultAvatar"
+                                            class="d-none align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-bold fs-2"
+                                            style="width: 130px; height: 130px;"
+                                        >
+                                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                                        </span>
+
+                                    @else
+
+                                        <img
+                                            id="profilePreview"
+                                            src=""
+                                            alt="Profile preview"
+                                            width="130"
+                                            height="130"
+                                            class="rounded-circle border border-3 object-fit-cover d-none"
+                                        >
+
+                                        <span
+                                            id="defaultAvatar"
+                                            class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-bold fs-2"
+                                            style="width: 130px; height: 130px;"
+                                        >
+                                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                                        </span>
+
+                                    @endif
+
+                                    <h5 class="fw-semibold text-dark mt-3 mb-1">
+                                        {{ $user->name }}
+                                    </h5>
+
+                                    <span class="badge rounded-pill bg-info-subtle text-info-emphasis px-3 py-2">
+                                        Beneficiary
+                                    </span>
+
+                                </div>
+
+
+                                <label
+                                    for="profileImage"
+                                    class="form-label fw-semibold"
+                                >
+                                    Upload New Image
+                                </label>
+
+                                <input
+                                    type="file"
+                                    id="profileImage"
+                                    name="image"
+                                    class="form-control @error('image') is-invalid @enderror"
+                                    accept="image/jpeg,image/png,image/jpg,image/webp"
+                                >
+
+                                @error('image')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                                <div class="form-text">
+                                    Accepted formats: JPG, PNG and WebP.
+                                </div>
+
+
+                                {{-- Account Summary --}}
+                                <div class="border rounded-3 overflow-hidden mt-4">
+
+                                    <div class="d-flex justify-content-between gap-3 p-3 border-bottom">
+                                        <span class="text-secondary small">
+                                            Account role
+                                        </span>
+
+                                        <span class="fw-semibold small text-capitalize">
+                                            {{ $user->role }}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between gap-3 p-3 border-bottom">
+                                        <span class="text-secondary small">
+                                            Qalam ID
+                                        </span>
+
+                                        <span class="fw-semibold small">
+                                            {{ $user->qalam_id ?? 'Not available' }}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between gap-3 p-3 border-bottom">
+                                        <span class="text-secondary small">
+                                            Institution
+                                        </span>
+
+                                        <span class="fw-semibold small">
+                                            {{ $beneficiaryProfile?->institution ?? 'Not provided' }}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between gap-3 p-3">
+                                        <span class="text-secondary small">
+                                            Member since
+                                        </span>
+
+                                        <span class="fw-semibold small">
+                                            {{ optional($user->created_at)->format('d M Y') }}
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Form Actions --}}
+                    <div class="col-12">
+
+                        <div class="card border-0 shadow-sm rounded-4">
+
+                            <div class="card-body px-4 py-3">
+
+                                <div class="d-flex flex-column-reverse flex-sm-row align-items-sm-center justify-content-between gap-3">
+
+                                    <p class="text-secondary small mb-0">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Review your information before saving the changes.
+                                    </p>
+
+                                    <div class="d-flex flex-column-reverse flex-sm-row gap-2">
+
+                                        <a
+                                            href="{{ route('dashboard') }}"
+                                            class="btn btn-light border"
+                                        >
+                                            <i class="bi bi-x-circle me-1"></i>
+                                            Cancel
+                                        </a>
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-primary"
+                                        >
+                                            <i class="bi bi-check2-circle me-1"></i>
                                             Update Profile
                                         </button>
 
-                                    </form>
+                                    </div>
 
                                 </div>
 
@@ -367,12 +1177,97 @@
 
                 </div>
 
-            </div>
+            </form>
 
-        </div>
+        </main>
 
     </div>
 
+
     @include('layouts.admin.script')
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const profileImage =
+                document.getElementById('profileImage');
+
+            const profilePreview =
+                document.getElementById('profilePreview');
+
+            const defaultAvatar =
+                document.getElementById('defaultAvatar');
+
+
+            if (
+                profileImage &&
+                profilePreview &&
+                defaultAvatar
+            ) {
+                profileImage.addEventListener('change', function () {
+                    const selectedFile = this.files[0];
+
+                    if (!selectedFile) {
+                        return;
+                    }
+
+                    if (!selectedFile.type.startsWith('image/')) {
+                        this.value = '';
+
+                        alert('Please select a valid image file.');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+
+                    reader.addEventListener('load', function (event) {
+                        profilePreview.src = event.target.result;
+                        profilePreview.classList.remove('d-none');
+
+                        defaultAvatar.classList.add('d-none');
+                        defaultAvatar.classList.remove('d-inline-flex');
+                    });
+
+                    reader.readAsDataURL(selectedFile);
+                });
+            }
+
+
+            document
+                .querySelectorAll('.password-toggle')
+                .forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        const targetId =
+                            this.getAttribute('data-target');
+
+                        const passwordField =
+                            document.getElementById(targetId);
+
+                        const icon =
+                            this.querySelector('i');
+
+                        if (!passwordField || !icon) {
+                            return;
+                        }
+
+                        const isHidden =
+                            passwordField.type === 'password';
+
+                        passwordField.type =
+                            isHidden ? 'text' : 'password';
+
+                        icon.classList.toggle(
+                            'bi-eye',
+                            !isHidden
+                        );
+
+                        icon.classList.toggle(
+                            'bi-eye-slash',
+                            isHidden
+                        );
+                    });
+                });
+        });
+    </script>
 
 </body>

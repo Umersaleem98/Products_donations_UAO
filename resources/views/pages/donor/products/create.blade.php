@@ -1,222 +1,627 @@
 @include('layouts.admin.head')
 
-<title>Create Products</title>
-
-<style>
-    .product-description {
-        white-space: pre-line;
-        line-height: 1.8;
-    }
-</style>
+<title>Add Donor Product</title>
 
 <body>
 
-<div class="container-scroller">
+    {{-- New Sidebar --}}
+    @include('layouts.admin.sidebar')
 
-    @include('layouts.admin.header')
 
-    <div class="container-fluid page-body-wrapper">
+    {{-- Main Content --}}
+    <div class="nsn-main">
 
-        @include('layouts.admin.sidebar')
+        {{-- New Topbar --}}
+        @include('layouts.admin.header')
 
-        <div class="main-panel">
 
-            <div class="content-wrapper">
+        <main class="nsn-content">
 
-                <!-- PAGE HEADER -->
-                <div class="page-header">
-                    <h3 class="page-title">
-                        <span class="page-title-icon bg-gradient-primary text-white me-2">
-                            <i class="mdi mdi-home"></i>
-                        </span>
-                        Add Donor Product
+            {{-- Page Header --}}
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+
+                <div>
+                    <h3 class="fw-bold text-dark mb-1">
+                        Add Product
                     </h3>
+
+                    <p class="text-secondary small mb-0">
+                        Share a product with the NUST community.
+                    </p>
                 </div>
 
-                <!-- GLOBAL ERRORS -->
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+                <a
+                    href="{{ route('donor.product.index') }}"
+                    class="btn btn-light border d-flex align-items-center gap-2"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Back to Products</span>
+                </a>
+
+            </div>
+
+
+            {{-- Breadcrumb --}}
+            <nav aria-label="breadcrumb" class="mb-4">
+
+                <ol class="breadcrumb small mb-0">
+
+                    <li class="breadcrumb-item">
+                        <a
+                            href="{{ route('dashboard') }}"
+                            class="text-decoration-none"
+                        >
+                            <i class="bi bi-house-door me-1"></i>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li class="breadcrumb-item">
+                        <a
+                            href="{{ route('donor.product.index') }}"
+                            class="text-decoration-none"
+                        >
+                            My Products
+                        </a>
+                    </li>
+
+                    <li
+                        class="breadcrumb-item active"
+                        aria-current="page"
+                    >
+                        Add Product
+                    </li>
+
+                </ol>
+
+            </nav>
+
+
+            {{-- Alert Messages --}}
+            @include('layouts.admin.alert')
+
+
+            {{-- Global Validation Errors --}}
+            @if ($errors->any())
+
+                <div
+                    class="alert alert-danger alert-dismissible fade show"
+                    role="alert"
+                >
+                    <div class="d-flex gap-3">
+
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+
+                        <div>
+                            <h6 class="alert-heading fw-semibold mb-2">
+                                Please correct the following errors:
+                            </h6>
+
+                            <ul class="mb-0 ps-3">
+                                @foreach ($errors->all() as $error)
+                                    <li class="small">
+                                        {{ $error }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
                     </div>
-                @endif
 
-                <!-- FORM -->
-                <div class="row">
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                    ></button>
+                </div>
 
-                    <div class="col-md-8">
+            @endif
 
-                        <div class="card">
 
-                            <div class="card-body">
+            <div class="row justify-content-center">
 
-                                <form method="POST"
-                                      action="{{ route('donor.product.store') }}"
-                                      enctype="multipart/form-data"
-                                      id="productForm">
+                <div class="col-12 col-xl-10">
 
-                                    @csrf
+                    <form
+                        method="POST"
+                        action="{{ route('donor.product.store') }}"
+                        enctype="multipart/form-data"
+                        id="productForm"
+                    >
+                        @csrf
 
-                                    <!-- PRODUCT NAME -->
-                                    <div class="mb-3">
-                                        <label>Product Name</label>
 
-                                        <input type="text"
-                                               name="name"
-                                               value="{{ old('name') }}"
-                                               class="form-control form-control-sm"
-                                               placeholder="Enter product name..."
-                                               required>
+                        <div class="row g-4">
 
-                                        @error('name')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
+                            {{-- Product Information --}}
+                            <div class="col-12 col-lg-8">
+
+                                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                                    {{-- Card Header --}}
+                                    <div class="card-header bg-white border-bottom px-4 py-3">
+
+                                        <div class="d-flex align-items-center gap-3">
+
+                                            <span
+                                                class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary flex-shrink-0"
+                                                style="width: 46px; height: 46px;"
+                                            >
+                                                <i class="bi bi-box-seam fs-5"></i>
+                                            </span>
+
+                                            <div>
+                                                <h5 class="fw-semibold text-dark mb-1">
+                                                    Product Information
+                                                </h5>
+
+                                                <p class="text-secondary small mb-0">
+                                                    Provide clear and accurate product details.
+                                                </p>
+                                            </div>
+
+                                        </div>
+
                                     </div>
 
-                                    <!-- CATEGORY -->
-                                    <div class="mb-3">
-                                        <label>Category</label>
 
-                                        <select name="category_id"
-                                                class="form-control form-control-sm"
-                                                required>
+                                    {{-- Card Body --}}
+                                    <div class="card-body p-4">
 
-                                            <option value="">Select Category</option>
+                                        <div class="row g-4">
 
-                                            @foreach($categories as $cat)
+                                            {{-- Product Name --}}
+                                            <div class="col-12">
 
-                                                <option value="{{ $cat->id }}"
-                                                    {{ old('category_id') == $cat->id ? 'selected' : '' }}>
+                                                <label
+                                                    for="productName"
+                                                    class="form-label fw-semibold"
+                                                >
+                                                    Product Name
+                                                    <span class="text-danger">*</span>
+                                                </label>
 
-                                                    {{ $cat->name }}
+                                                <div class="input-group">
 
-                                                </option>
+                                                    <span class="input-group-text bg-light">
+                                                        <i class="bi bi-box"></i>
+                                                    </span>
 
-                                            @endforeach
+                                                    <input
+                                                        type="text"
+                                                        id="productName"
+                                                        name="name"
+                                                        value="{{ old('name') }}"
+                                                        class="form-control @error('name') is-invalid @enderror"
+                                                        placeholder="For example: Study Table"
+                                                        required
+                                                        autofocus
+                                                    >
 
-                                        </select>
+                                                    @error('name')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
 
-                                        @error('category_id')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
+                                                </div>
+
+                                            </div>
+
+
+                                            {{-- Category --}}
+                                            <div class="col-12 col-md-6">
+
+                                                <label
+                                                    for="categoryId"
+                                                    class="form-label fw-semibold"
+                                                >
+                                                    Category
+                                                    <span class="text-danger">*</span>
+                                                </label>
+
+                                                <select
+                                                    name="category_id"
+                                                    id="categoryId"
+                                                    class="form-select @error('category_id') is-invalid @enderror"
+                                                    required
+                                                >
+                                                    <option value="">
+                                                        Select category
+                                                    </option>
+
+                                                    @foreach ($categories as $category)
+                                                        <option
+                                                            value="{{ $category->id }}"
+                                                            @selected(old('category_id') == $category->id)
+                                                        >
+                                                            {{ $category->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                                @error('category_id')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+
+                                            </div>
+
+
+                                            {{-- Status --}}
+                                            <div class="col-12 col-md-6">
+
+                                                <label
+                                                    for="productStatus"
+                                                    class="form-label fw-semibold"
+                                                >
+                                                    Status
+                                                    <span class="text-danger">*</span>
+                                                </label>
+
+                                                <select
+                                                    name="status"
+                                                    id="productStatus"
+                                                    class="form-select @error('status') is-invalid @enderror"
+                                                    required
+                                                >
+                                                    <option value="">
+                                                        Select status
+                                                    </option>
+
+                                                    <option
+                                                        value="active"
+                                                        @selected(old('status', 'active') === 'active')
+                                                    >
+                                                        Active
+                                                    </option>
+
+                                                    <option
+                                                        value="inactive"
+                                                        @selected(old('status') === 'inactive')
+                                                    >
+                                                        Inactive
+                                                    </option>
+                                                </select>
+
+                                                @error('status')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+
+                                                <div class="form-text">
+                                                    Active products can be viewed by beneficiaries.
+                                                </div>
+
+                                            </div>
+
+
+                                            {{-- Description --}}
+                                            <div class="col-12">
+
+                                                <label
+                                                    for="productDescription"
+                                                    class="form-label fw-semibold"
+                                                >
+                                                    Product Description
+                                                </label>
+
+                                                <textarea
+                                                    name="description"
+                                                    id="productDescription"
+                                                    rows="7"
+                                                    class="form-control @error('description') is-invalid @enderror"
+                                                    placeholder="Describe the product, its condition, specifications and other important details..."
+                                                >{{ old('description') }}</textarea>
+
+                                                @error('description')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+
+                                                <div class="form-text">
+                                                    Include the product condition and any important usage information.
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
                                     </div>
 
-                                    <!-- STATUS -->
-                                    <div class="mb-3">
-                                        <label>Status</label>
+                                </div>
 
-                                        <select name="status"
-                                                class="form-control form-control-sm"
-                                                required>
+                            </div>
 
-                                            <option value="">Select status</option>
 
-                                            <option value="active"
-                                                {{ old('status') == 'active' ? 'selected' : '' }}>
-                                                Active
-                                            </option>
+                            {{-- Product Images --}}
+                            <div class="col-12 col-lg-4">
 
-                                            <option value="inactive"
-                                                {{ old('status') == 'inactive' ? 'selected' : '' }}>
-                                                Inactive
-                                            </option>
+                                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
 
-                                        </select>
+                                    {{-- Card Header --}}
+                                    <div class="card-header bg-white border-bottom px-4 py-3">
 
-                                        @error('status')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
+                                        <h5 class="fw-semibold text-dark mb-1">
+                                            Product Images
+                                        </h5>
+
+                                        <p class="text-secondary small mb-0">
+                                            Upload clear images of the product.
+                                        </p>
+
                                     </div>
 
-                                    <!-- DESCRIPTION -->
-                                    <div class="mb-3">
-                                        <label>Description</label>
 
-                                        <textarea name="description"
-                                                  class="form-control form-control-sm"
-                                                  rows="6"
-                                                  placeholder="Enter product description...">{{ old('description') }}</textarea>
+                                    <div class="card-body p-4">
 
-                                        @error('description')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
+                                        <div class="border border-2 border-secondary-subtle rounded-4 bg-light p-4 text-center">
+
+                                            <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
+
+                                            <h6 class="fw-semibold text-dark mt-2 mb-1">
+                                                Upload Images
+                                            </h6>
+
+                                            <p class="text-secondary small mb-3">
+                                                Select one or multiple product images.
+                                            </p>
+
+                                            <input
+                                                type="file"
+                                                id="imageInput"
+                                                name="images[]"
+                                                class="form-control @error('images') is-invalid @enderror @error('images.*') is-invalid @enderror"
+                                                accept="image/jpeg,image/png,image/jpg,image/webp"
+                                                multiple
+                                            >
+
+                                            @error('images')
+                                                <div class="invalid-feedback text-start">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                            @error('images.*')
+                                                <div class="invalid-feedback text-start">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                        </div>
+
+
+                                        {{-- Upload Requirements --}}
+                                        <div class="border rounded-3 mt-3 p-3">
+
+                                            <h6 class="fw-semibold text-dark small mb-2">
+                                                Image requirements
+                                            </h6>
+
+                                            <ul class="text-secondary small ps-3 mb-0">
+                                                <li>JPG, JPEG, PNG or WebP</li>
+                                                <li>Maximum 100 KB per image</li>
+                                                <li>Multiple images are allowed</li>
+                                                <li>Use clear and well-lit images</li>
+                                            </ul>
+
+                                        </div>
+
+
+                                        {{-- Image Validation Message --}}
+                                        <div
+                                            id="imageError"
+                                            class="alert alert-danger small mt-3 mb-0 d-none"
+                                            role="alert"
+                                        ></div>
+
+
+                                        {{-- Image Preview --}}
+                                        <div
+                                            id="imagePreview"
+                                            class="row g-2 mt-2"
+                                        ></div>
+
                                     </div>
 
-                                    <!-- IMAGES -->
-                                    <div class="mb-3">
-                                        <label>Product Images (Max 100KB each)</label>
+                                </div>
 
-                                        <input type="file"
-                                               name="images[]"
-                                               class="form-control form-control-sm"
-                                               multiple
-                                               id="imageInput"
-                                               accept="image/*">
+                            </div>
 
-                                        <small class="text-muted">
-                                            Only JPG, PNG, WEBP allowed. Max size: 100KB each.
-                                        </small>
 
-                                        @error('images.*')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
+                            {{-- Form Actions --}}
+                            <div class="col-12">
+
+                                <div class="card border-0 shadow-sm rounded-4">
+
+                                    <div class="card-body px-4 py-3">
+
+                                        <div class="d-flex flex-column-reverse flex-sm-row align-items-sm-center justify-content-between gap-3">
+
+                                            <p class="text-secondary small mb-0">
+                                                <i class="bi bi-info-circle me-1"></i>
+                                                Review your product information before submitting.
+                                            </p>
+
+                                            <div class="d-flex flex-column-reverse flex-sm-row gap-2">
+
+                                                <a
+                                                    href="{{ route('donor.product.index') }}"
+                                                    class="btn btn-light border"
+                                                >
+                                                    <i class="bi bi-x-circle me-1"></i>
+                                                    Cancel
+                                                </a>
+
+                                                <button
+                                                    type="submit"
+                                                    id="submitProductButton"
+                                                    class="btn btn-primary"
+                                                >
+                                                    <i class="bi bi-check2-circle me-1"></i>
+                                                    Save Product
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+
                                     </div>
 
-                                    <!-- BUTTONS -->
-                                    <button type="submit" class="btn btn-primary btn-sm">
-                                        Save Product
-                                    </button>
-
-                                    <a href="{{ route('donor.product.index') }}"
-                                       class="btn btn-secondary btn-sm">
-                                        Back
-                                    </a>
-
-                                </form>
+                                </div>
 
                             </div>
 
                         </div>
 
-                    </div>
+                    </form>
 
                 </div>
 
             </div>
 
-        </div>
+        </main>
 
     </div>
 
-</div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+    @include('layouts.admin.script')
 
-    const input = document.getElementById('imageInput');
 
-    input.addEventListener('change', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const imageInput =
+                document.getElementById('imageInput');
 
-        const files = this.files;
+            const imagePreview =
+                document.getElementById('imagePreview');
 
-        for (let i = 0; i < files.length; i++) {
+            const imageError =
+                document.getElementById('imageError');
 
-            const sizeKB = files[i].size / 1024;
+            const submitButton =
+                document.getElementById('submitProductButton');
 
-            if (sizeKB > 1000) { // ✅ 1000 KB = 1MB
+            const maximumImageSize = 100 * 1024;
 
-                alert(files[i].name + " is larger than 1MB. Please upload a smaller image.");
 
-                this.value = ""; // reset input
-
+            if (
+                !imageInput ||
+                !imagePreview ||
+                !imageError
+            ) {
                 return;
             }
-        }
-    });
 
-});
-</script>
-@include('layouts.admin.script')
+
+            imageInput.addEventListener('change', function () {
+                imagePreview.innerHTML = '';
+                imageError.innerHTML = '';
+                imageError.classList.add('d-none');
+
+                if (submitButton) {
+                    submitButton.disabled = false;
+                }
+
+                const files = Array.from(this.files);
+                const invalidFiles = [];
+
+
+                files.forEach(function (file) {
+                    const validImageTypes = [
+                        'image/jpeg',
+                        'image/png',
+                        'image/webp'
+                    ];
+
+                    if (!validImageTypes.includes(file.type)) {
+                        invalidFiles.push(
+                            file.name + ' has an unsupported format.'
+                        );
+
+                        return;
+                    }
+
+                    if (file.size > maximumImageSize) {
+                        invalidFiles.push(
+                            file.name + ' is larger than 100 KB.'
+                        );
+
+                        return;
+                    }
+
+
+                    const reader = new FileReader();
+
+                    reader.addEventListener('load', function (event) {
+                        const column =
+                            document.createElement('div');
+
+                        column.className = 'col-6';
+
+
+                        const container =
+                            document.createElement('div');
+
+                        container.className =
+                            'border rounded-3 bg-light p-1';
+
+
+                        const image =
+                            document.createElement('img');
+
+                        image.src = event.target.result;
+                        image.alt = file.name;
+                        image.width = 120;
+                        image.height = 100;
+                        image.className =
+                            'img-fluid rounded-2 object-fit-cover w-100';
+
+
+                        const fileName =
+                            document.createElement('small');
+
+                        fileName.className =
+                            'd-block text-secondary text-truncate px-1 py-1';
+
+                        fileName.textContent = file.name;
+
+
+                        container.appendChild(image);
+                        container.appendChild(fileName);
+                        column.appendChild(container);
+                        imagePreview.appendChild(column);
+                    });
+
+                    reader.readAsDataURL(file);
+                });
+
+
+                if (invalidFiles.length > 0) {
+                    imageError.innerHTML =
+                        '<strong>Image upload error:</strong><ul class="mb-0 mt-1 ps-3">' +
+                        invalidFiles
+                            .map(function (message) {
+                                return '<li>' + message + '</li>';
+                            })
+                            .join('') +
+                        '</ul>';
+
+                    imageError.classList.remove('d-none');
+
+                    this.value = '';
+                    imagePreview.innerHTML = '';
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>

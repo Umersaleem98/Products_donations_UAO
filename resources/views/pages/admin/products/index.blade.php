@@ -1,506 +1,824 @@
 @include('layouts.admin.head')
 
-<title>Index Products</title>
-
-<style>
-    .profile-box {
-        text-align: center;
-        padding: 20px;
-    }
-
-    .profile-box img {
-        width: 110px;
-        height: 110px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid #eee;
-        margin-bottom: 10px;
-    }
-
-    .info-box p {
-        margin: 6px 0;
-        font-size: 14px;
-    }
-
-    .section-title {
-        font-weight: 700;
-        font-size: 16px;
-        margin: 15px 0 10px;
-        border-left: 4px solid #FABD4D;
-        padding-left: 10px;
-    }
-</style>
-<style>
-    .product-modal .modal-dialog {
-        max-width: 850px;
-    }
-
-    .product-modal .modal-content {
-        border: none;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 15px 40px rgba(0,0,0,.15);
-    }
-
-    .product-modal-header {
-        background: linear-gradient(135deg, #FABD4D, #3C9CE7);
-        color: #fff;
-        padding: 20px 25px;
-    }
-
-    .product-modal-header .modal-title {
-        font-size: 22px;
-        font-weight: 700;
-    }
-
-    .product-modal .modal-body {
-        padding: 30px;
-    }
-
-    .product-modal .form-label {
-        font-weight: 600;
-        margin-bottom: 8px;
-    }
-
-    .product-modal .form-control,
-    .product-modal .form-select {
-        border-radius: 12px;
-        padding: 12px 15px;
-        border: 1px solid #dcdcdc;
-    }
-
-    .product-modal .form-control:focus,
-    .product-modal .form-select:focus {
-        box-shadow: 0 0 0 .2rem rgba(75,73,172,.15);
-        border-color: #FABD4D;
-    }
-
-    .upload-box {
-        border: 2px dashed #d3d3d3;
-        border-radius: 15px;
-        padding: 25px;
-        text-align: center;
-        transition: .3s;
-    }
-
-    .upload-box:hover {
-        border-color: #FABD4D;
-    }
-
-    .preview-images {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 15px;
-    }
-
-    .preview-images img {
-        width: 90px;
-        height: 90px;
-        object-fit: cover;
-        border-radius: 10px;
-        border: 1px solid #ddd;
-    }
-
-    .product-modal .modal-footer {
-        border-top: 1px solid #eee;
-        padding: 20px 25px;
-    }
-
-    .btn-save-product {
-        background: #FABD4D;
-        color: #fff;
-        border-radius: 50px;
-        padding: 10px 25px;
-        border: none;
-    }
-
-    .btn-save-product:hover {
-        background: #3d3b93;
-        color: #fff;
-    }
-
-    @media(max-width:768px){
-        .product-modal .modal-body{
-            padding:20px;
-        }
-    }
-</style>
+<title>Manage Products</title>
 
 <body>
 
-    <div class="container-scroller">
+    {{-- New Sidebar --}}
+    @include('layouts.admin.sidebar')
 
+
+    {{-- Main Content --}}
+    <div class="nsn-main">
+
+        {{-- New Topbar --}}
         @include('layouts.admin.header')
 
-        <div class="container-fluid page-body-wrapper">
 
-            @include('layouts.admin.sidebar')
+        <main class="nsn-content">
 
-            <div class="main-panel">
+            {{-- Page Header --}}
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
 
-                <div class="content-wrapper">
+                <div>
+                    <h3 class="fw-bold text-dark mb-1">
+                        Products
+                    </h3>
 
-                    <div class="page-header">
-
-                        <h3 class="page-title">
-                            <span class="page-title-icon bg-gradient-primary text-white me-2">
-                                <i class="mdi mdi-cube"></i>
-                            </span>
-                            Products
-                        </h3>
-
-                        @include('layouts.admin.alert')
-
-                    </div>
-
-                    <!-- TABLE -->
-                    <div class="row">
-
-                        <div class="col-12">
-
-                            <div class="card shadow-sm">
-
-                                <div class="card-header d-flex justify-content-between align-items-center">
-
-                                    <h5>Products</h5>
-
-                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#addProductModal">
-                                        + Add Product
-                                    </button>
-
-                                </div>
-
-                                <div class="card-body">
-
-                                    <table class="table table-bordered table-hover align-middle">
-
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Image</th>
-                                                <th>Name</th>
-                                                <th>Category</th>
-                                                <th>Added By</th>
-                                                <th>Status</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            @forelse($products as $key => $product)
-                                                @php
-                                                    $images = json_decode($product->images, true);
-                                                    $user = $product->user;
-                                                @endphp
-
-                                                <tr>
-
-                                                    <td>{{ $key + 1 }}</td>
-
-                                                    {{-- IMAGE --}}
-                                                    <td>
-                                                        @if (!empty($images))
-                                                            <img src="{{ asset('admin/products/' . $images[0]) }}"
-                                                                width="60" height="60"
-                                                                style="object-fit:cover;border-radius:6px;">
-                                                        @else
-                                                            N/A
-                                                        @endif
-                                                    </td>
-
-                                                    {{-- NAME --}}
-                                                    <td>{{ $product->name }}</td>
-
-                                                    {{-- CATEGORY --}}
-                                                    <td>{{ $product->category->name ?? 'N/A' }}</td>
-
-                                                    {{-- ADDED BY --}}
-                                                    <td>
-
-                                                        <button class="btn btn-sm btn-info mt-1" data-bs-toggle="modal"
-                                                            data-bs-target="#userModal{{ $user->id }}">
-                                                            View Profile
-                                                        </button>
-
-                                                    </td>
-
-                                                    {{-- STATUS --}}
-                                                    <td>
-                                                        @if ($product->status == 'active')
-                                                            <span class="badge bg-success">Active</span>
-                                                        @else
-                                                            <span class="badge bg-danger">Inactive</span>
-                                                        @endif
-                                                    </td>
-
-                                                    {{-- ACTION --}}
-                                                    <td>
-
-                                                        <a href="{{ route('admin.product.edit', $product->id) }}"
-                                                            class="btn btn-warning btn-sm">
-                                                            Edit
-                                                        </a>
-
-                                                        <form
-                                                            action="{{ route('admin.products.delete', $product->id) }}"
-                                                            method="POST" style="display:inline-block">
-
-                                                            @csrf
-                                                            @method('DELETE')
-
-                                                            <button class="btn btn-danger btn-sm"
-                                                                onclick="return confirm('Are you sure?')">
-                                                                Delete
-                                                            </button>
-
-                                                        </form>
-
-                                                    </td>
-
-                                                </tr>
-
-                                                {{-- ================= USER PROFILE MODAL ================= --}}
-                                                <div class="modal fade" id="userModal{{ $user->id }}"
-                                                    tabindex="-1">
-
-                                                    <div class="modal-dialog modal-md modal-dialog-centered">
-
-                                                        <div class="modal-content">
-
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">User Profile</h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"></button>
-                                                            </div>
-
-                                                            <div class="modal-body">
-
-                                                                <div class="profile-box">
-
-                                                                    <img
-                                                                        src="{{ $user->image ? asset('admin/asset/profilephoto/' . $user->image) : asset('admin/default.png') }}">
-
-                                                                    <h5>{{ $user->name }}</h5>
-                                                                    <small
-                                                                        class="text-muted">{{ $user->email }}</small>
-
-                                                                </div>
-
-                                                                <hr>
-
-                                                                <div class="section-title">Account Info</div>
-
-                                                                <div class="info-box">
-                                                                    <p><strong>User ID:</strong> {{ $user->id }}
-                                                                    </p>
-                                                                    <p><strong>Email:</strong> {{ $user->email }}</p>
-                                                                </div>
-
-                                                                <div class="section-title">Product Stats</div>
-
-                                                                <div class="info-box">
-                                                                    <p>
-                                                                        <strong>Total Products:</strong>
-                                                                        {{ $user->products->count() ?? 0 }}
-                                                                    </p>
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
-
-                                                    </div>
-
-                                                </div>
-
-                                            @empty
-
-                                                <tr>
-                                                    <td colspan="7" class="text-center">
-                                                        No products found
-                                                    </td>
-                                                </tr>
-                                            @endforelse
-
-                                        </tbody>
-
-                                    </table>
-
-                                    <div class="d-flex justify-content-end mt-3">
-                                        {{ $products->links() }}
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
+                    <p class="text-secondary small mb-0">
+                        Manage products submitted to the NUST Sharing Network.
+                    </p>
                 </div>
 
-            </div>
-
-        </div>
-
-    </div>
-
-    @include('layouts.admin.script')
-
-</body>
-
-
-<div class="modal fade product-modal" id="addProductModal" tabindex="-1">
-
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="product-modal-header d-flex justify-content-between align-items-center">
-
-                <h5 class="modal-title">
-                    <i class="mdi mdi-package-variant me-2"></i>
-                    Add New Product
-                </h5>
-
-                <button type="button"
-                    class="btn-close btn-close-white"
-                    data-bs-dismiss="modal">
+                <button
+                    type="button"
+                    class="btn btn-primary d-flex align-items-center gap-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addProductModal"
+                >
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Add Product</span>
                 </button>
 
             </div>
 
-            <form action="{{ route('admin.products.store') }}"
-                method="POST"
-                enctype="multipart/form-data">
 
-                @csrf
+            {{-- Breadcrumb --}}
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb small mb-0">
 
-                <div class="modal-body">
+                    <li class="breadcrumb-item">
+                        <a
+                            href="{{ route('dashboard') }}"
+                            class="text-decoration-none"
+                        >
+                            <i class="bi bi-house-door me-1"></i>
+                            Dashboard
+                        </a>
+                    </li>
 
-                    <div class="row">
+                    <li
+                        class="breadcrumb-item active"
+                        aria-current="page"
+                    >
+                        Products
+                    </li>
 
-                        <!-- Category -->
-                        <div class="col-md-6 mb-4">
+                </ol>
+            </nav>
 
-                            <label class="form-label">
-                                Category
-                            </label>
 
-                            <select name="category_id"
-                                class="form-select"
-                                required>
+            {{-- Alert Messages --}}
+            @include('layouts.admin.alert')
 
-                                <option value="">
-                                    Select Category
-                                </option>
 
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
+            {{-- Products Card --}}
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
 
-                            </select>
+                {{-- Card Header --}}
+                <div class="card-header bg-white border-bottom px-4 py-3">
+
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+
+                        <div>
+                            <h5 class="fw-semibold text-dark mb-1">
+                                All Products
+                            </h5>
+
+                            <p class="text-secondary small mb-0">
+                                Total products:
+                                <span class="fw-semibold text-dark">
+                                    {{ $products->total() }}
+                                </span>
+                            </p>
+                        </div>
+
+                        <span class="badge rounded-pill bg-primary-subtle text-primary px-3 py-2">
+                            <i class="bi bi-box-seam me-1"></i>
+                            {{ $products->count() }} displayed
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                {{-- Products Table --}}
+                <div class="card-body p-0">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="px-4 py-3 text-secondary small">
+                                        #
+                                    </th>
+
+                                    <th class="py-3 text-secondary small">
+                                        Product
+                                    </th>
+
+                                    <th class="py-3 text-secondary small">
+                                        Category
+                                    </th>
+
+                                    <th class="py-3 text-secondary small">
+                                        Added By
+                                    </th>
+
+                                    <th class="py-3 text-secondary small">
+                                        Status
+                                    </th>
+
+                                    <th class="px-4 py-3 text-secondary small text-end">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+
+                                @forelse ($products as $key => $product)
+
+                                    @php
+                                        $images = is_array($product->images)
+                                            ? $product->images
+                                            : json_decode($product->images, true);
+
+                                        $images = is_array($images) ? $images : [];
+
+                                        $productUser = $product->user;
+                                    @endphp
+
+                                    <tr>
+
+                                        {{-- Number --}}
+                                        <td class="px-4">
+                                            <span class="text-secondary">
+                                                {{ $products->firstItem() + $key }}
+                                            </span>
+                                        </td>
+
+
+                                        {{-- Product --}}
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+
+                                                @if (!empty($images))
+                                                    <img
+                                                        src="{{ asset('admin/products/' . $images[0]) }}"
+                                                        alt="{{ $product->name }}"
+                                                        width="58"
+                                                        height="58"
+                                                        class="rounded-3 border object-fit-cover flex-shrink-0"
+                                                    >
+                                                @else
+                                                    <span
+                                                        class="d-inline-flex align-items-center justify-content-center rounded-3 bg-light border text-secondary flex-shrink-0"
+                                                        style="width: 58px; height: 58px;"
+                                                    >
+                                                        <i class="bi bi-image fs-5"></i>
+                                                    </span>
+                                                @endif
+
+                                                <div>
+                                                    <div class="fw-semibold text-dark">
+                                                        {{ $product->name }}
+                                                    </div>
+
+                                                    <small class="text-secondary">
+                                                        ID: {{ $product->id }}
+                                                    </small>
+                                                </div>
+
+                                            </div>
+                                        </td>
+
+
+                                        {{-- Category --}}
+                                        <td>
+                                            <span class="badge bg-light text-secondary border fw-normal">
+                                                <i class="bi bi-tag me-1"></i>
+                                                {{ optional($product->category)->name ?? 'Not assigned' }}
+                                            </span>
+                                        </td>
+
+
+                                        {{-- Added By --}}
+                                        <td>
+                                            @if ($productUser)
+
+                                                <div class="d-flex align-items-center gap-2">
+
+                                                    @if ($productUser->image)
+                                                        <img
+                                                            src="{{ asset('admin/asset/profilephoto/' . $productUser->image) }}"
+                                                            alt="{{ $productUser->name }}"
+                                                            width="34"
+                                                            height="34"
+                                                            class="rounded-circle border object-fit-cover"
+                                                        >
+                                                    @else
+                                                        <span
+                                                            class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-semibold"
+                                                            style="width: 34px; height: 34px;"
+                                                        >
+                                                            {{ strtoupper(substr($productUser->name, 0, 1)) }}
+                                                        </span>
+                                                    @endif
+
+                                                    <div>
+                                                        <div class="small fw-semibold text-dark">
+                                                            {{ $productUser->name }}
+                                                        </div>
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-link btn-sm text-decoration-none p-0"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#userModal{{ $product->id }}"
+                                                        >
+                                                            View profile
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+
+                                            @else
+                                                <span class="text-secondary small">
+                                                    User unavailable
+                                                </span>
+                                            @endif
+                                        </td>
+
+
+                                        {{-- Status --}}
+                                        <td>
+                                            @if ($product->status === 'active')
+                                                <span class="badge rounded-pill bg-success-subtle text-success px-3 py-2">
+                                                    <i class="bi bi-check-circle me-1"></i>
+                                                    Active
+                                                </span>
+                                            @else
+                                                <span class="badge rounded-pill bg-danger-subtle text-danger px-3 py-2">
+                                                    <i class="bi bi-x-circle me-1"></i>
+                                                    Inactive
+                                                </span>
+                                            @endif
+                                        </td>
+
+
+                                        {{-- Actions --}}
+                                        <td class="px-4 text-end">
+
+                                            <div class="d-inline-flex align-items-center gap-2">
+
+                                                <a
+                                                    href="{{ route('admin.product.edit', $product->id) }}"
+                                                    class="btn btn-outline-warning btn-sm"
+                                                    title="Edit product"
+                                                >
+                                                    <i class="bi bi-pencil-square me-1"></i>
+                                                    Edit
+                                                </a>
+
+                                                <form
+                                                    action="{{ route('admin.products.delete', $product->id) }}"
+                                                    method="POST"
+                                                    class="d-inline"
+                                                    onsubmit="return confirm('Are you sure you want to delete this product?');"
+                                                >
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        title="Delete product"
+                                                    >
+                                                        <i class="bi bi-trash3 me-1"></i>
+                                                        Delete
+                                                    </button>
+                                                </form>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                @empty
+
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5">
+
+                                            <div class="d-flex flex-column align-items-center">
+
+                                                <span
+                                                    class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light text-secondary mb-3"
+                                                    style="width: 64px; height: 64px;"
+                                                >
+                                                    <i class="bi bi-box-seam fs-3"></i>
+                                                </span>
+
+                                                <h6 class="fw-semibold text-dark mb-1">
+                                                    No products found
+                                                </h6>
+
+                                                <p class="text-secondary small mb-3">
+                                                    Add your first product to get started.
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-primary btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#addProductModal"
+                                                >
+                                                    <i class="bi bi-plus-lg me-1"></i>
+                                                    Add Product
+                                                </button>
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+
+                                @endforelse
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                {{-- Pagination --}}
+                @if ($products->hasPages())
+
+                    <div class="card-footer bg-white border-top px-4 py-3">
+
+                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+
+                            <p class="text-secondary small mb-0">
+                                Showing
+                                <span class="fw-semibold text-dark">
+                                    {{ $products->firstItem() }}
+                                </span>
+                                to
+                                <span class="fw-semibold text-dark">
+                                    {{ $products->lastItem() }}
+                                </span>
+                                of
+                                <span class="fw-semibold text-dark">
+                                    {{ $products->total() }}
+                                </span>
+                                products
+                            </p>
+
+                            <div>
+                                {{ $products->withQueryString()->links() }}
+                            </div>
 
                         </div>
 
-                        <!-- Product Name -->
-                        <div class="col-md-6 mb-4">
+                    </div>
 
-                            <label class="form-label">
-                                Product Name
-                            </label>
+                @endif
 
-                            <input type="text"
-                                name="name"
-                                id="product_name"
-                                class="form-control"
-                                placeholder="Enter product name"
-                                required>
+            </div>
 
-                        </div>
+        </main>
 
-                        <!-- Slug -->
-                        <div class="col-md-6 mb-4">
+    </div>
 
-                            <label class="form-label">
-                                Product Slug
-                            </label>
 
-                            <input type="text"
-                                name="slug"
-                                id="product_slug"
-                                class="form-control"
-                                placeholder="Auto generated slug"
-                                required>
+    {{-- ===================================================== --}}
+    {{-- USER PROFILE MODALS --}}
+    {{-- ===================================================== --}}
+    @foreach ($products as $product)
 
-                        </div>
+        @php
+            $productUser = $product->user;
+        @endphp
 
-                        <!-- Status -->
-                        <div class="col-md-6 mb-4">
+        @if ($productUser)
 
-                            <label class="form-label">
-                                Status
-                            </label>
+            <div
+                class="modal fade"
+                id="userModal{{ $product->id }}"
+                tabindex="-1"
+                aria-labelledby="userModalLabel{{ $product->id }}"
+                aria-hidden="true"
+            >
+                <div class="modal-dialog modal-dialog-centered">
 
-                            <select name="status"
-                                class="form-select">
+                    <div class="modal-content border-0 shadow rounded-4">
 
-                                <option value="active">
-                                    Active
-                                </option>
+                        {{-- Header --}}
+                        <div class="modal-header border-bottom px-4 py-3">
 
-                                <option value="inactive">
-                                    Inactive
-                                </option>
+                            <h5
+                                class="modal-title fw-bold"
+                                id="userModalLabel{{ $product->id }}"
+                            >
+                                User Profile
+                            </h5>
 
-                            </select>
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
 
                         </div>
 
-                        <!-- Description -->
-                        <div class="col-md-12 mb-4">
 
-                            <label class="form-label">
-                                Product Description
-                            </label>
+                        {{-- Body --}}
+                        <div class="modal-body p-4">
 
-                            <textarea name="description"
-                                rows="5"
-                                class="form-control"
-                                placeholder="Write product details here..."></textarea>
+                            <div class="text-center mb-4">
 
-                        </div>
+                                @if ($productUser->image)
+                                    <img
+                                        src="{{ asset('admin/asset/profilephoto/' . $productUser->image) }}"
+                                        alt="{{ $productUser->name }}"
+                                        width="105"
+                                        height="105"
+                                        class="rounded-circle border border-3 object-fit-cover mb-3"
+                                    >
+                                @else
+                                    <span
+                                        class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-bold fs-2 mb-3"
+                                        style="width: 105px; height: 105px;"
+                                    >
+                                        {{ strtoupper(substr($productUser->name, 0, 1)) }}
+                                    </span>
+                                @endif
 
-                        <!-- Image Upload -->
-                        <div class="col-md-12">
+                                <h5 class="fw-bold text-dark mb-1">
+                                    {{ $productUser->name }}
+                                </h5>
 
-                            <label class="form-label">
-                                Product Images
-                            </label>
-
-                            <div class="upload-box">
-
-                                <i class="mdi mdi-cloud-upload"
-                                    style="font-size:40px;color:#FABD4D"></i>
-
-                                <p class="mt-2 mb-2">
-                                    Drag & Drop Images or Click Below
+                                <p class="text-secondary small mb-2">
+                                    {{ $productUser->email }}
                                 </p>
 
-                                <input type="file"
-                                    id="productImages"
-                                    name="images[]"
-                                    class="form-control"
-                                    multiple
-                                    accept="image/*">
+                                <span class="badge rounded-pill bg-primary-subtle text-primary text-capitalize px-3 py-2">
+                                    {{ $productUser->role }}
+                                </span>
 
-                                <div class="preview-images" id="imagePreview"></div>
+                            </div>
+
+
+                            <div class="border rounded-3 overflow-hidden">
+
+                                <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                                    <span class="text-secondary small">
+                                        <i class="bi bi-person-badge me-2"></i>
+                                        User ID
+                                    </span>
+
+                                    <span class="fw-semibold text-dark">
+                                        #{{ $productUser->id }}
+                                    </span>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                                    <span class="text-secondary small">
+                                        <i class="bi bi-envelope me-2"></i>
+                                        Email
+                                    </span>
+
+                                    <span class="fw-semibold text-dark small">
+                                        {{ $productUser->email }}
+                                    </span>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center p-3">
+                                    <span class="text-secondary small">
+                                        <i class="bi bi-box-seam me-2"></i>
+                                        Total Products
+                                    </span>
+
+                                    <span class="fw-semibold text-dark">
+                                        {{ $productUser->products->count() }}
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- Footer --}}
+                        <div class="modal-footer border-top px-4 py-3">
+
+                            <button
+                                type="button"
+                                class="btn btn-light border"
+                                data-bs-dismiss="modal"
+                            >
+                                Close
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        @endif
+
+    @endforeach
+
+
+    {{-- ===================================================== --}}
+    {{-- ADD PRODUCT MODAL --}}
+    {{-- ===================================================== --}}
+    <div
+        class="modal fade"
+        id="addProductModal"
+        tabindex="-1"
+        aria-labelledby="addProductModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+
+            <div class="modal-content border-0 shadow rounded-4">
+
+                <form
+                    action="{{ route('admin.products.store') }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+                    @csrf
+
+
+                    {{-- Modal Header --}}
+                    <div class="modal-header border-bottom px-4 py-3">
+
+                        <div>
+                            <h5
+                                class="modal-title fw-bold"
+                                id="addProductModalLabel"
+                            >
+                                <i class="bi bi-box-seam me-2"></i>
+                                Add New Product
+                            </h5>
+
+                            <p class="text-secondary small mb-0 mt-1">
+                                Enter product information and upload its images.
+                            </p>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+
+                    </div>
+
+
+                    {{-- Modal Body --}}
+                    <div class="modal-body p-4">
+
+                        <div class="row g-4">
+
+                            {{-- Category --}}
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="category_id"
+                                    class="form-label fw-semibold"
+                                >
+                                    Category
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <select
+                                    name="category_id"
+                                    id="category_id"
+                                    class="form-select @error('category_id') is-invalid @enderror"
+                                    required
+                                >
+                                    <option value="">
+                                        Select category
+                                    </option>
+
+                                    @foreach ($categories as $category)
+                                        <option
+                                            value="{{ $category->id }}"
+                                            @selected(old('category_id') == $category->id)
+                                        >
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @error('category_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Product Name --}}
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="product_name"
+                                    class="form-label fw-semibold"
+                                >
+                                    Product Name
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="name"
+                                    id="product_name"
+                                    value="{{ old('name') }}"
+                                    class="form-control @error('name') is-invalid @enderror"
+                                    placeholder="Enter product name"
+                                    required
+                                >
+
+                                @error('name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Slug --}}
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="product_slug"
+                                    class="form-label fw-semibold"
+                                >
+                                    Product Slug
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-link-45deg"></i>
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        name="slug"
+                                        id="product_slug"
+                                        value="{{ old('slug') }}"
+                                        class="form-control @error('slug') is-invalid @enderror"
+                                        placeholder="Auto-generated slug"
+                                        required
+                                    >
+
+                                    @error('slug')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- Status --}}
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="status"
+                                    class="form-label fw-semibold"
+                                >
+                                    Status
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <select
+                                    name="status"
+                                    id="status"
+                                    class="form-select @error('status') is-invalid @enderror"
+                                    required
+                                >
+                                    <option
+                                        value="active"
+                                        @selected(old('status', 'active') === 'active')
+                                    >
+                                        Active
+                                    </option>
+
+                                    <option
+                                        value="inactive"
+                                        @selected(old('status') === 'inactive')
+                                    >
+                                        Inactive
+                                    </option>
+                                </select>
+
+                                @error('status')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Description --}}
+                            <div class="col-12">
+
+                                <label
+                                    for="description"
+                                    class="form-label fw-semibold"
+                                >
+                                    Product Description
+                                </label>
+
+                                <textarea
+                                    name="description"
+                                    id="description"
+                                    rows="5"
+                                    class="form-control @error('description') is-invalid @enderror"
+                                    placeholder="Write product details here..."
+                                >{{ old('description') }}</textarea>
+
+                                @error('description')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Product Images --}}
+                            <div class="col-12">
+
+                                <label
+                                    for="productImages"
+                                    class="form-label fw-semibold"
+                                >
+                                    Product Images
+                                </label>
+
+                                <div class="border border-2 border-secondary-subtle rounded-4 bg-light p-4 text-center">
+
+                                    <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
+
+                                    <h6 class="fw-semibold text-dark mt-2 mb-1">
+                                        Upload Product Images
+                                    </h6>
+
+                                    <p class="text-secondary small mb-3">
+                                        You can select multiple JPG, PNG or WebP images.
+                                    </p>
+
+                                    <input
+                                        type="file"
+                                        id="productImages"
+                                        name="images[]"
+                                        class="form-control @error('images') is-invalid @enderror @error('images.*') is-invalid @enderror"
+                                        multiple
+                                        accept="image/*"
+                                    >
+
+                                    @error('images')
+                                        <div class="invalid-feedback text-start">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                                    @error('images.*')
+                                        <div class="invalid-feedback text-start">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                                    <div
+                                        id="imagePreview"
+                                        class="d-flex flex-wrap justify-content-center gap-2 mt-3"
+                                    ></div>
+
+                                </div>
 
                             </div>
 
@@ -508,72 +826,96 @@
 
                     </div>
 
-                </div>
 
-                <div class="modal-footer">
+                    {{-- Modal Footer --}}
+                    <div class="modal-footer border-top px-4 py-3">
 
-                    <button type="button"
-                        class="btn btn-light"
-                        data-bs-dismiss="modal">
-                        Cancel
-                    </button>
+                        <button
+                            type="button"
+                            class="btn btn-light border"
+                            data-bs-dismiss="modal"
+                        >
+                            Cancel
+                        </button>
 
-                    <button type="submit"
-                        class="btn btn-save-product">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-check2-circle me-1"></i>
+                            Save Product
+                        </button>
 
-                        <i class="mdi mdi-content-save"></i>
-                        Save Product
+                    </div>
 
-                    </button>
+                </form>
 
-                </div>
-
-            </form>
+            </div>
 
         </div>
-
     </div>
 
-</div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
 
-    // Auto Slug
-    let name = document.getElementById('product_name');
-    let slug = document.getElementById('product_slug');
+    @include('layouts.admin.script')
 
-    name.addEventListener('keyup', function() {
-        slug.value = this.value
-            .toLowerCase()
-            .trim()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '');
-    });
 
-    // Image Preview
-    document.getElementById('productImages')
-        .addEventListener('change', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const productName = document.getElementById('product_name');
+            const productSlug = document.getElementById('product_slug');
+            const productImages = document.getElementById('productImages');
+            const imagePreview = document.getElementById('imagePreview');
 
-        let preview = document.getElementById('imagePreview');
-        preview.innerHTML = '';
-
-        Array.from(this.files).forEach(file => {
-
-            let reader = new FileReader();
-
-            reader.onload = function(e) {
-
-                preview.innerHTML += `
-                    <img src="${e.target.result}">
-                `;
-
+            if (productName && productSlug) {
+                productName.addEventListener('input', function () {
+                    productSlug.value = this.value
+                        .toLowerCase()
+                        .trim()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/^-+|-+$/g, '');
+                });
             }
 
-            reader.readAsDataURL(file);
+            if (productImages && imagePreview) {
+                productImages.addEventListener('change', function () {
+                    imagePreview.innerHTML = '';
 
+                    Array.from(this.files).forEach(function (file) {
+                        if (!file.type.startsWith('image/')) {
+                            return;
+                        }
+
+                        const reader = new FileReader();
+
+                        reader.addEventListener('load', function (event) {
+                            const image = document.createElement('img');
+
+                            image.src = event.target.result;
+                            image.alt = file.name;
+                            image.width = 90;
+                            image.height = 90;
+                            image.className =
+                                'rounded-3 border bg-white object-fit-cover p-1';
+
+                            imagePreview.appendChild(image);
+                        });
+
+                        reader.readAsDataURL(file);
+                    });
+                });
+            }
+
+            @if ($errors->any())
+                const addProductModal =
+                    document.getElementById('addProductModal');
+
+                if (addProductModal) {
+                    bootstrap.Modal
+                        .getOrCreateInstance(addProductModal)
+                        .show();
+                }
+            @endif
         });
+    </script>
 
-    });
-
-});
-</script>
+</body>
