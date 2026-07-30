@@ -5,7 +5,7 @@
 <body>
 
     @php
-        $fallbackImage = asset('admin/asset/dummy/dummy.jpg');
+        $fallbackImage = asset('admins/asset/dummy/dummy.jpg');
     @endphp
 
 
@@ -256,7 +256,7 @@
                             : [];
 
                         $productImage = !empty($productImages)
-                            ? asset('admin/products/' . $productImages[0])
+                            ? asset('admins/products/' . $productImages[0])
                             : $fallbackImage;
                     @endphp
 

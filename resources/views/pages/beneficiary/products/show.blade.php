@@ -13,7 +13,7 @@
             ? array_values(array_filter($productImages))
             : [];
 
-        $fallbackImage = asset('admin/asset/dummy/dummy.jpg');
+        $fallbackImage = asset('admins/asset/dummy/dummy.jpg');
     @endphp
 
 
@@ -116,7 +116,7 @@
                                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
 
                                             <img
-                                                src="{{ asset('admin/products/' . $image) }}"
+                                                src="{{ asset('admins/products/' . $image) }}"
                                                 alt="{{ $product->name }} image {{ $index + 1 }}"
                                                 width="800"
                                                 height="500"

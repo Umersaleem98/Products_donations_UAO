@@ -393,7 +393,7 @@
                                                             <div class="border rounded-3 bg-light p-1">
 
                                                                 <img
-                                                                    src="{{ asset('admin/products/' . $image) }}"
+                                                                    src="{{ asset('admins/products/' . $image) }}"
                                                                     alt="{{ $product->name }}"
                                                                     class="img-fluid rounded-2 object-fit-cover w-100"
                                                                     height="90"

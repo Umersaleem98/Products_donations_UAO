@@ -27,11 +27,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/cookie-accept', [CookieConsentController::class, 'accept']);
-Route::post('/cookie-reject', [CookieConsentController::class, 'reject']);
+Route::post('/cookie-accept',[CookieConsentController::class, 'accept'])->middleware('throttle:10,1')->name('cookie.accept');
+Route::post('/cookie-reject',[CookieConsentController::class, 'reject'])->middleware('throttle:10,1')->name('cookie.reject');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
 
 /*
@@ -60,7 +59,6 @@ Route::middleware('auth')->group(function () {
         }
 
         return back();
-
     })->name('notification.read');
 
 
@@ -82,20 +80,20 @@ Route::middleware('auth')->group(function () {
         Route::delete('category/delete/{id}', [AdminCategorytController::class, 'destroy'])->name('admin.category.delete');
 
         // PRODUCTS
-        Route::get('products/index', [AdminProductsController::class,'index'])->name('admin.products.index');
-        Route::get('products/create', [AdminProductsController::class,'create'])->name('admin.products.create');
-        Route::post('products/store', [AdminProductsController::class,'store'])->name('admin.products.store');
+        Route::get('products/index', [AdminProductsController::class, 'index'])->name('admin.products.index');
+        Route::get('products/create', [AdminProductsController::class, 'create'])->name('admin.products.create');
+        Route::post('products/store', [AdminProductsController::class, 'store'])->name('admin.products.store');
         Route::get('product/{id}/edit', [AdminProductsController::class, 'edit'])->name('admin.product.edit');
-        Route::put('products/update/{id}', [AdminProductsController::class,'update'])->name('admin.products.update');
+        Route::put('products/update/{id}', [AdminProductsController::class, 'update'])->name('admin.products.update');
         Route::delete('products/delete/{id}', [AdminProductsController::class, 'destroy'])->name('admin.products.delete');
 
         // USERS
-        Route::get('user/index', [AdminUserController::class,'index'])->name('admin.user.index');
-        Route::get('user/create', [AdminUserController::class,'create'])->name('admin.user.create');
-        Route::post('user/store', [AdminUserController::class,'store'])->name('admin.user.store');
-        Route::get('user/edit/{id}', [AdminUserController::class,'edit'])->name('admin.user.edit');
-        Route::put('user/update/{id}', [AdminUserController::class,'update'])->name('admin.user.update');
-        Route::get('user/delete/{id}', [AdminUserController::class,'destroy'])->name('admin.user.destroy');
+        Route::get('user/index', [AdminUserController::class, 'index'])->name('admin.user.index');
+        Route::get('user/create', [AdminUserController::class, 'create'])->name('admin.user.create');
+        Route::post('user/store', [AdminUserController::class, 'store'])->name('admin.user.store');
+        Route::get('user/edit/{id}', [AdminUserController::class, 'edit'])->name('admin.user.edit');
+        Route::put('user/update/{id}', [AdminUserController::class, 'update'])->name('admin.user.update');
+        Route::get('user/delete/{id}', [AdminUserController::class, 'destroy'])->name('admin.user.destroy');
 
         Route::post('user/delete-selected', [AdminUserController::class, 'deleteSelected'])->name('admin.user.delete.selected');
 
@@ -108,7 +106,7 @@ Route::middleware('auth')->group(function () {
         Route::get('requests', [AdminRequestController::class, 'index'])->name('admin.requests');
         Route::post('request/{id}/update', [AdminRequestController::class, 'update'])->name('admin.request.update');
 
-        Route::get('/reports/traffic',[AdminTrafficReportController::class, 'index'])->name('reports.traffic');
+        Route::get('/reports/traffic', [AdminTrafficReportController::class, 'index'])->name('reports.traffic');
     });
 
 
@@ -124,10 +122,10 @@ Route::middleware('auth')->group(function () {
         // PRODUCTS
         Route::get('product/index', [DonorProductController::class, 'index'])->name('donor.product.index');
         Route::get('product/create', [DonorProductController::class, 'create'])->name('donor.product.create');
-        Route::post('products/store', [DonorProductController::class,'store'])->name('donor.product.store');
-        Route::get('products/edit/{id}', [DonorProductController::class,'edit'])->name('donor.product.edit');
-        Route::put('products/update/{id}', [DonorProductController::class,'update'])->name('donor.product.update');
-        Route::delete('products/delete/{id}', [DonorProductController::class,'destroy'])->name('donor.products.delete');
+        Route::post('products/store', [DonorProductController::class, 'store'])->name('donor.product.store');
+        Route::get('products/edit/{id}', [DonorProductController::class, 'edit'])->name('donor.product.edit');
+        Route::put('products/update/{id}', [DonorProductController::class, 'update'])->name('donor.product.update');
+        Route::delete('products/delete/{id}', [DonorProductController::class, 'destroy'])->name('donor.products.delete');
 
         // PROFILE
         Route::get('profile/index', [DonorProfileController::class, 'index'])->name('donor.profile.index');
@@ -136,8 +134,6 @@ Route::middleware('auth')->group(function () {
         // REQUESTS
         Route::get('requests', [DonorRequestController::class, 'donorRequests'])->name('donor.requests');
         Route::post('request/{id}', [DonorRequestController::class, 'updateRequestStatus'])->name('donor.request.update');
-
-
     });
 
 
@@ -170,5 +166,4 @@ Route::middleware('auth')->group(function () {
         Route::get('my-requests', [BeneficiaryProductController::class, 'myRequests'])
             ->name('beneficiary.my.requests');
     });
-
 });

@@ -700,7 +700,7 @@
                 {{-- Login Form --}}
                 <form
                     method="POST"
-                    action="{{ route('login') }}"
+                    action="{{ route('login.post') }}"
                     id="loginForm"
                 >
                     @csrf

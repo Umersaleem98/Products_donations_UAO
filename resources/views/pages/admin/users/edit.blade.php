@@ -433,7 +433,7 @@
                                             @if ($user->image)
                                                 <img
                                                     id="imagePreview"
-                                                    src="{{ asset('admin/asset/profilephoto/' . $user->image) }}"
+                                                    src="{{ asset('admins/asset/profilephoto/' . $user->image) }}"
                                                     alt="{{ $user->name }}"
                                                     width="120"
                                                     height="120"

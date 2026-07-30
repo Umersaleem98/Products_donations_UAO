@@ -1,5 +1,5 @@
 @include('layouts.admin.head')
-
+<title>NUST Sharing Network · Dashboard</title>
 <style>
     .dashboard-heading {
         color: #172033;

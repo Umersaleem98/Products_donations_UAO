@@ -171,7 +171,7 @@
                                                 @if (!empty($images))
 
                                                     <img
-                                                        src="{{ asset('admin/products/' . $images[0]) }}"
+                                                        src="{{ asset('admins/products/' . $images[0]) }}"
                                                         alt="{{ $product->name }}"
                                                         width="60"
                                                         height="60"

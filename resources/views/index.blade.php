@@ -1,4 +1,5 @@
 @include('layouts.home.head')
+<title>NUST Sharing-Network </title>
 
 <body>
 

@@ -33,7 +33,7 @@
             ->where('donor_status', 'rejected')
             ->count();
 
-        $fallbackImage = asset('admin/asset/dummy/dummy.jpg');
+        $fallbackImage = asset('admins/asset/dummy/dummy.jpg');
     @endphp
 
 
@@ -338,7 +338,7 @@
                                         }
 
                                         $productImage = !empty($productImages)
-                                            ? asset('admin/products/' . $productImages[0])
+                                            ? asset('admins/products/' . $productImages[0])
                                             : $fallbackImage;
 
                                         $donorAccepted =
@@ -601,7 +601,7 @@
 
             $donorImage = $donor && $donor->image
                 ? asset(
-                    'admin/asset/profilephoto/' .
+                    'admins/asset/profilephoto/' .
                     $donor->image
                 )
                 : $fallbackImage;

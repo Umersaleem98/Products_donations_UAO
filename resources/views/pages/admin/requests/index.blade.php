@@ -161,8 +161,8 @@
                                         }
 
                                         $productImage = !empty($productImages)
-                                            ? asset('admin/products/' . $productImages[0])
-                                            : asset('admin/asset/dummy/dummy.jpg');
+                                            ? asset('admins/products/' . $productImages[0])
+                                            : asset('admins/asset/dummy/dummy.jpg');
 
                                         $isApproved =
                                             $productRequest->admin_status === 'approved';
@@ -467,18 +467,18 @@
             $beneficiaryImage =
                 $beneficiary && $beneficiary->image
                     ? asset(
-                        'admin/asset/profilephoto/' .
+                        'admins/asset/profilephoto/' .
                         $beneficiary->image
                     )
-                    : asset('admin/asset/dummy/dummy.jpg');
+                    : asset('admins/asset/dummy/dummy.jpg');
 
             $donorImage =
                 $donor && $donor->image
                     ? asset(
-                        'admin/asset/profilephoto/' .
+                        'admins/asset/profilephoto/' .
                         $donor->image
                     )
-                    : asset('admin/asset/dummy/dummy.jpg');
+                    : asset('admins/asset/dummy/dummy.jpg');
         @endphp
 
 

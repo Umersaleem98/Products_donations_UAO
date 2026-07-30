@@ -67,8 +67,8 @@ class AdminUserController extends Controller
         if ($request->hasFile('image')) {
             $imageName = time().'.'.$request->image->extension();
 
-            // Save in: public/admin/asset/profilephoto
-            $request->image->move(public_path('admin/asset/profilephoto'), $imageName);
+            // Save in: public/admins/asset/profilephoto
+            $request->image->move(public_path('admins/asset/profilephoto'), $imageName);
         }
 
         User::create([
@@ -107,12 +107,12 @@ class AdminUserController extends Controller
         if ($request->hasFile('image')) {
 
             // Delete old image
-            if ($user->image && file_exists(public_path('admin/asset/profilephoto/'.$user->image))) {
-                unlink(public_path('admin/asset/profilephoto/'.$user->image));
+            if ($user->image && file_exists(public_path('admins/asset/profilephoto/'.$user->image))) {
+                unlink(public_path('admins/asset/profilephoto/'.$user->image));
             }
 
             $imageName = time().'.'.$request->image->extension();
-            $request->image->move(public_path('admin/asset/profilephoto'), $imageName);
+            $request->image->move(public_path('admins/asset/profilephoto'), $imageName);
 
             $user->image = $imageName;
         }
@@ -140,8 +140,8 @@ class AdminUserController extends Controller
         $user = User::findOrFail($id);
 
         // Delete profile image if exists
-        if ($user->image && file_exists(public_path('admin/asset/profilephoto/'.$user->image))) {
-            unlink(public_path('admin/asset/profilephoto/'.$user->image));
+        if ($user->image && file_exists(public_path('admins/asset/profilephoto/'.$user->image))) {
+            unlink(public_path('admins/asset/profilephoto/'.$user->image));
         }
 
         $user->delete();

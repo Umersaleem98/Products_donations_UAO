@@ -169,7 +169,7 @@
 
                                                 @if (!empty($images))
                                                     <img
-                                                        src="{{ asset('admin/products/' . $images[0]) }}"
+                                                        src="{{ asset('admins/products/' . $images[0]) }}"
                                                         alt="{{ $product->name }}"
                                                         width="58"
                                                         height="58"
@@ -215,7 +215,7 @@
 
                                                     @if ($productUser->image)
                                                         <img
-                                                            src="{{ asset('admin/asset/profilephoto/' . $productUser->image) }}"
+                                                            src="{{ asset('admins/asset/profilephoto/' . $productUser->image) }}"
                                                             alt="{{ $productUser->name }}"
                                                             width="34"
                                                             height="34"
@@ -447,7 +447,7 @@
 
                                 @if ($productUser->image)
                                     <img
-                                        src="{{ asset('admin/asset/profilephoto/' . $productUser->image) }}"
+                                        src="{{ asset('admins/asset/profilephoto/' . $productUser->image) }}"
                                         alt="{{ $productUser->name }}"
                                         width="105"
                                         height="105"

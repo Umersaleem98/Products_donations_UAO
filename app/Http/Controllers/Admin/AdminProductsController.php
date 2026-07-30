@@ -21,12 +21,7 @@ class AdminProductsController extends Controller
         return view('pages.admin.products.index', compact('products', 'categories'));
     }
 
-    // public function create()
-    // {
-    //     $categories = Category::all();
-
-    //     return view('pages.admin.products.create', compact('categories'));
-    // }
+   
 
     public function store(Request $request)
     {

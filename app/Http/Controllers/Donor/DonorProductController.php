@@ -50,7 +50,7 @@ class DonorProductController extends Controller
 
                 $filename = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
 
-                $image->move(public_path('admin/products'), $filename);
+                $image->move(public_path('admins/products'), $filename);
 
                 $imageNames[] = $filename;
             }
@@ -120,7 +120,7 @@ class DonorProductController extends Controller
 
             $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
 
-            $image->move(public_path('admin/products'), $filename);
+            $image->move(public_path('admins/products'), $filename);
 
             $newImages[] = $filename;
         }
@@ -129,7 +129,7 @@ class DonorProductController extends Controller
         if (!empty($imageNames)) {
             foreach ($imageNames as $oldImage) {
 
-                $oldPath = public_path('admin/products/' . $oldImage);
+                $oldPath = public_path('admins/products/' . $oldImage);
 
                 if (file_exists($oldPath)) {
                     unlink($oldPath);
@@ -167,7 +167,7 @@ class DonorProductController extends Controller
             if (! empty($images)) {
                 foreach ($images as $image) {
 
-                    $path = public_path('admin/products/'.$image);
+                    $path = public_path('admins/products/'.$image);
 
                     if (file_exists($path)) {
                         unlink($path);

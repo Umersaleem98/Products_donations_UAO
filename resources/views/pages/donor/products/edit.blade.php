@@ -407,7 +407,7 @@
                                                             <div class="border rounded-3 bg-light p-1">
 
                                                                 <img
-                                                                    src="{{ asset('admin/products/' . $image) }}"
+                                                                    src="{{ asset('admins/products/' . $image) }}"
                                                                     alt="{{ $product->name }}"
                                                                     width="150"
                                                                     height="110"

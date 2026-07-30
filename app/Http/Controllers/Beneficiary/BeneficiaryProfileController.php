@@ -66,7 +66,7 @@ class BeneficiaryProfileController extends Controller
         // IMAGE UPLOAD
         if ($request->hasFile('image')) {
 
-            $uploadPath = public_path('admin/asset/profilephoto');
+            $uploadPath = public_path('admins/asset/profilephoto');
 
             // CREATE DIRECTORY IF NOT EXISTS
             if (!File::exists($uploadPath)) {

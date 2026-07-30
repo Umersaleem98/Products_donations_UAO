@@ -156,19 +156,25 @@
                                         }
 
                                         $productImage = !empty($productImages)
-                                            ? asset('admin/products/' . $productImages[0])
-                                            : asset('admin/asset/dummy/dummy.jpg');
+                                            ? asset('admins/products/' . $productImages[0])
+                                            : asset('admins/asset/dummy/dummy.jpg');
 
-                                        $isAccepted =
-                                            $productRequest->donor_status === 'accepted';
+                                        $isApproved =
+                                            $productRequest->donor_status === 'approved';
 
                                         $isRejected =
                                             $productRequest->donor_status === 'rejected';
 
                                         $statusBadge = match ($productRequest->donor_status) {
-                                            'accepted' => 'bg-success-subtle text-success',
+                                            'approved' => 'bg-success-subtle text-success',
                                             'rejected' => 'bg-danger-subtle text-danger',
                                             default => 'bg-warning-subtle text-warning-emphasis',
+                                        };
+
+                                        $statusLabel = match ($productRequest->donor_status) {
+                                            'approved' => 'Accepted',
+                                            'rejected' => 'Rejected',
+                                            default => 'Pending',
                                         };
                                     @endphp
 
@@ -220,7 +226,7 @@
                                                     @if ($beneficiary->image)
 
                                                         <img
-                                                            src="{{ asset('admin/asset/profilephoto/' . $beneficiary->image) }}"
+                                                            src="{{ asset('admins/asset/profilephoto/' . $beneficiary->image) }}"
                                                             alt="{{ $beneficiary->name }}"
                                                             width="40"
                                                             height="40"
@@ -276,7 +282,7 @@
 
                                             <span class="badge rounded-pill {{ $statusBadge }} px-3 py-2">
 
-                                                @if ($isAccepted)
+                                                @if ($isApproved)
                                                     <i class="bi bi-check-circle me-1"></i>
                                                 @elseif ($isRejected)
                                                     <i class="bi bi-x-circle me-1"></i>
@@ -284,7 +290,7 @@
                                                     <i class="bi bi-hourglass-split me-1"></i>
                                                 @endif
 
-                                                {{ ucfirst($productRequest->donor_status) }}
+                                                {{ $statusLabel }}
 
                                             </span>
 
@@ -322,18 +328,18 @@
                                                     <input
                                                         type="hidden"
                                                         name="donor_status"
-                                                        value="accepted"
+                                                        value="approved"
                                                     >
 
                                                     <button
                                                         type="submit"
-                                                        class="btn btn-sm {{ $isAccepted ? 'btn-secondary' : 'btn-success' }}"
-                                                        @disabled($isAccepted)
+                                                        class="btn btn-sm {{ $isApproved ? 'btn-secondary' : 'btn-success' }}"
+                                                        @disabled($isApproved)
                                                         onclick="return confirm('Are you sure you want to accept this request?');"
                                                     >
                                                         <i class="bi bi-check-lg me-1"></i>
 
-                                                        {{ $isAccepted ? 'Accepted' : 'Accept' }}
+                                                        {{ $isApproved ? 'Accepted' : 'Accept' }}
                                                     </button>
                                                 </form>
 
@@ -472,10 +478,10 @@
 
             $beneficiaryImage = $beneficiary && $beneficiary->image
                 ? asset(
-                    'admin/asset/profilephoto/' .
+                    'admins/asset/profilephoto/' .
                     $beneficiary->image
                 )
-                : asset('admin/asset/dummy/dummy.jpg');
+                : asset('admins/asset/dummy/dummy.jpg');
         @endphp
 
 

@@ -51,7 +51,7 @@ class DonorProfileController extends Controller
         // IMAGE UPLOAD
         if ($request->hasFile('image')) {
 
-            $uploadPath = public_path('admin/asset/profilephoto');
+            $uploadPath = public_path('admins/asset/profilephoto');
 
             // CREATE FOLDER
             if (! File::exists($uploadPath)) {

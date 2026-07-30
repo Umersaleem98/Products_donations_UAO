@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class VisitorTracker extends Model
 {
+    
     protected $fillable = [
         'ip_address',
         'user_agent',

@@ -1008,7 +1008,7 @@
 
                                         <img
                                             id="profilePreview"
-                                            src="{{ asset('admin/asset/profilephoto/' . $user->image) }}"
+                                            src="{{ asset('admins/asset/profilephoto/' . $user->image) }}"
                                             alt="{{ $user->name }}"
                                             width="130"
                                             height="130"
