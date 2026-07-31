@@ -25,6 +25,9 @@ use Illuminate\Support\Facades\Route;
 | PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
+});
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/cookie-accept',[CookieConsentController::class, 'accept'])->middleware('throttle:10,1')->name('cookie.accept');
