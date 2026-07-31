@@ -5,7 +5,7 @@
     <div class="nsn-brand">
         <a href="{{ route('dashboard') }}" class="d-flex align-items-center text-decoration-none w-100">
 
-            <div class="nsn-brand-mark">
+            <div class="nsn-brand-mark me-0 me-2">
                 @if (Auth::user()->image)
                     <img
                         src="{{ asset('admin/asset/profilephoto/' . Auth::user()->image) }}"
@@ -14,7 +14,7 @@
                     >
                 @else
                     <img
-                        src="{{ asset('admin/asset/dummy/dummy.jpg') }}"
+                        src="{{ asset('admins/asset/dummy/dummy.jpg') }}"
                         alt="{{ Auth::user()->name }}"
                         class="w-100 h-100 rounded-circle object-fit-cover"
                     >

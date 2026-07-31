@@ -25,13 +25,14 @@ use Illuminate\Support\Facades\Route;
 | PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
+
 Route::fallback(function () {
     return response()->view('errors.404', [], 404);
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/cookie-accept',[CookieConsentController::class, 'accept'])->middleware('throttle:10,1')->name('cookie.accept');
-Route::post('/cookie-reject',[CookieConsentController::class, 'reject'])->middleware('throttle:10,1')->name('cookie.reject');
+Route::post('/cookie-accept', [CookieConsentController::class, 'accept'])->middleware('throttle:10,1')->name('cookie.accept');
+Route::post('/cookie-reject', [CookieConsentController::class, 'reject'])->middleware('throttle:10,1')->name('cookie.reject');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
@@ -91,20 +92,85 @@ Route::middleware('auth')->group(function () {
         Route::delete('products/delete/{id}', [AdminProductsController::class, 'destroy'])->name('admin.products.delete');
 
         // USERS
-        Route::get('user/index', [AdminUserController::class, 'index'])->name('admin.user.index');
-        Route::get('user/create', [AdminUserController::class, 'create'])->name('admin.user.create');
-        Route::post('user/store', [AdminUserController::class, 'store'])->name('admin.user.store');
-        Route::get('user/edit/{id}', [AdminUserController::class, 'edit'])->name('admin.user.edit');
-        Route::put('user/update/{id}', [AdminUserController::class, 'update'])->name('admin.user.update');
-        Route::get('user/delete/{id}', [AdminUserController::class, 'destroy'])->name('admin.user.destroy');
 
-        Route::post('user/delete-selected', [AdminUserController::class, 'deleteSelected'])->name('admin.user.delete.selected');
+        /*
+|--------------------------------------------------------------------------
+| Admin User Management Routes
+|--------------------------------------------------------------------------
+*/
 
-        // EXCEL
-        Route::post('users/import', [AdminUserController::class, 'importUsers'])->name('admin.user.import');
-        Route::get('users/export', [AdminUserController::class, 'exportUsers'])->name('admin.user.export');
-        Route::post('users/export-selected', [AdminUserController::class, 'exportSelected'])->name('admin.user.export.selected');
+        Route::get(
+            'user/index',
+            [AdminUserController::class, 'index']
+        )->name('admin.user.index');
 
+        Route::get(
+            'user/create',
+            [AdminUserController::class, 'create']
+        )->name('admin.user.create');
+
+        Route::post(
+            'user/store',
+            [AdminUserController::class, 'store']
+        )->name('admin.user.store');
+
+        Route::get(
+            'user/edit/{id}',
+            [AdminUserController::class, 'edit']
+        )->name('admin.user.edit');
+
+        Route::put(
+            'user/update/{id}',
+            [AdminUserController::class, 'update']
+        )->name('admin.user.update');
+
+        /*
+|--------------------------------------------------------------------------
+| Activate, suspend or block user
+|--------------------------------------------------------------------------
+*/
+
+        Route::patch(
+            'user/{user}/account-status',
+            [AdminUserController::class, 'updateAccountStatus']
+        )->name('admin.user.status.update');
+
+        /*
+|--------------------------------------------------------------------------
+| Delete users
+|--------------------------------------------------------------------------
+*/
+
+        Route::delete(
+            'user/delete/{id}',
+            [AdminUserController::class, 'destroy']
+        )->name('admin.user.destroy');
+
+        Route::post(
+            'user/delete-selected',
+            [AdminUserController::class, 'deleteSelected']
+        )->name('admin.user.delete.selected');
+
+        /*
+|--------------------------------------------------------------------------
+| Excel import/export
+|--------------------------------------------------------------------------
+*/
+
+        Route::post(
+            'users/import',
+            [AdminUserController::class, 'importUsers']
+        )->name('admin.user.import');
+
+        Route::get(
+            'users/export',
+            [AdminUserController::class, 'exportUsers']
+        )->name('admin.user.export');
+
+        Route::post(
+            'users/export-selected',
+            [AdminUserController::class, 'exportSelected']
+        )->name('admin.user.export.selected');
         // REQUESTS
         Route::get('requests', [AdminRequestController::class, 'index'])->name('admin.requests');
         Route::post('request/{id}/update', [AdminRequestController::class, 'update'])->name('admin.request.update');

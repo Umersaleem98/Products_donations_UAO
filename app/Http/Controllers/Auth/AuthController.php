@@ -3,151 +3,311 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class AuthController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Display login form
+    |--------------------------------------------------------------------------
+    */
 
-    public function showLoginForm()
+    public function showLoginForm(): View
     {
         return view('pages.auth.login');
     }
 
-
-    public function login(Request $request)
-{
     /*
     |--------------------------------------------------------------------------
-    | Validate Login Information
+    | Process login request
     |--------------------------------------------------------------------------
     */
 
-    $validationRules = [
-        'role' => [
-            'required',
-            'in:admin,donor,beneficiary',
-        ],
+    public function login(
+        Request $request
+    ): RedirectResponse {
+        /*
+        |--------------------------------------------------------------------------
+        | Login validation
+        |--------------------------------------------------------------------------
+        */
 
-        'email' => [
-            'required',
-            'email',
-        ],
+        $validationRules = [
+            'role' => [
+                'required',
+                Rule::in([
+                    'admin',
+                    'donor',
+                    'beneficiary',
+                ]),
+            ],
 
-        'password' => [
-            'required',
-            'string',
-            'min:6',
-        ],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+            ],
 
-        'remember' => [
-            'nullable',
-            'boolean',
-        ],
-    ];
+            'password' => [
+                'required',
+                'string',
+                'min:6',
+            ],
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Qalam ID Is Required Only for Beneficiaries
-    |--------------------------------------------------------------------------
-    */
-
-    if ($request->role === 'beneficiary') {
-        $validationRules['qalam_id'] = [
-            'required',
+            'remember' => [
+                'nullable',
+                'boolean',
+            ],
         ];
-    }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Qalam ID is required only for beneficiaries
+        |--------------------------------------------------------------------------
+        */
 
-    $validated = $request->validate($validationRules);
+        if ($request->input('role') === 'beneficiary') {
+            $validationRules['qalam_id'] = [
+                'required',
+                'string',
+                'max:100',
+            ];
+        }
 
+        $validated = $request->validate(
+            $validationRules,
+            [
+                'role.required' =>
+                    'Please select your account role.',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Find User by Email and Selected Role
-    |--------------------------------------------------------------------------
-    */
+                'role.in' =>
+                    'The selected role is invalid.',
 
-    $userQuery = User::query()
-        ->where('email', $validated['email'])
-        ->where('role', $validated['role']);
+                'email.required' =>
+                    'Please enter your email address.',
 
+                'email.email' =>
+                    'Please enter a valid email address.',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Check Qalam ID for Beneficiary
-    |--------------------------------------------------------------------------
-    */
+                'password.required' =>
+                    'Please enter your password.',
 
-    if ($validated['role'] === 'beneficiary') {
-        $userQuery->where(
-            'qalam_id',
-            $validated['qalam_id']
+                'qalam_id.required' =>
+                    'Qalam ID is required for beneficiary login.',
+            ]
         );
-    }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Find user using email and selected role
+        |--------------------------------------------------------------------------
+        */
 
-    $user = $userQuery->first();
+        $userQuery = User::query()
+            ->where('email', $validated['email'])
+            ->where('role', $validated['role']);
 
+        /*
+        |--------------------------------------------------------------------------
+        | Check Qalam ID for beneficiary
+        |--------------------------------------------------------------------------
+        */
 
-    /*
-    |--------------------------------------------------------------------------
-    | Validate Password
-    |--------------------------------------------------------------------------
-    */
+        if ($validated['role'] === 'beneficiary') {
+            $userQuery->where(
+                'qalam_id',
+                $validated['qalam_id']
+            );
+        }
 
-    if (
-        !$user ||
-        !Hash::check(
-            $validated['password'],
-            $user->password
-        )
-    ) {
-        return back()
-            ->withErrors([
-                'login' => 'The provided login information is incorrect.',
-            ])
-            ->withInput(
-                $request->except('password')
+        $user = $userQuery->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Verify user and password
+        |--------------------------------------------------------------------------
+        |
+        | Account status is checked only after verifying the password. This
+        | prevents unauthorized people from checking another user's status.
+        |
+        */
+
+        if (
+            ! $user
+            || ! Hash::check(
+                $validated['password'],
+                $user->password
+            )
+        ) {
+            return back()
+                ->withErrors([
+                    'login' =>
+                        'The provided login information is incorrect.',
+                ])
+                ->withInput(
+                    $request->except([
+                        'password',
+                        'remember',
+                    ])
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Prevent suspended users from logging in
+        |--------------------------------------------------------------------------
+        */
+
+        if ($user->account_status === 'suspended') {
+            Log::warning(
+                'Suspended user attempted to log in.',
+                [
+                    'user_id' => $user->id,
+                    'role' => $user->role,
+                    'ip_address' => $request->ip(),
+                ]
+            );
+
+            return back()
+                ->withErrors([
+                    'login' =>
+                        'Your account has been suspended. Please contact the administrator.',
+                ])
+                ->with(
+                    'account_status',
+                    'suspended'
+                )
+                ->withInput(
+                    $request->except([
+                        'password',
+                        'remember',
+                    ])
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Prevent blocked users from logging in
+        |--------------------------------------------------------------------------
+        */
+
+        if ($user->account_status === 'blocked') {
+            Log::warning(
+                'Blocked user attempted to log in.',
+                [
+                    'user_id' => $user->id,
+                    'role' => $user->role,
+                    'ip_address' => $request->ip(),
+                ]
+            );
+
+            return back()
+                ->withErrors([
+                    'login' =>
+                        'Your account has been blocked. Please contact the administrator.',
+                ])
+                ->with(
+                    'account_status',
+                    'blocked'
+                )
+                ->withInput(
+                    $request->except([
+                        'password',
+                        'remember',
+                    ])
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Reject any unknown account status
+        |--------------------------------------------------------------------------
+        */
+
+        if ($user->account_status !== 'active') {
+            Log::warning(
+                'User with an invalid account status attempted to log in.',
+                [
+                    'user_id' => $user->id,
+                    'account_status' =>
+                        $user->account_status,
+
+                    'ip_address' => $request->ip(),
+                ]
+            );
+
+            return back()
+                ->withErrors([
+                    'login' =>
+                        'Your account is currently unavailable. Please contact the administrator.',
+                ])
+                ->withInput(
+                    $request->except([
+                        'password',
+                        'remember',
+                    ])
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Log in active user
+        |--------------------------------------------------------------------------
+        */
+
+        Auth::login(
+            $user,
+            $request->boolean('remember')
+        );
+
+        /*
+        | Regenerate the session ID to prevent session fixation.
+        */
+
+        $request->session()->regenerate();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Redirect authenticated user
+        |--------------------------------------------------------------------------
+        */
+
+        return redirect()
+            ->intended(route('dashboard'))
+            ->with(
+                'success',
+                'Welcome back, ' . $user->name . '!'
             );
     }
 
-
     /*
     |--------------------------------------------------------------------------
-    | Log In User
+    | Log out user
     |--------------------------------------------------------------------------
     */
 
-    Auth::login(
-        $user,
-        $request->boolean('remember')
-    );
-
-    $request->session()->regenerate();
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Redirect to Dashboard
-    |--------------------------------------------------------------------------
-    */
-
-    return redirect()
-        ->intended(route('dashboard'));
-}
-
-    public function logout(Request $request)
-    {
+    public function logout(
+        Request $request
+    ): RedirectResponse {
         Auth::logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()
+            ->route('login')
+            ->with(
+                'success',
+                'You have been logged out successfully.'
+            );
     }
 }
