@@ -8,7 +8,7 @@
             <div class="nsn-brand-mark me-0 me-2">
                 @if (Auth::user()->image)
                     <img
-                        src="{{ asset('admin/asset/profilephoto/' . Auth::user()->image) }}"
+                        src="{{ asset('admins/asset/profilephoto/' . Auth::user()->image) }}"
                         alt="{{ Auth::user()->name }}"
                         class="w-100 h-100 rounded-circle object-fit-cover"
                     >

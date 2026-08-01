@@ -1,10 +1,11 @@
 @extends('errors.layout')
 
+@section('title', 'Service Unavailable')
 @section('code', '503')
-
-@section('title', 'Temporarily Unavailable')
+@section('icon', '…')
+@section('heading', 'Service temporarily unavailable')
 
 @section(
     'message',
-    'NUST Sharing Network is currently undergoing maintenance. Please check again shortly.'
+    'The application is temporarily unavailable due to maintenance or a service interruption. Please try again shortly.'
 )

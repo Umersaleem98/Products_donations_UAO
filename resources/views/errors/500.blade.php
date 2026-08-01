@@ -1,17 +1,11 @@
 @extends('errors.layout')
 
+@section('title', 'Server Error')
 @section('code', '500')
-
-@section('title', 'Something Went Wrong')
+@section('icon', '!')
+@section('heading', 'Something went wrong')
 
 @section(
     'message',
-    'We could not complete your request due to an unexpected system error. The issue has been recorded.'
+    'An unexpected error occurred while processing your request. The issue has been recorded. Please try again later.'
 )
-
-@if (!empty($reference))
-    @section(
-        'reference',
-        'Error reference: ' . $reference
-    )
-@endif

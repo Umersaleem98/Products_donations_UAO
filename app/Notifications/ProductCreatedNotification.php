@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
@@ -9,30 +11,44 @@ class ProductCreatedNotification extends Notification
 {
     use Queueable;
 
-    public $product;
-
-    // ✅ FIXED constructor
-    public function __construct($product)
-    {
-        $this->product = $product;
+    public function __construct(
+        protected Product $product,
+        protected User $donor
+    ) {
     }
 
-    // ✅ channels
-    public function via($notifiable)
+    public function via(object $notifiable): array
     {
         return ['database'];
     }
 
-    // ❌ remove toMail if not using email (avoid confusion)
-
-    // ✅ database payload
-    public function toArray($notifiable)
+    public function toDatabase(object $notifiable): array
     {
         return [
-            'title' => 'New Product Created',
-            'message' => 'Product "' . $this->product->name . '" created by donor.',
+            'type' => 'product_created',
+            'title' => 'New Product Submitted',
+
+            'message' => $this->donor->name
+                . ' submitted a new product: '
+                . $this->product->name . '.',
+
             'product_id' => $this->product->id,
-            'created_by' => auth()->user()->name ?? 'Donor',
+            'product_name' => $this->product->name,
+
+            'created_by_id' => $this->donor->id,
+            'created_by_name' => $this->donor->name,
+            'created_by_role' => $this->donor->role,
+
+            'donor_id' => $this->donor->id,
+            'donor_name' => $this->donor->name,
+            'donor_role' => $this->donor->role,
+
+            'icon' => 'bi-box-seam',
         ];
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        return $this->toDatabase($notifiable);
     }
 }

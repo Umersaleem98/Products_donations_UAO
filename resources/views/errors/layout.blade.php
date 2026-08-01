@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
 
@@ -11,169 +11,196 @@
     <meta name="robots" content="noindex, nofollow">
 
     <title>
-        @yield('code') | {{ config('app.name', 'NUST Sharing Network') }}
+        @yield('title', 'Error') | NUST Sharing Network
     </title>
 
     <style>
+        :root {
+            --primary: #00629b;
+            --primary-dark: #004c78;
+            --text: #172033;
+            --secondary: #667085;
+            --border: #e4e9f0;
+            --background: #f5f8fc;
+            --white: #ffffff;
+        }
+
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        }
+
+        html,
+        body {
+            min-height: 100%;
         }
 
         body {
             min-height: 100vh;
+            margin: 0;
+            padding: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
-            font-family: Arial, Helvetica, sans-serif;
-            color: #1f2937;
+            color: var(--text);
             background:
                 radial-gradient(
-                    circle at top left,
-                    rgba(0, 96, 140, 0.12),
-                    transparent 40%
+                    circle at 15% 15%,
+                    rgba(0, 98, 155, 0.12),
+                    transparent 32%
                 ),
-                linear-gradient(135deg, #f4f8fb, #e8f1f6);
+                radial-gradient(
+                    circle at 85% 85%,
+                    rgba(13, 110, 253, 0.08),
+                    transparent 32%
+                ),
+                var(--background);
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
         }
 
-        .error-wrapper {
+        .error-container {
             width: 100%;
-            max-width: 760px;
+            max-width: 680px;
         }
 
         .error-card {
+            position: relative;
             overflow: hidden;
+            padding: 56px 36px;
             text-align: center;
-            background: #ffffff;
-            border: 1px solid rgba(0, 96, 140, 0.12);
-            border-radius: 22px;
-            box-shadow: 0 22px 60px rgba(15, 23, 42, 0.12);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 24px 65px rgba(16, 24, 40, 0.12);
         }
 
-        .error-header {
-            height: 8px;
-            background: linear-gradient(90deg, #00608c, #0088b8, #faaf19);
-        }
-
-        .error-content {
-            padding: 55px 40px;
+        .error-card::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            content: "";
+            background: linear-gradient(
+                90deg,
+                var(--primary),
+                #0d6efd
+            );
         }
 
         .brand {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 34px;
-            color: #00608c;
-            font-size: 17px;
-            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--primary);
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
-        .brand-mark {
-            width: 38px;
-            height: 38px;
-            display: inline-flex;
+        .error-icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 20px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            color: #ffffff;
-            background: #00608c;
-            border-radius: 11px;
+            color: var(--primary);
+            background: rgba(0, 98, 155, 0.1);
+            border-radius: 50%;
+            font-size: 2rem;
+            font-weight: 800;
         }
 
         .error-code {
-            margin-bottom: 12px;
-            color: #00608c;
-            font-size: clamp(72px, 15vw, 130px);
-            font-weight: 800;
-            line-height: 0.9;
-            letter-spacing: -5px;
+            margin: 0;
+            color: var(--primary);
+            font-size: clamp(4rem, 16vw, 7.5rem);
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -0.06em;
         }
 
         .error-title {
-            margin-bottom: 14px;
-            color: #172033;
-            font-size: clamp(25px, 4vw, 36px);
-            font-weight: 750;
+            margin: 24px 0 12px;
+            color: var(--text);
+            font-size: clamp(1.4rem, 5vw, 2rem);
+            line-height: 1.25;
         }
 
         .error-message {
-            max-width: 560px;
+            max-width: 500px;
             margin: 0 auto 30px;
-            color: #667085;
-            font-size: 16px;
-            line-height: 1.7;
+            color: var(--secondary);
+            font-size: 0.95rem;
+            line-height: 1.75;
         }
 
-        .error-reference {
-            margin: -14px auto 28px;
-            color: #667085;
-            font-size: 13px;
-        }
-
-        .actions {
+        .error-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
             justify-content: center;
+            gap: 10px;
         }
 
-        .btn {
-            min-width: 145px;
-            display: inline-block;
-            padding: 13px 22px;
-            color: #ffffff;
-            font-size: 14px;
+        .error-button {
+            min-width: 140px;
+            padding: 12px 20px;
+            color: var(--white);
+            background: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            font-size: 0.9rem;
             font-weight: 700;
             text-decoration: none;
-            border: 1px solid #00608c;
-            border-radius: 10px;
-            background: #00608c;
-            transition: 0.2s ease;
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
         }
 
-        .btn:hover {
-            color: #ffffff;
-            background: #004c70;
-            border-color: #004c70;
+        .error-button:hover {
+            color: var(--white);
+            background: var(--primary-dark);
             transform: translateY(-2px);
         }
 
-        .btn-outline {
-            color: #00608c;
-            background: #ffffff;
+        .error-button.secondary {
+            color: #344054;
+            background: var(--white);
+            border-color: #d0d5dd;
         }
 
-        .btn-outline:hover {
-            color: #ffffff;
-            background: #00608c;
+        .error-button.secondary:hover {
+            color: var(--text);
+            background: #f8fafc;
         }
 
-        .footer-text {
-            margin-top: 36px;
+        .error-reference {
+            margin: 30px 0 0;
             color: #98a2b3;
-            font-size: 13px;
+            font-size: 0.72rem;
         }
 
-        @media (max-width: 576px) {
+        @media (max-width: 575px) {
             body {
                 padding: 15px;
             }
 
-            .error-content {
-                padding: 42px 22px;
+            .error-card {
+                padding: 40px 20px;
+                border-radius: 18px;
             }
 
-            .error-code {
-                letter-spacing: -2px;
-            }
-
-            .actions {
+            .error-actions {
                 flex-direction: column;
             }
 
-            .btn {
+            .error-button {
                 width: 100%;
             }
         }
@@ -181,63 +208,48 @@
 </head>
 
 <body>
-    <main class="error-wrapper">
+    <main class="error-container">
         <section class="error-card">
-            <div class="error-header"></div>
-
-            <div class="error-content">
-                <div class="brand">
-                    <span class="brand-mark">NS</span>
-                    <span>NUST Sharing Network</span>
-                </div>
-
-                <div class="error-code">
-                    @yield('code')
-                </div>
-
-                <h1 class="error-title">
-                    @yield('title')
-                </h1>
-
-                <p class="error-message">
-                    @yield('message')
-                </p>
-
-                @hasSection('reference')
-                    <p class="error-reference">
-                        @yield('reference')
-                    </p>
-                @endif
-
-                <div class="actions">
-                    @auth
-                        <a
-                            href="{{ route('dashboard') }}"
-                            class="btn"
-                        >
-                            Go to Dashboard
-                        </a>
-                    @else
-                        <a
-                            href="{{ url('/') }}"
-                            class="btn"
-                        >
-                            Go to Home
-                        </a>
-                    @endauth
-
-                    <a
-                        href="{{ url()->previous() }}"
-                        class="btn btn-outline"
-                    >
-                        Go Back
-                    </a>
-                </div>
-
-                <p class="footer-text">
-                    If the problem continues, please contact the system administrator.
-                </p>
+            <div class="brand">
+                NUST Sharing Network
             </div>
+
+            <div class="error-icon" aria-hidden="true">
+                @yield('icon', '!')
+            </div>
+
+            <p class="error-code">
+                @yield('code', 'Error')
+            </p>
+
+            <h1 class="error-title">
+                @yield('heading', 'Something went wrong')
+            </h1>
+
+            <p class="error-message">
+                @yield(
+                    'message',
+                    'We could not complete your request.'
+                )
+            </p>
+
+            <div class="error-actions">
+                <a href="/" class="error-button">
+                    Return Home
+                </a>
+
+                <a
+                    href="javascript:history.back()"
+                    class="error-button secondary"
+                >
+                    Go Back
+                </a>
+            </div>
+
+            <p class="error-reference">
+                If the problem continues, please contact the system
+                administrator.
+            </p>
         </section>
     </main>
 </body>

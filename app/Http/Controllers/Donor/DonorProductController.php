@@ -33,55 +33,178 @@ class DonorProductController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:1024',
-            'status' => 'required|in:active,inactive',
+        /*
+    |--------------------------------------------------------------------------
+    | Validate Product Information
+    |--------------------------------------------------------------------------
+    */
+
+        $validated = $request->validate([
+            'category_id' => [
+                'required',
+                'integer',
+                'exists:categories,id',
+            ],
+
+            'name' => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+            ],
+
+            'description' => [
+                'nullable',
+                'string',
+                'max:3000',
+            ],
+
+            'images' => [
+                'nullable',
+                'array',
+                'max:5',
+            ],
+
+            'images.*' => [
+                'required',
+                'file',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:1024',
+            ],
+
+            'status' => [
+                'required',
+                'in:active,inactive',
+            ],
         ]);
+
+        /*
+    |--------------------------------------------------------------------------
+    | Prepare Product Image Directory
+    |--------------------------------------------------------------------------
+    */
 
         $imageNames = [];
 
-        // ✅ IMAGE UPLOAD
+        $uploadDirectory = public_path('admins/products');
+
+        if (! is_dir($uploadDirectory)) {
+            mkdir($uploadDirectory, 0755, true);
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Upload Product Images
+    |--------------------------------------------------------------------------
+    */
+
         if ($request->hasFile('images')) {
-
             foreach ($request->file('images') as $image) {
+                $filename = Str::uuid()->toString()
+                    . '.'
+                    . $image->extension();
 
-                $filename = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
-
-                $image->move(public_path('admins/products'), $filename);
+                $image->move(
+                    $uploadDirectory,
+                    $filename
+                );
 
                 $imageNames[] = $filename;
             }
         }
 
-        // ✅ CREATE PRODUCT (SAFE VERSION)
-        $product = new Product;
+        /*
+    |--------------------------------------------------------------------------
+    | Create Product
+    |--------------------------------------------------------------------------
+    */
 
-        $product->user_id = auth()->id(); // make sure auth middleware is applied
-        $product->category_id = $request->category_id;
-        $product->name = $request->name;
-        $product->slug = Str::slug($request->name);
-        $product->description = $request->description;
-        $product->images = json_encode($imageNames);
-        $product->status = $request->status;
+        try {
+            $product = new Product();
 
-        $saved = $product->save();
+            $product->user_id = $request->user()->id;
+            $product->category_id = $validated['category_id'];
+            $product->name = $validated['name'];
 
-        // ❗ DEBUG CHECK (TEMP)
-        if (! $saved) {
-            return back()->with('error', 'Product not saved. Check DB or fillable.');
+            $product->slug = Str::slug($validated['name'])
+                . '-'
+                . Str::lower(Str::random(6));
+
+            $product->description =
+                $validated['description'] ?? null;
+
+            $product->images = json_encode($imageNames);
+
+            $product->status = $validated['status'];
+
+            $product->save();
+        } catch (\Throwable $exception) {
+            /*
+         * Delete uploaded images if the product could not be saved.
+         */
+
+            foreach ($imageNames as $imageName) {
+                $imagePath = $uploadDirectory
+                    . DIRECTORY_SEPARATOR
+                    . $imageName;
+
+                if (is_file($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+
+            report($exception);
+
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Product could not be created. Please try again.'
+                );
         }
 
-        // ✅ NOTIFICATION
-        $users = User::where('id', '!=', auth()->id())->get();
+        /*
+    |--------------------------------------------------------------------------
+    | Send Notification to Administrators
+    |--------------------------------------------------------------------------
+    */
 
-        Notification::send($users, new ProductCreatedNotification($product));
+        try {
+            $admins = User::query()
+                ->where('role', 'admin')
+                ->get();
+
+            if ($admins->isNotEmpty()) {
+                Notification::send(
+                    $admins,
+                    new ProductCreatedNotification(
+                        $product,
+                        $request->user()
+                    )
+                );
+            }
+        } catch (\Throwable $exception) {
+            /*
+         * The product is already saved, so notification failure should
+         * not cause the donor to submit the product again.
+         */
+
+            report($exception);
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Redirect Donor
+    |--------------------------------------------------------------------------
+    */
 
         return redirect()
             ->route('donor.product.index')
-            ->with('success', 'Product created successfully');
+            ->with(
+                'success',
+                'Product created successfully.'
+            );
     }
 
     public function edit($id)
@@ -93,67 +216,67 @@ class DonorProductController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'category_id' => 'required|exists:categories,id',
-        'price' => 'nullable|numeric|min:0',
-        'description' => 'nullable|string',
-        'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'nullable|numeric|min:0',
+            'description' => 'nullable|string',
+            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
 
-    $product = Product::findOrFail($id);
+        $product = Product::findOrFail($id);
 
-    // (OPTIONAL SECURITY CHECK)
-    if ($product->user_id !== auth()->id()) {
-        abort(403, 'Unauthorized action.');
-    }
-
-    $imageNames = json_decode($product->images, true) ?? [];
-
-    // ✅ ONLY REPLACE IMAGES IF NEW ONES ARE UPLOADED
-    if ($request->hasFile('images')) {
-
-        $newImages = [];
-
-        foreach ($request->file('images') as $image) {
-
-            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-
-            $image->move(public_path('admins/products'), $filename);
-
-            $newImages[] = $filename;
+        // (OPTIONAL SECURITY CHECK)
+        if ($product->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
         }
 
-        // ✅ DELETE OLD ONLY AFTER SUCCESSFUL UPLOAD
-        if (!empty($imageNames)) {
-            foreach ($imageNames as $oldImage) {
+        $imageNames = json_decode($product->images, true) ?? [];
 
-                $oldPath = public_path('admins/products/' . $oldImage);
+        // ✅ ONLY REPLACE IMAGES IF NEW ONES ARE UPLOADED
+        if ($request->hasFile('images')) {
 
-                if (file_exists($oldPath)) {
-                    unlink($oldPath);
+            $newImages = [];
+
+            foreach ($request->file('images') as $image) {
+
+                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+                $image->move(public_path('admins/products'), $filename);
+
+                $newImages[] = $filename;
+            }
+
+            // ✅ DELETE OLD ONLY AFTER SUCCESSFUL UPLOAD
+            if (!empty($imageNames)) {
+                foreach ($imageNames as $oldImage) {
+
+                    $oldPath = public_path('admins/products/' . $oldImage);
+
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
                 }
             }
+
+            $imageNames = $newImages;
         }
 
-        $imageNames = $newImages;
+        // ✅ UPDATE PRODUCT
+        $product->update([
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'price' => $request->price,
+            'images' => json_encode($imageNames),
+        ]);
+
+        return redirect()
+            ->route('donor.product.index')
+            ->with('success', 'Product updated successfully');
     }
-
-    // ✅ UPDATE PRODUCT
-    $product->update([
-        'category_id' => $request->category_id,
-        'name' => $request->name,
-        'slug' => Str::slug($request->name),
-        'description' => $request->description,
-        'price' => $request->price,
-        'images' => json_encode($imageNames),
-    ]);
-
-    return redirect()
-        ->route('donor.product.index')
-        ->with('success', 'Product updated successfully');
-}
 
     public function destroy($id)
     {
@@ -167,7 +290,7 @@ class DonorProductController extends Controller
             if (! empty($images)) {
                 foreach ($images as $image) {
 
-                    $path = public_path('admins/products/'.$image);
+                    $path = public_path('admins/products/' . $image);
 
                     if (file_exists($path)) {
                         unlink($path);

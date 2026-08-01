@@ -14,10 +14,8 @@ use App\Http\Controllers\Donor\DonorProductController;
 use App\Http\Controllers\Donor\DonorProfileController;
 use App\Http\Controllers\Donor\DonorRequestController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
-
-
-
 
 
 /*
@@ -27,8 +25,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::fallback(function () {
-    return response()->view('errors.404', [], 404);
+    return response()->view(
+        'errors.404',
+        [],
+        404
+    );
 });
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/cookie-accept', [CookieConsentController::class, 'accept'])->middleware('throttle:10,1')->name('cookie.accept');
@@ -53,17 +56,22 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Notifications
-    Route::get('/notification/read/{id}', function ($id) {
+   Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::patch(
+        '/notifications/read-all',
+        [NotificationController::class, 'markAllAsRead']
+    )->name('notifications.read-all');
 
-        $notification = auth()->user()->notifications()->find($id);
+    Route::patch(
+        '/notifications/{id}/read',
+        [NotificationController::class, 'markAsRead']
+    )->name('notifications.read');
 
-        if ($notification) {
-            $notification->markAsRead();
-        }
-
-        return back();
-    })->name('notification.read');
+    Route::delete(
+        '/notifications/clear-all',
+        [NotificationController::class, 'clearAll']
+    )->name('notifications.clear-all');
+});
 
 
 

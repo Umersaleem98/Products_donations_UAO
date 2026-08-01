@@ -2,6 +2,186 @@
 
 <title>All Products</title>
 
+<style>
+    :root {
+        --product-primary: #0d6efd;
+        --product-primary-dark: #084298;
+        --product-text: #182230;
+        --product-muted: #667085;
+        --product-border: #e7ebf0;
+        --product-surface: #ffffff;
+    }
+
+    .product-page-header {
+        padding: 1.25rem 1.35rem;
+        background: linear-gradient(135deg, #ffffff 0%, #f4f8ff 100%);
+        border: 1px solid var(--product-border);
+        border-radius: 1rem;
+    }
+
+    .product-filter-card {
+        border: 1px solid var(--product-border) !important;
+        box-shadow: 0 8px 28px rgba(16, 24, 40, .06) !important;
+    }
+
+    .product-filter-card .form-control,
+    .product-filter-card .form-select,
+    .product-filter-card .input-group-text {
+        min-height: 46px;
+        border-color: #dfe4ea;
+    }
+
+    .product-filter-card .form-control:focus,
+    .product-filter-card .form-select:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .12);
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 1.1rem;
+    }
+
+    .product-card {
+        min-width: 0;
+        background: var(--product-surface);
+        border: 1px solid var(--product-border) !important;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(16, 24, 40, .055);
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        border-color: #c9dcff !important;
+        box-shadow: 0 16px 35px rgba(16, 24, 40, .12);
+    }
+
+    .product-image-wrap {
+        position: relative;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        background: #f2f4f7;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .45s ease;
+    }
+
+    .product-card:hover .product-image { transform: scale(1.055); }
+
+    .available-badge {
+        position: absolute;
+        top: .7rem;
+        right: .7rem;
+        padding: .42rem .65rem;
+        background: rgba(25, 135, 84, .94);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,.35);
+        border-radius: 999px;
+        font-size: .7rem;
+        font-weight: 700;
+        backdrop-filter: blur(6px);
+    }
+
+    .image-count-badge {
+        position: absolute;
+        left: .7rem;
+        bottom: .7rem;
+        padding: .38rem .55rem;
+        background: rgba(16, 24, 40, .78);
+        color: #fff;
+        border-radius: .55rem;
+        font-size: .7rem;
+        backdrop-filter: blur(6px);
+    }
+
+    .product-card-body {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .product-category {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        max-width: 100%;
+        padding: .35rem .6rem;
+        margin-bottom: .75rem;
+        color: var(--product-primary-dark);
+        background: #eaf2ff;
+        border-radius: 999px;
+        font-size: .7rem;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .product-title {
+        color: var(--product-text);
+        font-size: .98rem;
+        font-weight: 700;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        min-height: 2.65rem;
+    }
+
+    .product-description {
+        color: var(--product-muted);
+        font-size: .78rem;
+        line-height: 1.55;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        min-height: 3.65rem;
+    }
+
+    .product-card-footer {
+        padding: 0 1rem 1rem;
+        background: #fff;
+        border: 0;
+    }
+
+    .product-detail-btn {
+        min-height: 40px;
+        border-radius: .7rem;
+        font-size: .78rem;
+        font-weight: 700;
+        transition: all .2s ease;
+    }
+
+    .empty-products { grid-column: 1 / -1; }
+
+    @media (max-width: 1399.98px) {
+        .products-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 1199.98px) {
+        .products-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 767.98px) {
+        .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
+        .product-page-header { padding: 1rem; }
+    }
+
+    @media (max-width: 479.98px) {
+        .products-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
 <body>
 
     @php
@@ -23,7 +203,7 @@
         <main class="nsn-content">
 
             {{-- Page Header --}}
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+            <div class="product-page-header d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
 
                 <div>
                     <h3 class="fw-bold text-dark mb-1">
@@ -77,7 +257,7 @@
             {{-- ================================================= --}}
             {{-- FILTER SECTION --}}
             {{-- ================================================= --}}
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card product-filter-card border-0 shadow-sm rounded-4 mb-4">
 
                 <div class="card-body p-4">
 
@@ -161,7 +341,7 @@
                                     type="submit"
                                     class="btn btn-primary w-100"
                                 >
-                                    <i class="bi bi-funnel me-1"></i>
+                                    {{-- <i class="bi bi-funnel me-1"></i> --}}
                                     Apply Filter
                                 </button>
 
@@ -175,7 +355,7 @@
                                     href="{{ route('beneficiary.products.index') }}"
                                     class="btn btn-light border w-100"
                                 >
-                                    <i class="bi bi-arrow-counterclockwise me-1"></i>
+                                    {{-- <i class="bi bi-arrow-counterclockwise me-1"></i> --}}
                                     Reset
                                 </a>
 
@@ -242,7 +422,7 @@
             {{-- ================================================= --}}
             {{-- PRODUCTS GRID --}}
             {{-- ================================================= --}}
-            <div class="row g-4">
+            <div class="products-grid">
 
                 @forelse ($products as $product)
 
@@ -261,61 +441,55 @@
                     @endphp
 
 
-                    <div class="col-12 col-sm-6 col-xl-4">
-
-                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+                    <article class="product-card card h-100">
 
                             {{-- Product Image --}}
-                            <div class="position-relative">
+                            <div class="product-image-wrap">
 
                                 <img
                                     src="{{ $productImage }}"
                                     alt="{{ $product->name }}"
-                                    width="600"
-                                    height="240"
-                                    class="card-img-top object-fit-cover"
+                                    width="420"
+                                    height="315"
+                                    class="product-image"
+                                    loading="lazy"
+                                    decoding="async"
+                                    onerror="this.onerror=null;this.src='{{ $fallbackImage }}';"
                                 >
 
 
                                 {{-- Status --}}
-                                <span class="position-absolute top-0 end-0 badge rounded-pill bg-success m-3 px-3 py-2">
+                                <span class="available-badge">
                                     <i class="bi bi-check-circle me-1"></i>
                                     Available
                                 </span>
+
+                                @if (count($productImages) > 1)
+                                    <span class="image-count-badge">
+                                        <i class="bi bi-images me-1"></i>
+                                        {{ count($productImages) }} photos
+                                    </span>
+                                @endif
 
                             </div>
 
 
                             {{-- Product Body --}}
-                            <div class="card-body p-4">
+                            <div class="product-card-body card-body">
 
-                                <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-
-                                    <span class="badge rounded-pill bg-primary-subtle text-primary">
+                                    <span class="product-category" title="{{ optional($product->category)->name ?? 'Uncategorized' }}">
                                         <i class="bi bi-tag me-1"></i>
                                         {{ optional($product->category)->name ?? 'Uncategorized' }}
                                     </span>
 
-                                    @if (count($productImages) > 1)
-
-                                        <span class="badge rounded-pill bg-light text-secondary border">
-                                            <i class="bi bi-images me-1"></i>
-                                            {{ count($productImages) }} images
-                                        </span>
-
-                                    @endif
-
-                                </div>
-
-
-                                <h5 class="fw-bold text-dark mb-2">
+                                <h2 class="product-title mb-2">
                                     {{ $product->name }}
-                                </h5>
+                                </h2>
 
 
                                 @if ($product->description)
 
-                                    <p class="text-secondary small lh-base mb-0">
+                                    <p class="product-description mb-0">
                                         {{ \Illuminate\Support\Str::limit(
                                             $product->description,
                                             105
@@ -324,7 +498,7 @@
 
                                 @else
 
-                                    <p class="text-secondary small mb-0">
+                                    <p class="product-description mb-0">
                                         No product description is available.
                                     </p>
 
@@ -334,25 +508,24 @@
 
 
                             {{-- Product Footer --}}
-                            <div class="card-footer bg-white border-top p-4">
+                            <div class="product-card-footer card-footer">
 
                                 <a
                                     href="{{ route('beneficiary.products.detail.show', $product->id) }}"
-                                    class="btn btn-primary w-100"
+                                    class="product-detail-btn btn btn-primary d-flex align-items-center justify-content-center w-100"
+                                    aria-label="View details for {{ $product->name }}"
                                 >
-                                    View Product Details
+                                    View Details
                                     <i class="bi bi-arrow-right ms-1"></i>
                                 </a>
 
                             </div>
 
-                        </div>
-
-                    </div>
+                    </article>
 
                 @empty
 
-                    <div class="col-12">
+                    <div class="empty-products">
 
                         <div class="card border-0 shadow-sm rounded-4">
 

@@ -1,10 +1,11 @@
 @extends('errors.layout')
 
-@section('code', '403')
-
 @section('title', 'Access Denied')
+@section('code', '403')
+@section('icon', '×')
+@section('heading', 'Access denied')
 
 @section(
     'message',
-    $message ?? 'You do not have permission to access this page or perform this action.'
+    'You do not have permission to access this page or perform this action.'
 )
