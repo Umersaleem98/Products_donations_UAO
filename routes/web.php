@@ -56,22 +56,22 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-   Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::patch(
-        '/notifications/read-all',
-        [NotificationController::class, 'markAllAsRead']
-    )->name('notifications.read-all');
+    Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::patch(
+            '/notifications/read-all',
+            [NotificationController::class, 'markAllAsRead']
+        )->name('notifications.read-all');
 
-    Route::patch(
-        '/notifications/{id}/read',
-        [NotificationController::class, 'markAsRead']
-    )->name('notifications.read');
+        Route::patch(
+            '/notifications/{id}/read',
+            [NotificationController::class, 'markAsRead']
+        )->name('notifications.read');
 
-    Route::delete(
-        '/notifications/clear-all',
-        [NotificationController::class, 'clearAll']
-    )->name('notifications.clear-all');
-});
+        Route::delete(
+            '/notifications/clear-all',
+            [NotificationController::class, 'clearAll']
+        )->name('notifications.clear-all');
+    });
 
 
 
@@ -165,10 +165,14 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-        Route::post(
-            'users/import',
-            [AdminUserController::class, 'importUsers']
-        )->name('admin.user.import');
+        Route::post('/admin/users/import/preview', [AdminUserController::class, 'preview'])
+            ->name('admin.user.import.preview');
+
+        Route::post('/admin/users/import/confirm', [AdminUserController::class, 'confirm'])
+            ->name('admin.user.import.confirm');
+
+        Route::post('/admin/users/import/cancel', [AdminUserController::class, 'cancel'])
+            ->name('admin.user.import.cancel');
 
         Route::get(
             'users/export',

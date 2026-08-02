@@ -20,6 +20,8 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
+
+
     protected $fillable = [
         'name',
         'email',
@@ -141,6 +143,8 @@ class User extends Authenticatable
     | Account-status relationships
     |--------------------------------------------------------------------------
     */
+
+
 
     public function statusChangedBy(): BelongsTo
     {
