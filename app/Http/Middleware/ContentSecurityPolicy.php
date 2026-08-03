@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ContentSecurityPolicy
 {
+    /**
+     * Add Content Security Policy to every web response.
+     */
     public function handle(
         Request $request,
         Closure $next
@@ -15,21 +18,13 @@ class ContentSecurityPolicy
         $response = $next($request);
 
         /*
-         * Do not add CSP to downloads or non-HTML responses.
-         */
-        $contentType = $response->headers->get(
-            'Content-Type',
-            ''
-        );
-
-        if (
-            ! str_contains(
-                strtolower($contentType),
-                'text/html'
-            )
-        ) {
-            return $response;
-        }
+        |--------------------------------------------------------------------------
+        | Content Security Policy
+        |--------------------------------------------------------------------------
+        |
+        | Report-only mode identifies problems without blocking resources.
+        |
+        */
 
         $policy = implode(' ', [
             "default-src 'self';",
@@ -37,53 +32,11 @@ class ContentSecurityPolicy
             "object-src 'none';",
             "frame-ancestors 'none';",
             "form-action 'self';",
-
-            /*
-             * Add blob: only if image previews use Blob URLs.
-             */
             "img-src 'self' data: blob:;",
-
-            "font-src 'self' data:"
-                . " https://cdnjs.cloudflare.com"
-                . " https://cdn.jsdelivr.net;",
-
-            /*
-             * unsafe-inline is temporarily necessary because the
-             * current Blade templates contain inline CSS.
-             */
-            "style-src 'self' 'unsafe-inline'"
-                . " https://cdnjs.cloudflare.com"
-                . " https://cdn.jsdelivr.net;",
-
-            /*
-             * Inline scripts are intentionally not permitted here.
-             * Existing inline scripts will be reported but not blocked
-             * while Report-Only mode remains active.
-             */
-            "script-src 'self'"
-                . " https://cdnjs.cloudflare.com"
-                . " https://cdn.jsdelivr.net;",
-
-            /*
-             * Required for same-origin fetch() requests.
-             */
+            "font-src 'self' data: https://cdnjs.cloudflare.com;",
+            "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;",
+            "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;",
             "connect-src 'self';",
-
-            /*
-             * Prevent media loading from unknown origins.
-             */
-            "media-src 'self';",
-
-            /*
-             * Allows workers only from the current application.
-             */
-            "worker-src 'self' blob:;",
-
-            "manifest-src 'self';",
-
-            /*
-             * Automatically upgrade HTTP resource requests to HTTPS.
-             */
             "upgrade-insecure-requests;",
         ]);
 

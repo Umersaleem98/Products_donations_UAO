@@ -2,7 +2,7 @@
 
 use App\Http\Middleware\ContentSecurityPolicy;
 use App\Http\Middleware\RoleMiddleware;
-use App\Http\Middleware\TrackVisitor;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
@@ -16,16 +16,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-return Application::configure(basePath: dirname(__DIR__))
+return Application::configure(
+    basePath: dirname(__DIR__)
+)
     ->withRouting(
-        web: __DIR__ . '/../routes/web.php',
-        commands: __DIR__ . '/../routes/console.php',
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
         /*
         |--------------------------------------------------------------------------
-        | Route middleware aliases
+        | Route Middleware Aliases
         |--------------------------------------------------------------------------
         */
 
@@ -35,24 +37,32 @@ return Application::configure(basePath: dirname(__DIR__))
 
         /*
         |--------------------------------------------------------------------------
-        | Global web middleware
+        | Global Web Middleware
         |--------------------------------------------------------------------------
+        |
+        | SecurityHeaders adds:
+        |
+        | - X-Frame-Options
+        | - X-Content-Type-Options
+        | - Referrer-Policy
+        | - Permissions-Policy
+        |
+        | ContentSecurityPolicy adds:
+        |
+        | - Content-Security-Policy-Report-Only
+        |
         */
 
         $middleware->web(append: [
-            TrackVisitor::class,
+            SecurityHeaders::class,
             ContentSecurityPolicy::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         /*
         |--------------------------------------------------------------------------
-        | Exceptions that should not be reported
+        | Exceptions That Should Not Be Reported
         |--------------------------------------------------------------------------
-        |
-        | These exceptions normally occur because of user actions and generally
-        | do not need to be written to the Laravel error log.
-        |
         */
 
         $exceptions->dontReport([
@@ -65,7 +75,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         /*
         |--------------------------------------------------------------------------
-        | Determine when JSON should be returned
+        | Determine When JSON Should Be Returned
         |--------------------------------------------------------------------------
         */
 
@@ -79,7 +89,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         /*
         |--------------------------------------------------------------------------
-        | Authentication error: 401
+        | Authentication Error: 401
         |--------------------------------------------------------------------------
         */
 
@@ -87,7 +97,10 @@ return Application::configure(basePath: dirname(__DIR__))
             AuthenticationException $exception,
             Request $request
         ) {
-            if ($request->expectsJson()) {
+            if (
+                $request->is('api/*')
+                || $request->expectsJson()
+            ) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Authentication is required.',
@@ -104,7 +117,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         /*
         |--------------------------------------------------------------------------
-        | Authorization error: 403
+        | Authorization Error: 403
         |--------------------------------------------------------------------------
         */
 
@@ -112,7 +125,10 @@ return Application::configure(basePath: dirname(__DIR__))
             AuthorizationException $exception,
             Request $request
         ) {
-            if ($request->expectsJson()) {
+            if (
+                $request->is('api/*')
+                || $request->expectsJson()
+            ) {
                 return response()->json([
                     'success' => false,
                     'message' =>
@@ -128,7 +144,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         /*
         |--------------------------------------------------------------------------
-        | CSRF/session expired error: 419
+        | CSRF or Session Expired Error: 419
         |--------------------------------------------------------------------------
         */
 
@@ -136,7 +152,10 @@ return Application::configure(basePath: dirname(__DIR__))
             TokenMismatchException $exception,
             Request $request
         ) {
-            if ($request->expectsJson()) {
+            if (
+                $request->is('api/*')
+                || $request->expectsJson()
+            ) {
                 return response()->json([
                     'success' => false,
                     'message' =>
@@ -144,16 +163,57 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 419);
             }
 
-            return response()->view('errors.419', [], 419);
+            if (view()->exists('errors.419')) {
+                return response()->view(
+                    'errors.419',
+                    [],
+                    419
+                );
+            }
+
+            return response(
+                'Your session has expired. Please refresh the page.',
+                419
+            );
         });
 
         /*
         |--------------------------------------------------------------------------
-        | Database query errors
+        | Validation Errors: 422
         |--------------------------------------------------------------------------
         |
-        | SQL queries, database names, credentials and exception messages must
-        | never be displayed to users in the production environment.
+        | Normal web form validation will continue to redirect back with errors.
+        | JSON requests will receive a safe JSON response.
+        |
+        */
+
+        $exceptions->render(function (
+            ValidationException $exception,
+            Request $request
+        ) {
+            if (
+                $request->is('api/*')
+                || $request->expectsJson()
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' =>
+                        'The submitted information is invalid.',
+                    'errors' => $exception->errors(),
+                ], 422);
+            }
+
+            return null;
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Database Query Errors
+        |--------------------------------------------------------------------------
+        |
+        | Database and SQL information will not be displayed in production.
+        | In the local environment, returning null allows Laravel to display
+        | the original exception for debugging.
         |
         */
 
@@ -165,7 +225,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
 
-            if ($request->expectsJson()) {
+            if (
+                $request->is('api/*')
+                || $request->expectsJson()
+            ) {
                 return response()->json([
                     'success' => false,
                     'message' =>
@@ -173,17 +236,27 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 500);
             }
 
-            return response()->view('errors.500', [
-                'reference' => $request->attributes->get(
-                    'error_reference'
-                ),
-            ], 500);
+            if (view()->exists('errors.500')) {
+                return response()->view('errors.500', [
+                    'reference' => $request->attributes->get(
+                        'error_reference'
+                    ),
+                ], 500);
+            }
+
+            return response(
+                'An internal server error occurred.',
+                500
+            );
         });
 
         /*
         |--------------------------------------------------------------------------
-        | HTTP errors: 404, 405, 429, 503 etc.
+        | HTTP Errors
         |--------------------------------------------------------------------------
+        |
+        | Handles 400, 404, 405, 408, 419, 422, 429, 503 and other HTTP errors.
+        |
         */
 
         $exceptions->render(function (
@@ -211,7 +284,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 default => 'The request could not be completed.',
             };
 
-            if ($request->expectsJson()) {
+            if (
+                $request->is('api/*')
+                || $request->expectsJson()
+            ) {
                 return response()->json([
                     'success' => false,
                     'message' => $message,
@@ -221,23 +297,35 @@ return Application::configure(basePath: dirname(__DIR__))
             if (view()->exists("errors.{$status}")) {
                 return response()->view(
                     "errors.{$status}",
-                    [],
+                    [
+                        'message' => $message,
+                    ],
                     $status
                 );
             }
 
-            return response()->view('errors.generic', [
-                'statusCode' => $status,
-                'title' => Response::$statusTexts[$status]
-                    ?? 'Request Error',
-                'message' => $message,
-            ], $status);
+            if (view()->exists('errors.generic')) {
+                return response()->view('errors.generic', [
+                    'statusCode' => $status,
+                    'title' => Response::$statusTexts[$status]
+                        ?? 'Request Error',
+                    'message' => $message,
+                ], $status);
+            }
+
+            return response(
+                $message,
+                $status
+            );
         });
 
         /*
         |--------------------------------------------------------------------------
-        | Unexpected server errors
+        | Unexpected Server Errors
         |--------------------------------------------------------------------------
+        |
+        | This is the final fallback handler for unexpected exceptions.
+        |
         */
 
         $exceptions->render(function (
@@ -248,7 +336,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
 
-            if ($request->expectsJson()) {
+            if (
+                $request->is('api/*')
+                || $request->expectsJson()
+            ) {
                 return response()->json([
                     'success' => false,
                     'message' =>
@@ -256,7 +347,18 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 500);
             }
 
-            return response()->view('errors.500', [], 500);
+            if (view()->exists('errors.500')) {
+                return response()->view(
+                    'errors.500',
+                    [],
+                    500
+                );
+            }
+
+            return response(
+                'An unexpected server error occurred.',
+                500
+            );
         });
     })
     ->create();
