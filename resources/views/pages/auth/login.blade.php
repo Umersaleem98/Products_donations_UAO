@@ -64,9 +64,9 @@
     .auth-information {
         position: relative;
         display: flex;
-        flex: 0 0 48%;
+        flex: 0 0 42%;
         align-items: center;
-        padding: 70px;
+        padding: 55px 65px;
         overflow: hidden;
         color: var(--auth-white);
         background:
@@ -107,7 +107,7 @@
         position: relative;
         z-index: 2;
         width: 100%;
-        max-width: 620px;
+        max-width: 580px;
         margin: auto;
     }
 
@@ -115,7 +115,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 38px;
+        margin-bottom: 30px;
         padding: 12px 18px;
         border-radius: 14px;
         background-color: rgba(255, 255, 255, 0.96);
@@ -132,12 +132,12 @@
         display: inline-flex;
         gap: 9px;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
         padding: 8px 14px;
         border: 1px solid rgba(255, 255, 255, 0.22);
         border-radius: 50rem;
         background-color: rgba(255, 255, 255, 0.10);
-        font-size: 0.85rem;
+        font-size: 0.84rem;
         font-weight: 600;
         letter-spacing: 0.4px;
     }
@@ -151,30 +151,30 @@
     }
 
     .information-content h1 {
-        max-width: 560px;
-        margin: 0 0 20px;
+        max-width: 540px;
+        margin: 0 0 18px;
         color: var(--auth-white);
-        font-size: clamp(2.3rem, 4vw, 4rem);
+        font-size: clamp(2.2rem, 3.5vw, 3.6rem);
         font-weight: 750;
         line-height: 1.12;
     }
 
     .information-description {
-        max-width: 560px;
-        margin: 0 0 34px;
+        max-width: 530px;
+        margin: 0 0 30px;
         color: rgba(255, 255, 255, 0.82);
-        font-size: 1.05rem;
-        line-height: 1.8;
+        font-size: 1rem;
+        line-height: 1.75;
     }
 
     .platform-features {
         display: grid;
-        gap: 14px;
+        gap: 13px;
     }
 
     .platform-feature {
         display: flex;
-        gap: 14px;
+        gap: 13px;
         align-items: center;
     }
 
@@ -195,13 +195,13 @@
         display: block;
         margin-bottom: 2px;
         color: var(--auth-white);
-        font-size: 0.95rem;
+        font-size: 0.93rem;
         font-weight: 700;
     }
 
     .feature-content span {
         color: rgba(255, 255, 255, 0.68);
-        font-size: 0.84rem;
+        font-size: 0.82rem;
     }
 
     /* Right form panel */
@@ -211,7 +211,8 @@
         flex: 1;
         align-items: center;
         justify-content: center;
-        padding: 45px 55px;
+        padding: 40px 55px;
+        overflow-y: auto;
         background-color: #f7fafc;
     }
 
@@ -230,12 +231,13 @@
         position: relative;
         z-index: 2;
         width: 100%;
-        max-width: 490px;
+        max-width: 650px;
+        padding: 15px 0;
     }
 
     .mobile-logo {
         display: none;
-        margin-bottom: 25px;
+        margin-bottom: 22px;
         text-align: center;
     }
 
@@ -246,7 +248,7 @@
     }
 
     .login-heading {
-        margin-bottom: 28px;
+        margin-bottom: 25px;
     }
 
     .login-heading h2 {
@@ -273,7 +275,7 @@
         border-radius: 12px;
         color: #a12b2b;
         background-color: var(--auth-danger-light);
-        font-size: 0.9rem;
+        font-size: 0.88rem;
     }
 
     .login-alert-icon {
@@ -293,14 +295,14 @@
 
     /* Form */
     .form-field {
-        margin-bottom: 18px;
+        margin-bottom: 17px;
     }
 
     .login-label {
         display: block;
         margin-bottom: 8px;
         color: var(--auth-text);
-        font-size: 0.89rem;
+        font-size: 0.88rem;
         font-weight: 650;
     }
 
@@ -325,14 +327,14 @@
     .login-control {
         display: block;
         width: 100%;
-        height: 52px;
+        height: 50px;
         padding: 10px 16px 10px 45px;
         border: 1px solid var(--auth-border);
-        border-radius: 12px;
+        border-radius: 11px;
         outline: none;
         color: var(--auth-text);
         background-color: var(--auth-white);
-        font-size: 0.95rem;
+        font-size: 0.93rem;
         transition:
             border-color 0.2s ease,
             box-shadow 0.2s ease;
@@ -344,6 +346,19 @@
 
     .login-control::placeholder {
         color: #9aa5ae;
+    }
+
+    /* Remove number input arrows in Chrome, Edge, Safari and Opera */
+    .login-control[type="number"]::-webkit-outer-spin-button,
+    .login-control[type="number"]::-webkit-inner-spin-button {
+        margin: 0;
+        -webkit-appearance: none;
+    }
+
+    /* Remove number input arrows in Firefox */
+    .login-control[type="number"] {
+        appearance: textfield;
+        -moz-appearance: textfield;
     }
 
     .login-control:hover {
@@ -363,7 +378,7 @@
         display: block;
         margin-top: 6px;
         color: var(--auth-danger);
-        font-size: 0.82rem;
+        font-size: 0.8rem;
     }
 
     .password-control {
@@ -461,6 +476,23 @@
         cursor: not-allowed;
         opacity: 0.7;
         transform: none;
+    }
+
+    .register-link {
+        margin: 18px 0 0;
+        color: var(--auth-muted);
+        font-size: 0.86rem;
+        text-align: center;
+    }
+
+    .register-link a {
+        color: var(--auth-primary);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
     }
 
     .login-support {
@@ -785,12 +817,13 @@
                             <i class="fa fa-id-card input-icon"></i>
 
                             <input
-                                type="text"
+                                type="number"
                                 name="qalam_id"
                                 id="qalam_id"
                                 value="{{ old('qalam_id') }}"
                                 class="login-control @error('qalam_id') is-invalid @enderror"
                                 placeholder="Enter your Qalam ID"
+                                inputmode="numeric"
                                 autocomplete="off"
                                 @if (old('role') === 'beneficiary')
                                     required
@@ -929,6 +962,16 @@
                             id="loginButtonIcon"
                         ></i>
                     </button>
+
+
+                    {{-- Donor Registration Link --}}
+                    <p class="register-link">
+                        Don&rsquo;t have a donor account?
+
+                        <a href="{{ route('register') }}">
+                            Register as a Donor
+                        </a>
+                    </p>
 
 
                     <p class="login-support">

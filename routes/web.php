@@ -38,6 +38,9 @@ Route::post('/cookie-accept', [CookieConsentController::class, 'accept'])->middl
 Route::post('/cookie-reject', [CookieConsentController::class, 'reject'])->middleware('throttle:10,1')->name('cookie.reject');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/register', [AuthController::class,'showRegistrationForm'])->name('register');
+Route::post('/register', [AuthController::class,'register'])->name('register.post');
+
 
 
 /*

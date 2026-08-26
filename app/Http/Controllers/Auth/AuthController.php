@@ -24,6 +24,11 @@ class AuthController extends Controller
     {
         return view('pages.auth.login');
     }
+    
+    public function showRegistrationForm(): View
+    {
+        return view('pages.auth.register');
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -293,6 +298,41 @@ class AuthController extends Controller
     | Log out user
     |--------------------------------------------------------------------------
     */
+
+     public function register(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['required', 'string', 'max:30'],
+            'role' => ['required', 'in:donor,beneficiary'],
+            'qalam_id' => [
+                'nullable',
+                'required_if:role,beneficiary',
+                'string',
+                'max:100',
+                'unique:users,qalam_id',
+            ],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'terms' => ['required', 'accepted'],
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'role' => $validated['role'],
+            'qalam_id' => $validated['qalam_id'] ?? null,
+            'password' => Hash::make($validated['password']),
+            'account_status' => 'active',
+        ]);
+
+        auth()->login($user);
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Your account has been created successfully.');
+    }
+
 
     public function logout(
         Request $request

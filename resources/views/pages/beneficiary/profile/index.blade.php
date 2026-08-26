@@ -763,14 +763,19 @@
                                             Domicile
                                         </label>
 
-                                        <input
-                                            type="text"
+                                        <select
                                             id="domicile"
                                             name="domicile"
-                                            value="{{ old('domicile', $beneficiaryProfile?->domicile) }}"
-                                            class="form-control @error('domicile') is-invalid @enderror"
-                                            placeholder="Enter your domicile district"
+                                            class="form-select @error('domicile') is-invalid @enderror"
+                                            data-selected-domicile="{{ old('domicile', $beneficiaryProfile?->domicile) }}"
+                                            disabled
                                         >
+
+                                            <option value="">
+                                                Select a province first
+                                            </option>
+
+                                        </select>
 
                                         @error('domicile')
                                             <div class="invalid-feedback">
@@ -1189,6 +1194,272 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const provinceField =
+                document.getElementById('province');
+
+            const domicileField =
+                document.getElementById('domicile');
+
+            const domicileOptions = {
+                'Punjab': [
+                    'Attock',
+                    'Bahawalnagar',
+                    'Bahawalpur',
+                    'Bhakkar',
+                    'Chakwal',
+                    'Chiniot',
+                    'Dera Ghazi Khan',
+                    'Faisalabad',
+                    'Gujranwala',
+                    'Gujrat',
+                    'Hafizabad',
+                    'Jhang',
+                    'Jhelum',
+                    'Kasur',
+                    'Khanewal',
+                    'Khushab',
+                    'Kot Addu',
+                    'Lahore',
+                    'Layyah',
+                    'Lodhran',
+                    'Mandi Bahauddin',
+                    'Mianwali',
+                    'Multan',
+                    'Murree',
+                    'Muzaffargarh',
+                    'Nankana Sahib',
+                    'Narowal',
+                    'Okara',
+                    'Pakpattan',
+                    'Rahim Yar Khan',
+                    'Rajanpur',
+                    'Rawalpindi',
+                    'Sahiwal',
+                    'Sargodha',
+                    'Sheikhupura',
+                    'Sialkot',
+                    'Talagang',
+                    'Taunsa',
+                    'Toba Tek Singh',
+                    'Vehari',
+                    'Wazirabad'
+                ],
+
+                'Sindh': [
+                    'Badin',
+                    'Dadu',
+                    'Ghotki',
+                    'Hyderabad',
+                    'Jacobabad',
+                    'Jamshoro',
+                    'Kambar Shahdadkot',
+                    'Karachi Central',
+                    'Karachi East',
+                    'Karachi South',
+                    'Karachi West',
+                    'Kashmore',
+                    'Keamari',
+                    'Khairpur',
+                    'Korangi',
+                    'Larkana',
+                    'Malir',
+                    'Matiari',
+                    'Mirpur Khas',
+                    'Naushahro Feroze',
+                    'Sanghar',
+                    'Shaheed Benazirabad',
+                    'Shikarpur',
+                    'Sujawal',
+                    'Sukkur',
+                    'Tando Allahyar',
+                    'Tando Muhammad Khan',
+                    'Tharparkar',
+                    'Thatta',
+                    'Umerkot'
+                ],
+
+                'Khyber Pakhtunkhwa': [
+                    'Abbottabad',
+                    'Bajaur',
+                    'Bannu',
+                    'Battagram',
+                    'Buner',
+                    'Central Dir',
+                    'Charsadda',
+                    'Dera Ismail Khan',
+                    'Hangu',
+                    'Haripur',
+                    'Karak',
+                    'Khyber',
+                    'Kohat',
+                    'Kolai-Palas',
+                    'Kurram',
+                    'Lakki Marwat',
+                    'Lower Chitral',
+                    'Lower Dir',
+                    'Lower Kohistan',
+                    'Lower South Waziristan',
+                    'Malakand',
+                    'Mansehra',
+                    'Mardan',
+                    'Mohmand',
+                    'North Waziristan',
+                    'Nowshera',
+                    'Orakzai',
+                    'Peshawar',
+                    'Shangla',
+                    'Swabi',
+                    'Swat',
+                    'Tank',
+                    'Torghar',
+                    'Upper Chitral',
+                    'Upper Dir',
+                    'Upper Kohistan',
+                    'Upper South Waziristan'
+                ],
+
+                'Balochistan': [
+                    'Awaran',
+                    'Barkhan',
+                    'Chagai',
+                    'Chaman',
+                    'Dera Bugti',
+                    'Duki',
+                    'Gwadar',
+                    'Harnai',
+                    'Hub',
+                    'Jafarabad',
+                    'Jhal Magsi',
+                    'Kachhi',
+                    'Kalat',
+                    'Kech',
+                    'Kharan',
+                    'Khuzdar',
+                    'Killa Abdullah',
+                    'Killa Saifullah',
+                    'Kohlu',
+                    'Lasbela',
+                    'Loralai',
+                    'Mastung',
+                    'Musakhel',
+                    'Nasirabad',
+                    'Nushki',
+                    'Panjgur',
+                    'Pishin',
+                    'Quetta',
+                    'Sherani',
+                    'Sibi',
+                    'Sohbatpur',
+                    'Surab',
+                    'Usta Muhammad',
+                    'Washuk',
+                    'Zhob',
+                    'Ziarat'
+                ],
+
+                'Gilgit Baltistan': [
+                    'Astore',
+                    'Darel',
+                    'Diamer',
+                    'Ghanche',
+                    'Ghizer',
+                    'Gilgit',
+                    'Gupis-Yasin',
+                    'Hunza',
+                    'Kharmang',
+                    'Nagar',
+                    'Roundu',
+                    'Shigar',
+                    'Skardu',
+                    'Tangir'
+                ],
+
+                'Azad Jammu & Kashmir': [
+                    'Bagh',
+                    'Bhimber',
+                    'Hattian Bala',
+                    'Haveli',
+                    'Kotli',
+                    'Mirpur',
+                    'Muzaffarabad',
+                    'Neelum',
+                    'Poonch',
+                    'Sudhnoti'
+                ],
+
+                'Islamabad Capital Territory': [
+                    'Islamabad'
+                ]
+            };
+
+
+            function populateDomiciles(
+                selectedProvince,
+                selectedDomicile = ''
+            ) {
+                if (!domicileField) {
+                    return;
+                }
+
+                domicileField.innerHTML = '';
+
+                const districts =
+                    domicileOptions[selectedProvince] || [];
+
+                const placeholderOption =
+                    document.createElement('option');
+
+                placeholderOption.value = '';
+                placeholderOption.textContent = districts.length
+                    ? 'Select domicile district'
+                    : 'Select a province first';
+
+                domicileField.appendChild(placeholderOption);
+
+                if (
+                    selectedDomicile &&
+                    !districts.includes(selectedDomicile)
+                ) {
+                    const savedOption =
+                        document.createElement('option');
+
+                    savedOption.value = selectedDomicile;
+                    savedOption.textContent = selectedDomicile;
+                    savedOption.selected = true;
+
+                    domicileField.appendChild(savedOption);
+                }
+
+                districts.forEach(function (district) {
+                    const option =
+                        document.createElement('option');
+
+                    option.value = district;
+                    option.textContent = district;
+                    option.selected = district === selectedDomicile;
+
+                    domicileField.appendChild(option);
+                });
+
+                domicileField.disabled = districts.length === 0;
+            }
+
+
+            if (provinceField && domicileField) {
+                const savedDomicile =
+                    domicileField.dataset.selectedDomicile || '';
+
+                populateDomiciles(
+                    provinceField.value,
+                    savedDomicile
+                );
+
+                provinceField.addEventListener('change', function () {
+                    populateDomiciles(this.value);
+                });
+            }
+
+
             const profileImage =
                 document.getElementById('profileImage');
 
