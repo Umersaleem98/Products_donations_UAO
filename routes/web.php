@@ -40,7 +40,16 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/register', [AuthController::class,'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class,'register'])->name('register.post');
+  Route::get('/email/verify', [AuthController::class,'showEmailVerificationNotice',])->name('verification.notice');
 
+    Route::get('/email/verify/{id}/{hash}', [AuthController::class,'verifyEmail',])->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', [
+        AuthController::class,
+        'resendEmailVerification',
+    ])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
 
 
 /*

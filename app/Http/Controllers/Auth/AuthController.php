@@ -264,6 +264,25 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | Donors must verify their email address before login
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $user->role === 'donor'
+            && ! $user->hasVerifiedEmail()
+        ) {
+            return redirect()
+                ->route('verification.notice')
+                ->with('email', $user->email)
+                ->with(
+                    'status',
+                    'Please verify your email address before signing in.'
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
         | Log in active user
         |--------------------------------------------------------------------------
         */
@@ -299,20 +318,13 @@ class AuthController extends Controller
     |--------------------------------------------------------------------------
     */
 
-     public function register(Request $request)
-    {
+    public function register(
+        Request $request
+    ): RedirectResponse {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['required', 'string', 'max:30'],
-            'role' => ['required', 'in:donor,beneficiary'],
-            'qalam_id' => [
-                'nullable',
-                'required_if:role,beneficiary',
-                'string',
-                'max:100',
-                'unique:users,qalam_id',
-            ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'terms' => ['required', 'accepted'],
         ]);
@@ -321,16 +333,123 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
-            'role' => $validated['role'],
-            'qalam_id' => $validated['qalam_id'] ?? null,
+            'role' => 'donor',
+            'qalam_id' => null,
             'password' => Hash::make($validated['password']),
             'account_status' => 'active',
         ]);
 
-        auth()->login($user);
+        $user->sendEmailVerificationNotification();
 
-        return redirect()->route('dashboard')
-            ->with('success', 'Your account has been created successfully.');
+        return redirect()
+            ->route('verification.notice')
+            ->with('email', $user->email)
+            ->with(
+                'status',
+                'Your donor account has been created. We sent a verification link to your email address.'
+            );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Display email verification notice
+    |--------------------------------------------------------------------------
+    */
+
+    public function showEmailVerificationNotice(): View
+    {
+        return view('pages.auth.verify-email');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Verify donor email, log the donor in, and redirect to dashboard
+    |--------------------------------------------------------------------------
+    */
+
+    public function verifyEmail(
+        Request $request,
+        int $id,
+        string $hash
+    ): RedirectResponse {
+        $user = User::query()
+            ->where('id', $id)
+            ->where('role', 'donor')
+            ->firstOrFail();
+
+        if (
+            ! hash_equals(
+                (string) $hash,
+                sha1($user->getEmailForVerification())
+            )
+        ) {
+            abort(403, 'This email verification link is invalid.');
+        }
+
+        if (! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+        }
+
+        Auth::login($user);
+
+        $request->session()->regenerate();
+
+        return redirect()
+            ->route('dashboard')
+            ->with(
+                'success',
+                'Your email address has been verified successfully. Welcome, '
+                    . $user->name . '!'
+            );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Resend donor email verification link
+    |--------------------------------------------------------------------------
+    */
+
+    public function resendEmailVerification(
+        Request $request
+    ): RedirectResponse {
+        $validated = $request->validate([
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+            ],
+        ]);
+
+        $user = User::query()
+            ->where('email', $validated['email'])
+            ->where('role', 'donor')
+            ->first();
+
+        if (! $user) {
+            return back()
+                ->withErrors([
+                    'email' => 'No donor account was found with this email address.',
+                ])
+                ->withInput();
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect()
+                ->route('login')
+                ->with(
+                    'success',
+                    'Your email address is already verified. You can sign in now.'
+                );
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return back()
+            ->with('email', $user->email)
+            ->with(
+                'status',
+                'A new verification link has been sent to your email address.'
+            );
     }
 
 
