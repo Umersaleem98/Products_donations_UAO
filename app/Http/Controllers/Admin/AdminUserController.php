@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
@@ -512,6 +513,13 @@ class AdminUserController extends Controller
 
         $user = User::findOrFail($id);
 
+        /*
+        |--------------------------------------------------------------------------
+        | Never allow the logged-in administrator to delete their own account.
+        | Other users, including another administrator, can be deleted.
+        |--------------------------------------------------------------------------
+        */
+
         if ($user->id === auth()->id()) {
             return back()->with(
                 'error',
@@ -519,17 +527,14 @@ class AdminUserController extends Controller
             );
         }
 
-        if ($user->isAdmin()) {
-            return back()->with(
-                'error',
-                'Another administrator account cannot be deleted.'
-            );
-        }
-
         $imageName = $user->image;
 
         try {
-            DB::transaction(function () use ($user) {
+            DB::transaction(function () use ($user): void {
+                $users = collect([$user]);
+
+                $this->cleanupUserReferences($users);
+
                 $user->delete();
             });
 
@@ -548,7 +553,7 @@ class AdminUserController extends Controller
 
             return back()->with(
                 'error',
-                'The user could not be deleted.'
+                'The user could not be deleted. Please check the Laravel log for a remaining related-record constraint.'
             );
         }
     }
@@ -587,35 +592,26 @@ class AdminUserController extends Controller
             'One of the selected users does not exist.',
         ]);
 
-        $userIds = collect($validated['ids'])
-            ->map(fn($id) => (int) $id)
+        $requestedIds = collect($validated['ids'])
+            ->map(fn ($id) => (int) $id)
             ->unique()
             ->values();
 
         /*
-        | Never delete the currently authenticated administrator.
+        |--------------------------------------------------------------------------
+        | Silently remove the current administrator from the delete set.
+        | This keeps the rest of a bulk selection deletable.
+        |--------------------------------------------------------------------------
         */
 
-        if ($userIds->contains(auth()->id())) {
+        $userIds = $requestedIds
+            ->reject(fn (int $id) => $id === auth()->id())
+            ->values();
+
+        if ($userIds->isEmpty()) {
             return back()->with(
                 'error',
-                'You cannot delete your own account.'
-            );
-        }
-
-        /*
-        | Prevent bulk deletion of administrator accounts.
-        */
-
-        $containsAdministrator = User::query()
-            ->whereIn('id', $userIds)
-            ->where('role', 'admin')
-            ->exists();
-
-        if ($containsAdministrator) {
-            return back()->with(
-                'error',
-                'Administrator accounts cannot be deleted in bulk.'
+                'No deletable users were selected. Your own account cannot be deleted.'
             );
         }
 
@@ -623,33 +619,234 @@ class AdminUserController extends Controller
             ->whereIn('id', $userIds)
             ->get();
 
+        if ($users->isEmpty()) {
+            return back()->with(
+                'error',
+                'No matching users were found to delete.'
+            );
+        }
+
         $imageNames = $users
             ->pluck('image')
             ->filter()
             ->values();
 
+        $deletedCount = $users->count();
+        $skippedOwnAccount = $requestedIds->contains(auth()->id());
+
         try {
-            DB::transaction(function () use ($userIds) {
-                User::query()
-                    ->whereIn('id', $userIds)
-                    ->delete();
+            DB::transaction(function () use ($users): void {
+                $this->cleanupUserReferences($users);
+
+                foreach ($users as $user) {
+                    $user->delete();
+                }
             });
 
             foreach ($imageNames as $imageName) {
                 $this->deleteProfileImage($imageName);
             }
 
-            return back()->with(
-                'success',
-                'Selected users deleted successfully.'
-            );
+            $message = "{$deletedCount} user(s) deleted successfully.";
+
+            if ($skippedOwnAccount) {
+                $message .= ' Your own account was skipped.';
+            }
+
+            return redirect()
+                ->route('admin.user.index')
+                ->with('success', $message);
         } catch (Throwable $exception) {
             report($exception);
 
             return back()->with(
                 'error',
-                'The selected users could not be deleted.'
+                'The selected users could not be deleted. Please check the Laravel log for a remaining related-record constraint.'
             );
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Clean references before deleting users
+    |--------------------------------------------------------------------------
+    |
+    | This prevents common foreign-key constraints from blocking a user delete.
+    | Every cleanup is guarded by Schema checks, so the controller remains safe
+    | when an optional table does not exist in the current installation.
+    |
+    */
+
+    private function cleanupUserReferences(Collection $users): void
+    {
+        $userIds = $users
+            ->pluck('id')
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values();
+
+        if ($userIds->isEmpty()) {
+            return;
+        }
+
+        /* Sessions */
+        if (
+            Schema::hasTable('sessions')
+            && Schema::hasColumn('sessions', 'user_id')
+        ) {
+            DB::table('sessions')
+                ->whereIn('user_id', $userIds)
+                ->delete();
+        }
+
+        /* Self-referencing status_changed_by field */
+        if (Schema::hasColumn('users', 'status_changed_by')) {
+            User::query()
+                ->whereIn('status_changed_by', $userIds)
+                ->update([
+                    'status_changed_by' => null,
+                ]);
+        }
+
+        /* Laravel notifications */
+        if (
+            Schema::hasTable('notifications')
+            && Schema::hasColumn('notifications', 'notifiable_id')
+        ) {
+            $notificationQuery = DB::table('notifications')
+                ->whereIn('notifiable_id', $userIds);
+
+            if (Schema::hasColumn('notifications', 'notifiable_type')) {
+                $notificationQuery->whereIn(
+                    'notifiable_type',
+                    [User::class, 'App\Models\User']
+                );
+            }
+
+            $notificationQuery->delete();
+        }
+
+        /* Sanctum / API tokens */
+        if (
+            Schema::hasTable('personal_access_tokens')
+            && Schema::hasColumn('personal_access_tokens', 'tokenable_id')
+        ) {
+            $tokenQuery = DB::table('personal_access_tokens')
+                ->whereIn('tokenable_id', $userIds);
+
+            if (Schema::hasColumn('personal_access_tokens', 'tokenable_type')) {
+                $tokenQuery->whereIn(
+                    'tokenable_type',
+                    [User::class, 'App\Models\User']
+                );
+            }
+
+            $tokenQuery->delete();
+        }
+
+        /* Get products owned by the users before request cleanup. */
+        $productIds = collect();
+
+        if (
+            Schema::hasTable('products')
+            && Schema::hasColumn('products', 'user_id')
+            && Schema::hasColumn('products', 'id')
+        ) {
+            $productIds = DB::table('products')
+                ->whereIn('user_id', $userIds)
+                ->pluck('id');
+        }
+
+        /* Product requests can point to donors, beneficiaries and products. */
+        if (Schema::hasTable('product_requests')) {
+            $requestFilters = [];
+
+            foreach (['donor_id', 'beneficiary_id', 'user_id'] as $column) {
+                if (Schema::hasColumn('product_requests', $column)) {
+                    $requestFilters[] = [
+                        'column' => $column,
+                        'values' => $userIds,
+                    ];
+                }
+            }
+
+            if (
+                $productIds->isNotEmpty()
+                && Schema::hasColumn('product_requests', 'product_id')
+            ) {
+                $requestFilters[] = [
+                    'column' => 'product_id',
+                    'values' => $productIds,
+                ];
+            }
+
+            if ($requestFilters !== []) {
+                $query = DB::table('product_requests');
+
+                $query->where(function ($subQuery) use ($requestFilters) {
+                    foreach ($requestFilters as $index => $filter) {
+                        if ($index === 0) {
+                            $subQuery->whereIn(
+                                $filter['column'],
+                                $filter['values']
+                            );
+                        } else {
+                            $subQuery->orWhereIn(
+                                $filter['column'],
+                                $filter['values']
+                            );
+                        }
+                    }
+                });
+
+                $query->delete();
+            }
+        }
+
+        /* Role-specific profile / acceptance tables. */
+        $directDeleteMap = [
+            'beneficiary_profiles' => ['user_id'],
+            'donor_profiles' => ['user_id'],
+            'donor_term_acceptances' => ['donor_id', 'user_id'],
+        ];
+
+        foreach ($directDeleteMap as $table => $possibleColumns) {
+            if (! Schema::hasTable($table)) {
+                continue;
+            }
+
+            $availableColumns = collect($possibleColumns)
+                ->filter(
+                    fn (string $column) =>
+                    Schema::hasColumn($table, $column)
+                )
+                ->values();
+
+            if ($availableColumns->isEmpty()) {
+                continue;
+            }
+
+            DB::table($table)
+                ->where(function ($query) use ($availableColumns, $userIds) {
+                    foreach ($availableColumns as $index => $column) {
+                        if ($index === 0) {
+                            $query->whereIn($column, $userIds);
+                        } else {
+                            $query->orWhereIn($column, $userIds);
+                        }
+                    }
+                })
+                ->delete();
+        }
+
+        /* Delete owned products after product requests are removed. */
+        if (
+            Schema::hasTable('products')
+            && Schema::hasColumn('products', 'user_id')
+        ) {
+            DB::table('products')
+                ->whereIn('user_id', $userIds)
+                ->delete();
         }
     }
 

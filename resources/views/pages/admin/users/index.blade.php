@@ -41,7 +41,7 @@
     }
 
     .users-table {
-        min-width: 1450px;
+        min-width: 1280px;
         table-layout: fixed;
     }
 
@@ -59,8 +59,8 @@
     }
 
     .users-table tbody td {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+        padding-top: .55rem;
+        padding-bottom: .55rem;
         border-color: var(--users-border);
         vertical-align: middle;
     }
@@ -69,19 +69,19 @@
         border-bottom: 0;
     }
 
-    .users-table .col-check { width: 58px; }
-    .users-table .col-number { width: 65px; }
-    .users-table .col-user { width: 235px; }
-    .users-table .col-qalam { width: 130px; }
-    .users-table .col-contact { width: 255px; }
-    .users-table .col-role { width: 130px; }
-    .users-table .col-status { width: 175px; }
-    .users-table .col-joined { width: 165px; }
-    .users-table .col-actions { width: 250px; }
+    .users-table .col-check { width: 50px; }
+    .users-table .col-number { width: 55px; }
+    .users-table .col-user { width: 210px; }
+    .users-table .col-qalam { width: 120px; }
+    .users-table .col-contact { width: 235px; }
+    .users-table .col-role { width: 110px; }
+    .users-table .col-status { width: 155px; }
+    .users-table .col-joined { width: 145px; }
+    .users-table .col-actions { width: 130px; }
 
     .user-avatar {
-        width: 44px;
-        height: 44px;
+        width: 36px;
+        height: 36px;
         object-fit: cover;
     }
 
@@ -98,8 +98,31 @@
         white-space: nowrap;
     }
 
-    .users-actions .btn {
-        min-width: 68px;
+    .users-actions form {
+        display: inline-flex;
+        margin: 0;
+    }
+
+    .users-action-btn {
+        width: 31px;
+        height: 31px;
+        min-width: 31px !important;
+        padding: 0 !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-size: .8rem;
+        transition: .2s ease;
+    }
+
+    .users-action-btn i {
+        margin: 0 !important;
+    }
+
+    .users-action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, .08);
     }
 
     .users-pagination .pagination {
@@ -295,9 +318,18 @@
                         </div>
 
                         <div class="col-12 col-lg-7">
-                            <form action="{{ route('admin.user.import.preview') }}" method="POST"
-                                id="userImportForm"
-                                enctype="multipart/form-data">
+                            <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2">
+                                <a href="{{ asset('admins/files/demodataimportfile.xlsx') }}"
+                                    class="btn btn-outline-success btn-sm d-inline-flex align-items-center justify-content-center gap-2"
+                                    download>
+                                    <i class="bi bi-file-earmark-arrow-down"></i>
+                                    Download Template
+                                </a>
+
+                                <form action="{{ route('admin.user.import.preview') }}" method="POST"
+                                    id="userImportForm"
+                                    class="flex-grow-1"
+                                    enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="row g-2">
@@ -322,7 +354,8 @@
                                         </button>
                                     </div>
                                 </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
 
                     </div>
@@ -405,9 +438,9 @@
                                                 @foreach ($importPreview['duplicates'] as $duplicate)
                                                     <tr>
                                                         <td class="px-3">{{ $duplicate['row'] }}</td>
-                                                        <td>{{ $duplicate['name'] ?: 'â€”' }}</td>
-                                                        <td>{{ $duplicate['email'] ?: 'â€”' }}</td>
-                                                        <td>{{ $duplicate['qalam_id'] ?: 'â€”' }}</td>
+                                                        <td>{{ $duplicate['name'] ?: '—' }}</td>
+                                                        <td>{{ $duplicate['email'] ?: '—' }}</td>
+                                                        <td>{{ $duplicate['qalam_id'] ?: '—' }}</td>
                                                         <td class="px-3 text-warning-emphasis">
                                                             {{ implode(' ', $duplicate['reasons']) }}
                                                         </td>
@@ -434,8 +467,8 @@
                                                 @foreach ($importPreview['invalid'] as $invalid)
                                                     <tr>
                                                         <td class="px-3">{{ $invalid['row'] }}</td>
-                                                        <td>{{ $invalid['name'] ?: 'â€”' }}</td>
-                                                        <td>{{ $invalid['email'] ?: 'â€”' }}</td>
+                                                        <td>{{ $invalid['name'] ?: '—' }}</td>
+                                                        <td>{{ $invalid['email'] ?: '—' }}</td>
                                                         <td class="px-3 text-danger">
                                                             {{ implode(' ', $invalid['errors']) }}
                                                         </td>
@@ -530,49 +563,40 @@
                     </div>
                 </div>
 
-                {{-- Bulk Action Form --}}
-                <form method="POST" id="bulkForm">
-                    @csrf
+                {{-- Bulk Action Bar --}}
+                <div class="bg-light border-bottom px-4 py-2">
+                    <div class="users-bulk-bar d-flex flex-wrap align-items-center justify-content-between gap-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check2-square text-primary"></i>
+                            <span class="small text-secondary">
+                                <span id="selectedCount" class="fw-semibold text-dark">0</span>
+                                users selected
+                            </span>
+                        </div>
 
-                    {{-- Bulk Action Bar --}}
-                    <div class="bg-light border-bottom px-4 py-3">
-                        <div
-                            class="users-bulk-bar d-flex flex-wrap align-items-center
-                                   justify-content-between gap-3">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-check2-square text-primary"></i>
-
-                                <span class="small text-secondary">
-                                    <span id="selectedCount" class="fw-semibold text-dark">
-                                        0
-                                    </span>
-
-                                    users selected
-                                </span>
-                            </div>
-
-                            <div
-                                class="users-bulk-actions d-flex flex-wrap
-                                       align-items-center gap-2">
+                        <div class="users-bulk-actions d-flex flex-wrap align-items-center gap-2">
+                            <form action="{{ route('admin.user.export.selected') }}" method="POST" id="bulkExportForm" class="m-0">
+                                @csrf
+                                <div id="bulkExportIds"></div>
                                 <button type="submit" id="exportSelectedButton"
-                                    formaction="{{ route('admin.user.export.selected') }}"
                                     class="btn btn-outline-dark btn-sm" disabled>
                                     <i class="bi bi-download me-1"></i>
                                     Export Selected
                                 </button>
+                            </form>
 
+                            <form action="{{ route('admin.user.delete.selected') }}" method="POST" id="bulkDeleteForm" class="m-0">
+                                @csrf
+                                <div id="bulkDeleteIds"></div>
                                 <button type="submit" id="deleteSelectedButton"
-                                    formaction="{{ route('admin.user.delete.selected') }}"
-                                    class="btn btn-outline-danger btn-sm" disabled
-                                    onclick="return confirm(
-                                        'Are you sure you want to delete the selected users?'
-                                    );">
+                                    class="btn btn-outline-danger btn-sm" disabled>
                                     <i class="bi bi-trash3 me-1"></i>
                                     Delete Selected
                                 </button>
-                            </div>
+                            </form>
                         </div>
                     </div>
+                </div>
 
                     {{-- Users Table --}}
                     <div class="users-table-wrap table-responsive">
@@ -669,10 +693,13 @@
                                         {{-- Checkbox --}}
                                         <td class="px-4">
                                             <div class="form-check mb-0">
-                                                <input type="checkbox" name="ids[]" value="{{ $user->id }}"
-                                                    class="form-check-input
-                                                           user-checkbox"
-                                                    aria-label="Select {{ $user->name }}">
+                                                @if (auth()->id() !== $user->id)
+                                                    <input type="checkbox" value="{{ $user->id }}"
+                                                        class="form-check-input user-checkbox"
+                                                        aria-label="Select {{ $user->name }}">
+                                                @else
+                                                    <i class="bi bi-lock-fill text-secondary small" title="Your account cannot be selected for deletion"></i>
+                                                @endif
                                             </div>
                                         </td>
 
@@ -827,52 +854,37 @@
                                         </td>
 
                                         {{-- Actions --}}
-                                        <td class="px-4 text-end">
-                                            <div
-                                                class="users-actions d-inline-flex
-                                                       flex-wrap
-                                                       justify-content-end
-                                                       align-items-center gap-2">
+                                        <td class="px-3 text-end">
+                                            <div class="users-actions d-inline-flex justify-content-end align-items-center gap-1">
                                                 @if ($canManageStatus)
                                                     <button type="button"
-                                                        class="btn
-                                                               btn-outline-primary
-                                                               btn-sm"
+                                                        class="btn btn-outline-primary btn-sm users-action-btn"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#statusModal{{ $user->id }}"
                                                         title="Manage account status">
-                                                        <i class="bi bi-shield-lock me-1"></i>
-                                                        Status
+                                                        <i class="bi bi-shield-lock"></i>
                                                     </button>
                                                 @endif
 
                                                 <a href="{{ route('admin.user.edit', $user->id) }}"
-                                                    class="btn
-                                                           btn-outline-warning
-                                                           btn-sm"
+                                                    class="btn btn-outline-warning btn-sm users-action-btn"
                                                     title="Edit user">
-                                                    <i
-                                                        class="bi
-                                                               bi-pencil-square
-                                                               me-1"></i>
-                                                    Edit
+                                                    <i class="bi bi-pencil-square"></i>
                                                 </a>
 
                                                 @if (auth()->id() !== $user->id)
-                                                    <button type="button"
-                                                        class="btn
-                                                               btn-outline-danger
-                                                               btn-sm
-                                                               delete-user-button"
-                                                        title="Delete user"
-                                                        data-delete-url="{{ route('admin.user.destroy', $user->id) }}"
+                                                    <form action="{{ route('admin.user.destroy', $user->id) }}"
+                                                        method="POST"
+                                                        class="individual-delete-form"
                                                         data-user-name="{{ $user->name }}">
-                                                        <i
-                                                            class="bi
-                                                                   bi-trash3
-                                                                   me-1"></i>
-                                                        Delete
-                                                    </button>
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="btn btn-outline-danger btn-sm users-action-btn"
+                                                            title="Delete user">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
+                                                    </form>
                                                 @endif
                                             </div>
                                         </td>
@@ -947,18 +959,6 @@
                             </tbody>
                         </table>
                     </div>
-                </form>
-
-                {{--
-                    Individual Delete Form
-
-                    This form is intentionally outside bulkForm so the page
-                    never contains invalid nested forms.
-                --}}
-                <form id="deleteUserForm" method="POST" class="d-none">
-                    @csrf
-                    @method('DELETE')
-                </form>
 
                 {{-- Pagination --}}
                 @if ($users->hasPages())
@@ -1102,15 +1102,15 @@
                                                account-status-select"
                                         required>
                                         <option value="active" @selected(($user->account_status ?? 'active') === 'active')>
-                                            Active Ã¢â‚¬â€ Allow system access
+                                            Active — Allow system access
                                         </option>
 
                                         <option value="suspended" @selected($user->account_status === 'suspended')>
-                                            Suspended Ã¢â‚¬â€ Temporarily disable access
+                                            Suspended — Temporarily disable access
                                         </option>
 
                                         <option value="blocked" @selected($user->account_status === 'blocked')>
-                                            Blocked Ã¢â‚¬â€ Deny system access
+                                            Blocked — Deny system access
                                         </option>
                                     </select>
                                 </div>
@@ -1187,9 +1187,10 @@
 
     @include('layouts.admin.script')
 
-    {{-- Select All and Status Form Scripts --}}
+    {{-- Select All, Bulk Actions, Delete and Status Scripts --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            /* Import preview */
             const importForm = document.getElementById('userImportForm');
             const importButton = document.getElementById('userImportButton');
 
@@ -1216,147 +1217,133 @@
                 });
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Bulk user selection
-            |--------------------------------------------------------------------------
-            */
-
+            /* Bulk selection */
             const selectAll = document.getElementById('select-all');
+            const userCheckboxes = Array.from(document.querySelectorAll('.user-checkbox'));
+            const selectedCount = document.getElementById('selectedCount');
+            const exportSelectedButton = document.getElementById('exportSelectedButton');
+            const deleteSelectedButton = document.getElementById('deleteSelectedButton');
+            const bulkExportForm = document.getElementById('bulkExportForm');
+            const bulkDeleteForm = document.getElementById('bulkDeleteForm');
+            const bulkExportIds = document.getElementById('bulkExportIds');
+            const bulkDeleteIds = document.getElementById('bulkDeleteIds');
 
-            const userCheckboxes = Array.from(
-                document.querySelectorAll('.user-checkbox')
-            );
+            function getSelectedIds() {
+                return userCheckboxes
+                    .filter(function(checkbox) {
+                        return checkbox.checked;
+                    })
+                    .map(function(checkbox) {
+                        return checkbox.value;
+                    });
+            }
 
-            const selectedCount = document.getElementById(
-                'selectedCount'
-            );
+            function setHiddenIds(container, ids) {
+                if (!container) {
+                    return;
+                }
 
-            const exportButton = document.getElementById(
-                'exportSelectedButton'
-            );
+                container.innerHTML = '';
 
-            const deleteButton = document.getElementById(
-                'deleteSelectedButton'
-            );
+                ids.forEach(function(id) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ids[]';
+                    input.value = id;
+                    container.appendChild(input);
+                });
+            }
 
             function updateBulkActions() {
-                const checkedUsers = userCheckboxes.filter(
-                    function(checkbox) {
-                        return checkbox.checked;
-                    }
-                );
-
-                const checkedCount = checkedUsers.length;
+                const ids = getSelectedIds();
 
                 if (selectedCount) {
-                    selectedCount.textContent = checkedCount;
+                    selectedCount.textContent = ids.length;
                 }
 
-                if (exportButton) {
-                    exportButton.disabled = checkedCount === 0;
+                if (exportSelectedButton) {
+                    exportSelectedButton.disabled = ids.length === 0;
                 }
 
-                if (deleteButton) {
-                    deleteButton.disabled = checkedCount === 0;
+                if (deleteSelectedButton) {
+                    deleteSelectedButton.disabled = ids.length === 0;
                 }
 
                 if (selectAll) {
                     selectAll.checked =
                         userCheckboxes.length > 0 &&
-                        checkedCount === userCheckboxes.length;
+                        ids.length === userCheckboxes.length;
 
                     selectAll.indeterminate =
-                        checkedCount > 0 &&
-                        checkedCount < userCheckboxes.length;
+                        ids.length > 0 &&
+                        ids.length < userCheckboxes.length;
                 }
             }
 
             if (selectAll) {
-                selectAll.addEventListener(
-                    'change',
-                    function() {
-                        userCheckboxes.forEach(
-                            function(checkbox) {
-                                checkbox.checked =
-                                    selectAll.checked;
-                            }
-                        );
-
-                        updateBulkActions();
-                    }
-                );
+                selectAll.addEventListener('change', function() {
+                    userCheckboxes.forEach(function(checkbox) {
+                        checkbox.checked = selectAll.checked;
+                    });
+                    updateBulkActions();
+                });
             }
 
             userCheckboxes.forEach(function(checkbox) {
-                checkbox.addEventListener(
-                    'change',
-                    updateBulkActions
-                );
+                checkbox.addEventListener('change', updateBulkActions);
             });
 
-            updateBulkActions();
+            if (bulkExportForm) {
+                bulkExportForm.addEventListener('submit', function(event) {
+                    const ids = getSelectedIds();
 
-            /*
-            |--------------------------------------------------------------------------
-            | Individual user deletion
-            |--------------------------------------------------------------------------
-            */
-
-            const deleteUserForm = document.getElementById(
-                'deleteUserForm'
-            );
-
-            const deleteUserButtons = document.querySelectorAll(
-                '.delete-user-button'
-            );
-
-            deleteUserButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    if (!deleteUserForm) {
+                    if (ids.length === 0) {
+                        event.preventDefault();
+                        alert('Please select at least one user.');
                         return;
                     }
 
-                    const deleteUrl = button.dataset.deleteUrl;
-                    const userName = button.dataset.userName || 'this user';
+                    setHiddenIds(bulkExportIds, ids);
+                });
+            }
 
-                    const confirmed = confirm(
-                        'Are you sure you want to permanently delete ' +
-                        userName +
-                        '?'
-                    );
+            if (bulkDeleteForm) {
+                bulkDeleteForm.addEventListener('submit', function(event) {
+                    const ids = getSelectedIds();
 
-                    if (!confirmed) {
+                    if (ids.length === 0) {
+                        event.preventDefault();
+                        alert('Please select at least one user to delete.');
                         return;
                     }
 
-                    deleteUserForm.action = deleteUrl;
-                    deleteUserForm.submit();
+                    if (!confirm('Are you sure you want to permanently delete ' + ids.length + ' selected user(s)?')) {
+                        event.preventDefault();
+                        return;
+                    }
+
+                    setHiddenIds(bulkDeleteIds, ids);
+                });
+            }
+
+            /* Individual delete */
+            document.querySelectorAll('.individual-delete-form').forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    const userName = form.dataset.userName || 'this user';
+
+                    if (!confirm('Are you sure you want to permanently delete ' + userName + '?')) {
+                        event.preventDefault();
+                    }
                 });
             });
 
-            /*
-            |--------------------------------------------------------------------------
-            | Account status reason validation
-            |--------------------------------------------------------------------------
-            */
-
-            const statusForms = document.querySelectorAll(
-                '.account-status-form'
-            );
+            /* Account status */
+            const statusForms = document.querySelectorAll('.account-status-form');
 
             statusForms.forEach(function(form) {
-                const statusSelect = form.querySelector(
-                    '.account-status-select'
-                );
-
-                const reasonInput = form.querySelector(
-                    '.status-reason-input'
-                );
-
-                const requiredMark = form.querySelector(
-                    '.reason-required-mark'
-                );
+                const statusSelect = form.querySelector('.account-status-select');
+                const reasonInput = form.querySelector('.status-reason-input');
+                const requiredMark = form.querySelector('.reason-required-mark');
 
                 if (!statusSelect || !reasonInput) {
                     return;
@@ -1370,10 +1357,7 @@
                     reasonInput.required = requiresReason;
 
                     if (requiredMark) {
-                        requiredMark.classList.toggle(
-                            'd-none',
-                            !requiresReason
-                        );
+                        requiredMark.classList.toggle('d-none', !requiresReason);
                     }
 
                     if (!requiresReason) {
@@ -1381,32 +1365,26 @@
                     }
                 }
 
-                statusSelect.addEventListener(
-                    'change',
-                    updateReasonRequirement
-                );
+                statusSelect.addEventListener('change', updateReasonRequirement);
 
-                form.addEventListener(
-                    'submit',
-                    function(event) {
-                        const selectedStatus =
-                            statusSelect.value;
+                form.addEventListener('submit', function(event) {
+                    const selectedStatus = statusSelect.value;
+                    const confirmationMessage =
+                        selectedStatus === 'active'
+                            ? 'Activate this user account?'
+                            : selectedStatus === 'suspended'
+                                ? 'Suspend this user account?'
+                                : 'Block this user account?';
 
-                        const confirmationMessage =
-                            selectedStatus === 'active' ?
-                            'Activate this user account?' :
-                            selectedStatus === 'suspended' ?
-                            'Suspend this user account?' :
-                            'Block this user account?';
-
-                        if (!confirm(confirmationMessage)) {
-                            event.preventDefault();
-                        }
+                    if (!confirm(confirmationMessage)) {
+                        event.preventDefault();
                     }
-                );
+                });
 
                 updateReasonRequirement();
             });
+
+            updateBulkActions();
         });
     </script>
 
