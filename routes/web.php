@@ -13,9 +13,13 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Donor\DonorProductController;
 use App\Http\Controllers\Donor\DonorProfileController;
 use App\Http\Controllers\Donor\DonorRequestController;
+use App\Http\Controllers\ExploreNeedController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OurImpectController;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 /*
@@ -34,6 +38,8 @@ Route::fallback(function () {
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/explore-needs', [ExploreNeedController::class, 'index'])->name('explore.needs');
+Route::get('/our-impact', [OurImpectController::class, 'index'])->name('our.impact');
 Route::post('/cookie-accept', [CookieConsentController::class, 'accept'])->middleware('throttle:10,1')->name('cookie.accept');
 Route::post('/cookie-reject', [CookieConsentController::class, 'reject'])->middleware('throttle:10,1')->name('cookie.reject');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

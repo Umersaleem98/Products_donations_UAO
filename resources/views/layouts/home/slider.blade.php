@@ -35,7 +35,7 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(to right, rgba(0,0,0,0.75), rgba(0,0,0,0.45));
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.45));
         z-index: 1;
     }
 
@@ -65,7 +65,7 @@
         font-size: 1.1rem;
         line-height: 1.9;
         margin-bottom: 35px;
-        color: rgba(255,255,255,0.9);
+        color: rgba(255, 255, 255, 0.9);
     }
 
     .btn-hero {
@@ -112,7 +112,7 @@
         width: 55px;
         height: 55px;
         border-radius: 50%;
-        background: rgba(255,255,255,0.15);
+        background: rgba(255, 255, 255, 0.15);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -139,7 +139,7 @@
         width: 12px;
         height: 12px;
         border-radius: 50%;
-        background: rgba(255,255,255,0.5);
+        background: rgba(255, 255, 255, 0.5);
         cursor: pointer;
     }
 
@@ -162,41 +162,61 @@
                 A centralized platform connecting donors and students to reduce educational inequality.
                 We facilitate the donation of laptops, books, and essential learning resources.
             </p>
+            <a href="{{ route('explore.needs') }}" class="btn-hero">
+                Explore Needs
+            </a>
+            <a href="{{ route('our.impact') }}" class="btn-hero btn-hero-outline">
+                Our Impact
+            </a>
 
-           <a href="#categories" class="btn-hero">Explore Needs</a>
-            <a href="#impact" class="btn-hero btn-hero-outline">Our Impact</a>
         </div>
     </div>
 
     <!-- SLIDE 2 -->
     <div class="slide">
-        <div class="slide-bg" style="background-image: url('{{ asset('templates/assets/sliders/slider2.png') }}');"></div>
+        <div class="slide-bg" style="background-image: url('{{ asset('templates/assets/sliders/slider2.png') }}');">
+        </div>
 
         <div class="slide-content">
-           <h1>NUST <span>Sharing Network</span></h1>
+            <h1>NUST <span>Sharing Network</span></h1>
             <p>
                 A centralized platform connecting donors and students to reduce educational inequality.
                 We facilitate the donation of laptops, books, and essential learning resources.
             </p>
 
-            <a href="#categories" class="btn-hero">Explore Needs</a>
-            <a href="#impact" class="btn-hero btn-hero-outline">Our Impact</a>
+            <a href="{{ route('explore.needs') }}" class="btn-hero">
+                Explore Needs
+            </a>
+
+            <a href="{{ route('our.impact') }}" class="btn-hero btn-hero-outline">
+                Our Impact
+            </a>
+
+
         </div>
     </div>
 
     <!-- SLIDE 3 -->
     <div class="slide">
-        <div class="slide-bg" style="background-image: url('{{ asset('templates/assets/sliders/slider3.png') }}');"></div>
+        <div class="slide-bg" style="background-image: url('{{ asset('templates/assets/sliders/slider3.png') }}');">
+        </div>
 
         <div class="slide-content">
-           <h1>NUST <span>Sharing Network</span></h1>
+            <h1>NUST <span>Sharing Network</span></h1>
             <p>
                 A centralized platform connecting donors and students to reduce educational inequality.
                 We facilitate the donation of laptops, books, and essential learning resources.
             </p>
 
-             <a href="#categories" class="btn-hero">Explore Needs</a>
-            <a href="#impact" class="btn-hero btn-hero-outline">Our Impact</a>
+            <a href="{{ route('explore.needs') }}" class="btn-hero">
+                Explore Needs
+            </a>
+
+            <a href="{{ route('our.impact') }}" class="btn-hero btn-hero-outline">
+                Our Impact
+            </a>
+
+
         </div>
     </div>
 
