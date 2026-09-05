@@ -8,151 +8,497 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+
 class BeneficiaryProfileController extends Controller
 {
-      // SHOW PROFILE PAGE
+    /**
+     * Show Beneficiary Profile Page
+     */
     public function index()
     {
         $user = Auth::user();
 
-        // LOAD BENEFICIARY PROFILE
+        // Load beneficiary profile
         $user->load('beneficiaryProfile');
 
-        return view('pages.beneficiary.profile.index', compact('user'));
+        return view(
+            'pages.beneficiary.profile.index',
+            compact('user')
+        );
     }
 
+
+    /**
+     * Update Beneficiary Profile
+     */
     public function update(Request $request)
     {
         $user = Auth::user();
 
-        // VALIDATION
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validation
+        |--------------------------------------------------------------------------
+        */
+
         $request->validate([
 
-            // USER
-            'name' => 'required|string|max:255',
+            /*
+            |--------------------------------------------------------------------------
+            | User Information
+            |--------------------------------------------------------------------------
+            */
 
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
 
-            // BENEFICIARY PROFILE
-            'institution' => 'nullable|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'unique:users,email,' . $user->id,
+            ],
 
-            'enrollment_year' => 'nullable|integer|min:2000|max:2100',
+            'phone' => [
+                'nullable',
+                'string',
+                'max:20',
+            ],
 
-            'graduation_year' => 'nullable|integer|min:2000|max:2100|gte:enrollment_year',
 
-            'father_status' => 'nullable|string|max:255',
+            /*
+            |--------------------------------------------------------------------------
+            | Personal Information
+            |--------------------------------------------------------------------------
+            */
 
-            'guardian_profession' => 'nullable|string|max:255',
+            'gender' => [
+                'required',
+                'in:male,female,other',
+            ],
 
-            'monthly_income' => 'nullable|numeric|min:0',
 
-            'province' => 'nullable|string|max:255',
+            /*
+            |--------------------------------------------------------------------------
+            | Academic Information
+            |--------------------------------------------------------------------------
+            */
 
-            'domicile' => 'nullable|string|max:255',
+            'institution' => [
+                'required',
+                'string',
+                'max:255',
+            ],
 
-            'home_address' => 'nullable|string|max:1000',
+            'degree_level' => [
+                'required',
+                'in:UG,PG,PhD',
+            ],
 
-            // IMAGE
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'degree_program' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
 
-            // PASSWORD
-            'current_password' => 'nullable|required_with:password',
+            'department' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
 
-            'password' => 'nullable|min:6|confirmed',
+            'semester' => [
+                'nullable',
+                'string',
+                'max:50',
+            ],
+
+            'cgpa' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                'max:4',
+            ],
+
+            'enrollment_year' => [
+                'required',
+                'integer',
+                'min:2000',
+                'max:2100',
+            ],
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Family / Financial Information
+            |--------------------------------------------------------------------------
+            */
+
+            'father_status' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'guardian_profession' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'monthly_income' => [
+                'nullable',
+                'numeric',
+                'min:0',
+            ],
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Location Information
+            |--------------------------------------------------------------------------
+            */
+
+            'province' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'domicile' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'home_address' => [
+                'required',
+                'string',
+                'max:1000',
+            ],
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Profile Image
+            |--------------------------------------------------------------------------
+            */
+
+            'image' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Password
+            |--------------------------------------------------------------------------
+            */
+
+            'current_password' => [
+                'nullable',
+                'required_with:password',
+            ],
+
+            'password' => [
+                'nullable',
+                'string',
+                'min:6',
+                'confirmed',
+            ],
 
         ]);
 
-        // IMAGE UPLOAD
+
+        /*
+        |--------------------------------------------------------------------------
+        | Calculate Graduation Year
+        |--------------------------------------------------------------------------
+        |
+        | UG  = Enrollment Year + 4
+        | PG  = Enrollment Year + 2
+        | PhD = Enrollment Year + 2
+        |
+        */
+
+        $degreeDuration = match ($request->degree_level) {
+            'UG' => 4,
+            'PG' => 2,
+            'PhD' => 2,
+            default => 0,
+        };
+
+
+        $graduationYear = null;
+
+        if (
+            $request->filled('enrollment_year') &&
+            $degreeDuration > 0
+        ) {
+            $graduationYear =
+                (int) $request->enrollment_year + $degreeDuration;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Profile Image Upload
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->hasFile('image')) {
 
-            $uploadPath = public_path('admins/asset/profilephoto');
+            $uploadPath =
+                public_path('admins/asset/profilephoto');
 
-            // CREATE DIRECTORY IF NOT EXISTS
+
+            /*
+            |--------------------------------------------------------------------------
+            | Create Directory
+            |--------------------------------------------------------------------------
+            */
+
             if (!File::exists($uploadPath)) {
 
-                File::makeDirectory($uploadPath, 0777, true);
+                File::makeDirectory(
+                    $uploadPath,
+                    0777,
+                    true
+                );
 
             }
 
-            // DELETE OLD IMAGE
+
+            /*
+            |--------------------------------------------------------------------------
+            | Delete Old Image
+            |--------------------------------------------------------------------------
+            */
+
             if (!empty($user->image)) {
 
-                $oldImage = $uploadPath . '/' . $user->image;
+                $oldImage =
+                    $uploadPath . '/' . $user->image;
+
 
                 if (File::exists($oldImage)) {
 
                     File::delete($oldImage);
 
                 }
+
             }
 
-            // GENERATE UNIQUE FILE NAME
-            $filename = time() . '_' . Str::random(10) . '.' .
-                        $request->file('image')->getClientOriginalExtension();
 
-            // MOVE FILE
-            $request->file('image')->move($uploadPath, $filename);
+            /*
+            |--------------------------------------------------------------------------
+            | Generate Unique Filename
+            |--------------------------------------------------------------------------
+            */
 
-            // SAVE IMAGE NAME
+            $filename =
+                time()
+                . '_'
+                . Str::random(10)
+                . '.'
+                . $request
+                    ->file('image')
+                    ->getClientOriginalExtension();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Move Uploaded Image
+            |--------------------------------------------------------------------------
+            */
+
+            $request
+                ->file('image')
+                ->move(
+                    $uploadPath,
+                    $filename
+                );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Save Filename
+            |--------------------------------------------------------------------------
+            */
+
             $user->image = $filename;
+
         }
 
-        // UPDATE USER DATA
-        $user->name = $request->name;
 
-        $user->email = $request->email;
+        /*
+        |--------------------------------------------------------------------------
+        | Update User Data
+        |--------------------------------------------------------------------------
+        */
 
-        $user->phone = $request->phone;
+        $user->name =
+            $request->name;
 
-        // PASSWORD UPDATE
+        $user->email =
+            $request->email;
+
+        $user->phone =
+            $request->phone;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Password Update
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->filled('password')) {
 
-            if (!Hash::check($request->current_password, $user->password)) {
+            if (
+                !Hash::check(
+                    $request->current_password,
+                    $user->password
+                )
+            ) {
 
                 return back()
                     ->withErrors([
-                        'current_password' => 'Current password is incorrect.'
+                        'current_password' =>
+                            'Current password is incorrect.',
                     ])
                     ->withInput();
+
             }
 
-            $user->password = Hash::make($request->password);
+
+            $user->password =
+                Hash::make(
+                    $request->password
+                );
+
         }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Save User
+        |--------------------------------------------------------------------------
+        */
 
         $user->save();
 
-        // UPDATE OR CREATE BENEFICIARY PROFILE
-        $user->beneficiaryProfile()->updateOrCreate(
 
-            [
-                'user_id' => $user->id,
-            ],
+        /*
+        |--------------------------------------------------------------------------
+        | Update Or Create Beneficiary Profile
+        |--------------------------------------------------------------------------
+        */
 
-            [
-                'institution' => $request->institution,
+        $user
+            ->beneficiaryProfile()
+            ->updateOrCreate(
 
-                'enrollment_year' => $request->enrollment_year,
+                [
+                    'user_id' => $user->id,
+                ],
 
-                'graduation_year' => $request->graduation_year,
+                [
 
-                'father_status' => $request->father_status,
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Personal Information
+                    |--------------------------------------------------------------------------
+                    */
 
-                'guardian_profession' => $request->guardian_profession,
+                    'gender' =>
+                        $request->gender,
 
-                'monthly_income' => $request->monthly_income,
 
-                'province' => $request->province,
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Academic Information
+                    |--------------------------------------------------------------------------
+                    */
 
-                'domicile' => $request->domicile,
+                    'institution' =>
+                        $request->institution,
 
-                'home_address' => $request->home_address,
-            ]
-        );
+                    'degree_level' =>
+                        $request->degree_level,
+
+                    'degree_program' =>
+                        $request->degree_program,
+
+                    'department' =>
+                        $request->department,
+
+                    'semester' =>
+                        $request->semester,
+
+                    'cgpa' =>
+                        $request->cgpa,
+
+                    'enrollment_year' =>
+                        $request->enrollment_year,
+
+                    'graduation_year' =>
+                        $graduationYear,
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Family / Financial Information
+                    |--------------------------------------------------------------------------
+                    */
+
+                    'father_status' =>
+                        $request->father_status,
+
+                    'guardian_profession' =>
+                        $request->guardian_profession,
+
+                    'monthly_income' =>
+                        $request->monthly_income,
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Location Information
+                    |--------------------------------------------------------------------------
+                    */
+
+                    'province' =>
+                        $request->province,
+
+                    'domicile' =>
+                        $request->domicile,
+
+                    'home_address' =>
+                        $request->home_address,
+
+                ]
+            );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Success Response
+        |--------------------------------------------------------------------------
+        */
 
         return redirect()
             ->back()
-            ->with('success', 'Profile updated successfully.');
+            ->with(
+                'success',
+                'Profile updated successfully.'
+            );
     }
 }
-

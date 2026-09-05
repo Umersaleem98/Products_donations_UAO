@@ -12,19 +12,62 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('beneficiary_profiles', function (Blueprint $table) {
+
             $table->id();
 
-            // 🔗 LINK TO USERS TABLE
+            /*
+            |--------------------------------------------------------------------------
+            | User Relationship
+            |--------------------------------------------------------------------------
+            */
+
             $table->foreignId('user_id')
                 ->constrained()
-                ->onDelete('cascade');
+                ->cascadeOnDelete();
 
-                // 📌 Profile Fields
-                $table->string('institution')->nullable();
+            /*
+            |--------------------------------------------------------------------------
+            | Personal Information
+            |--------------------------------------------------------------------------
+            */
 
-                // 🎓 Academic Information
-                $table->year('enrollment_year')->nullable();
-                $table->year('graduation_year')->nullable();
+            $table->enum('gender', [
+                'male',
+                'female',
+                'other'
+            ])->nullable();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Academic Information
+            |--------------------------------------------------------------------------
+            */
+
+            $table->string('institution')->nullable();
+
+            $table->enum('degree_level', [
+                'UG',
+                'PG',
+                'PhD'
+            ])->nullable();
+
+            $table->string('degree_program')->nullable();
+
+            $table->string('department')->nullable();
+
+            $table->string('semester')->nullable();
+
+            $table->decimal('cgpa', 4, 2)->nullable();
+
+            $table->year('enrollment_year')->nullable();
+
+            $table->year('graduation_year')->nullable();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Family / Guardian Information
+            |--------------------------------------------------------------------------
+            */
 
             $table->string('father_status')->nullable();
 
@@ -32,11 +75,23 @@ return new class extends Migration
 
             $table->decimal('monthly_income', 12, 2)->nullable();
 
+            /*
+            |--------------------------------------------------------------------------
+            | Location Information
+            |--------------------------------------------------------------------------
+            */
+
             $table->string('province')->nullable();
 
             $table->string('domicile')->nullable();
 
             $table->text('home_address')->nullable();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Timestamps
+            |--------------------------------------------------------------------------
+            */
 
             $table->timestamps();
         });
